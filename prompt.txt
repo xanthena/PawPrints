@@ -1,0 +1,398 @@
+Task
+
+the main task is to take an input of a raw_json and give an output as final_timeline.json
+
+raw_json: PawPrints\jsons\raw_json.json
+
+Overall Pipeline
+raw_json
+    │
+    ▼
+clean_results()
+    │
+    ▼
+normalize_results()
+    │
+    ▼
+detect_state_changes()
+    │
+    ▼
+merge_consecutive_events()
+    │
+    ▼
+score_events()
+    │
+    ▼
+generate_event_json()
+
+Each stage transforms the data a little.
+
+Stage 1 — Clean the JSON
+
+Some outputs are malformed.
+
+Example:
+
+{
+    "raw_output": "```json ... ```"
+}
+
+Others already contain
+
+{
+    "activity":"sleeping",
+    ...
+}
+
+Function
+
+clean_results(results)
+
+Responsibilities
+
+for every frame
+
+    if raw_output exists
+
+        extract JSON
+
+        parse it
+
+        replace result
+
+    if parsing fails
+
+        mark frame invalid
+
+return cleaned_results
+
+Output
+
+Every frame now has exactly
+
+activity
+confidence
+interaction
+summary
+objects
+Stage 2 — Normalize
+
+Different models use different words.
+
+Example
+
+Looking
+looking
+Looking Out
+Peering
+Watching outside
+
+should all become
+
+looking_out
+
+Likewise
+
+resting
+sleeping
+lying down
+
+might all become
+
+resting
+
+Function
+
+normalize_results(results)
+
+Pseudo
+
+dictionary =
+
+{
+    "Looking":"looking_out",
+    "looking out":"looking_out",
+    "Peering":"looking_out",
+
+    "sleeping":"sleeping",
+    "resting":"sleeping",
+
+    ...
+}
+
+replace activity
+
+Also normalize
+
+interaction
+
+cat toy
+toy
+rope toy
+
+into
+
+toy
+Stage 3 — Detect State Changes
+
+This is where events begin.
+
+Input
+
+0 sleeping
+
+5 sleeping
+
+10 drinking
+
+15 drinking
+
+20 eating
+
+25 eating
+
+30 eating
+
+35 sleeping
+
+Output
+
+sleeping starts
+
+drinking starts
+
+eating starts
+
+sleeping starts
+
+Function
+
+detect_state_changes(results)
+
+Pseudo
+
+current = None
+
+for frame
+
+    if activity != current
+
+        create event
+
+        current = activity
+
+Notice
+
+We don't know event duration yet.
+
+Only beginnings.
+
+Stage 4 — Merge Consecutive Frames
+
+Suppose
+
+10 drinking
+
+15 drinking
+
+20 drinking
+
+25 drinking
+
+becomes
+
+Drinking
+
+start = 10
+
+end = 25
+
+instead of four events.
+
+Function
+
+merge_consecutive_events(events)
+
+Pseudo
+
+current_event = first
+
+for next
+
+    if same activity
+
+        extend end
+
+    else
+
+        save event
+
+        start new
+
+Now you finally have
+
+Event
+
+start
+
+end
+
+duration
+Stage 5 — Score Events
+
+Not all events deserve highlights.
+
+Sleeping for 40 minutes
+
+↓
+
+boring
+
+Jumping
+
+↓
+
+interesting
+
+Playing
+
+↓
+
+very interesting
+
+Scratching
+
+↓
+
+interesting
+
+Function
+
+score_events(events)
+
+Simple rule table
+
+playing       +10
+
+jumping       +10
+
+drinking      +4
+
+eating        +4
+
+walking       +2
+
+sleeping      +1
+
+Then bonus
+
+interaction exists
+
++2
+
+multiple cats
+
++3
+
+confidence > .95
+
++1
+
+Now every event has
+
+importance_score
+Stage 6 — Merge Similar Events
+
+Example
+
+playing
+
+walking
+
+playing
+
+within
+
+20 seconds
+
+might really be one play session.
+
+Merge them.
+
+Function
+
+merge_nearby_events()
+
+Pseudo
+
+if
+
+same activity
+
+gap < threshold
+
+merge
+Stage 7 — Generate Final Event JSON
+
+Instead of
+
+frame
+
+frame
+
+frame
+
+frame
+
+frame
+
+you produce [eg just observer format]
+
+[
+{
+    "event_id": 1,
+    "activity": "playing",
+    "start_time": 135,
+    "end_time": 170,
+    "duration": 35,
+
+    "importance": 9,
+
+    "thumbnail_frame": "resized_frame_004350_145.00s.jpg",
+
+    "objects": [
+        "cat",
+        "toy"
+    ],
+
+    "interaction": "playing with toy",
+
+    "summary": "Kitten playing with colorful toy",
+
+    "clip_start": 130,
+    "clip_end": 175
+},
+{
+"event_id": 2,
+    "activity": "playing",
+    "start_time": 200,
+    "end_time": 290,
+    "duration": 90,
+
+    "importance": 2,
+
+    "thumbnail_frame": "resized_frame_006660_145.00s.jpg",
+
+    "objects": [
+        "cat",
+        "c"
+    ],
+
+    "interaction": "sleeping",
+
+    "summary": "Kitten was sleeping",
+
+    "clip_start": 600,
+    "clip_end": 690
+}
+]
