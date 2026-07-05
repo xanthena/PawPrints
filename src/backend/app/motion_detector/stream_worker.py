@@ -15,6 +15,7 @@ DEFAULT_VIDEO = SRC_ROOT / "data" / "cat_inbag.mp4"
 SMALL_WIDTH = 320
 SAMPLE_INTERVAL_SEC = 0.5
 COOLDOWN_SEC = 4.0
+STILL_PING_INTERVAL_SEC = 300.0
 
 
 def resize_keep_aspect(frame, target_width=SMALL_WIDTH):
@@ -23,12 +24,13 @@ def resize_keep_aspect(frame, target_width=SMALL_WIDTH):
     return cv.resize(frame, (target_width, int(h * scale)))
 
 
-def stream_events(video_source, cooldown_sec=COOLDOWN_SEC):
+def stream_events(video_source, cooldown_sec=COOLDOWN_SEC, still_ping_interval_sec=STILL_PING_INTERVAL_SEC):
     """
     Reads video_source sequentially -- a finished file today, a live
     camera/RTSP URL tomorrow, cv.VideoCapture treats both identically --
     and yields one event dict per motion burst start/continuation
-    ("candidate") or end ("burst_end"), as soon as it's found. Never
+    ("candidate", trigger "motion"), a coarse check-in during sustained
+    stillness ("candidate", trigger "still_ping"), or a burst end. Never
     assumes a known total length, so the same loop works unchanged for a
     finished file or a feed that never ends.
     """
@@ -40,7 +42,11 @@ def stream_events(video_source, cooldown_sec=COOLDOWN_SEC):
     sample_every = max(1, int(fps * SAMPLE_INTERVAL_SEC))
 
     detector = FrameDiffDetector(use_contours=True)
-    queue = CandidateFrameQueue(detector, cooldown_sec=cooldown_sec)
+    queue = CandidateFrameQueue(
+        detector,
+        cooldown_sec=cooldown_sec,
+        still_ping_interval_sec=still_ping_interval_sec,
+    )
 
     frame_index = 0
     try:
@@ -84,14 +90,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("video_path", nargs="?", default=str(DEFAULT_VIDEO))
     parser.add_argument("--cooldown", type=float, default=COOLDOWN_SEC)
+    parser.add_argument("--still-ping-interval", type=float, default=STILL_PING_INTERVAL_SEC)
     args = parser.parse_args()
 
     out_dir = EVENTS_DIR / Path(args.video_path).stem
 
     counts = {"candidate": 0, "burst_end": 0}
-    for event in stream_events(args.video_path, cooldown_sec=args.cooldown):
+    for event in stream_events(
+        args.video_path,
+        cooldown_sec=args.cooldown,
+        still_ping_interval_sec=args.still_ping_interval,
+    ):
         persist_event(event, out_dir)
         counts[event["kind"]] += 1
-        print(f"{event['kind']}: frame {event['frame_index']} @ {event['timestamp']:.2f}s")
+        trigger = f" ({event['trigger']})" if event["kind"] == "candidate" else ""
+        print(f"{event['kind']}{trigger}: frame {event['frame_index']} @ {event['timestamp']:.2f}s")
 
     print(f"{counts['candidate']} candidate(s), {counts['burst_end']} burst_end(s) written to {out_dir}")
