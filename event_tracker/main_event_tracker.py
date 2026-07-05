@@ -1,16 +1,53 @@
-from timeline_exporter import generate_timeline
-
-INPUT_JSON = r"PawPrints/jsons/qwen.json"
-
-OUTPUT_JSON = r"PawPrints/jsons/timeline_qwen.json"
+import sys
+from pathlib import Path
 
 
-timeline = generate_timeline(
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if __package__ in (None, ""):
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-    input_file=INPUT_JSON,
+from event_tracker.event_pipeline import run_event_pipeline
 
-    output_file=OUTPUT_JSON
+INPUT_MODE = "cloud"
+INPUT_OPTIONS = {
+    "local": PROJECT_ROOT / "jsons" / "qwen.json",
+    "cloud": PROJECT_ROOT / "jsons" / "gemini.json",
+}
+OUTPUT_OPTIONS = {
+    "local": PROJECT_ROOT / "jsons" / "final_timeline_qwen.json",
+    "cloud": PROJECT_ROOT / "jsons" / "final_timeline_gemini.json",
+}
 
-)
 
-print(f"Frames in timeline: {len(timeline)}")
+def get_input_json(input_mode):
+    try:
+        return INPUT_OPTIONS[input_mode]
+    except KeyError as error:
+        valid_modes = ", ".join(sorted(INPUT_OPTIONS))
+        raise ValueError(
+            f"Unknown input mode '{input_mode}'. Use one of: {valid_modes}."
+        ) from error
+
+
+def get_output_json(input_mode):
+    try:
+        return OUTPUT_OPTIONS[input_mode]
+    except KeyError as error:
+        valid_modes = ", ".join(sorted(OUTPUT_OPTIONS))
+        raise ValueError(
+            f"Unknown output mode '{input_mode}'. Use one of: {valid_modes}."
+        ) from error
+
+
+def main():
+    input_json = get_input_json(INPUT_MODE)
+    output_json = get_output_json(INPUT_MODE)
+    final_events = run_event_pipeline(input_json, output_json)
+    print(f"Input mode: {INPUT_MODE}")
+    print(f"Input JSON: {input_json}")
+    print(f"Generated {len(final_events)} events")
+    print(output_json)
+
+
+if __name__ == "__main__":
+    main()
