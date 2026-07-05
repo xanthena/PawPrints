@@ -8,27 +8,49 @@ import model_router
 EVENTS_DIR = DATA_DIR / "events"
 
 
-def load_candidates(video_stem):
-    """Read events.jsonl for video_stem and keep only vision-bound candidates
-    -- burst_end markers have no frame and cost nothing, so they're skipped
-    here rather than sent to the model."""
+def load_events(video_stem):
     events_path = EVENTS_DIR / video_stem / "events.jsonl"
 
     with events_path.open("r", encoding="utf-8") as f:
-        events = [json.loads(line) for line in f if line.strip()]
+        return [json.loads(line) for line in f if line.strip()]
 
-    return [event for event in events if event["kind"] == "candidate"]
+
+def compute_end_time(all_events, index):
+    """
+    Motion candidates end when the burst containing them ends (the next
+    burst_end in the stream) -- exact, and free since it costs no extra
+    vision-model call. Still-ping candidates end when the next event of
+    any kind begins, i.e. "still going as of then." Either way, if
+    nothing follows (the feed ended first), end_time falls back to the
+    candidate's own timestamp -- duration 0, rather than guessing how
+    long an unclosed event ran.
+    """
+    candidate = all_events[index]
+
+    if candidate["trigger"] == "motion":
+        for event in all_events[index + 1:]:
+            if event["kind"] == "burst_end":
+                return event["timestamp"]
+        return candidate["timestamp"]
+
+    if index + 1 < len(all_events):
+        return all_events[index + 1]["timestamp"]
+    return candidate["timestamp"]
 
 
 def run(video_stem, preferred_model=None):
     """preferred_model overrides VISION_MODEL_PREFERENCE for this run --
     this is the hook a future API/UI toggle would call through."""
-    candidates = load_candidates(video_stem)
+    all_events = load_events(video_stem)
     results = []
 
-    for candidate in candidates:
-        frame_path = candidate["frame_path"]
-        print(f"Analyzing candidate: {Path(frame_path).name} (trigger={candidate['trigger']})")
+    for index, event in enumerate(all_events):
+        if event["kind"] != "candidate":
+            continue
+
+        frame_path = event["frame_path"]
+        end_time = compute_end_time(all_events, index)
+        print(f"Analyzing candidate: {Path(frame_path).name} (trigger={event['trigger']})")
 
         outcome = model_router.analyze(frame_path, allowed_dir=str(FRAMES_DIR), preferred=preferred_model)
         raw_output = outcome["output"]
@@ -43,8 +65,9 @@ def run(video_stem, preferred_model=None):
 
         results.append({
             "frame": Path(frame_path).name,
-            "timestamp": candidate["timestamp"],
-            "frame_number": candidate["frame_index"],
+            "timestamp": event["timestamp"],
+            "end_time": end_time,
+            "frame_number": event["frame_index"],
             "result": result,
             "model_used": outcome["model_used"],
             "fell_back": outcome["fell_back"],
