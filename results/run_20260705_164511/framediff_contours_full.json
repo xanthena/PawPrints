@@ -1,0 +1,210 @@
+[
+  {
+    "frame_index": 0,
+    "timestamp": 0.0,
+    "elapsed": 0.002150700000000061,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": null
+  },
+  {
+    "frame_index": 14,
+    "timestamp": 0.4827586206896552,
+    "elapsed": 0.005489400000000089,
+    "motion": true,
+    "changed_area": 173666,
+    "num_contours": 5
+  },
+  {
+    "frame_index": 28,
+    "timestamp": 0.9655172413793104,
+    "elapsed": 0.005519800000000075,
+    "motion": true,
+    "changed_area": 169724,
+    "num_contours": 3
+  },
+  {
+    "frame_index": 42,
+    "timestamp": 1.4482758620689655,
+    "elapsed": 0.004639099999999896,
+    "motion": true,
+    "changed_area": 15916,
+    "num_contours": 1
+  },
+  {
+    "frame_index": 56,
+    "timestamp": 1.9310344827586208,
+    "elapsed": 0.00473990000000013,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 70,
+    "timestamp": 2.413793103448276,
+    "elapsed": 0.007475799999999921,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 84,
+    "timestamp": 2.896551724137931,
+    "elapsed": 0.006054600000000132,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 98,
+    "timestamp": 3.3793103448275863,
+    "elapsed": 0.006280400000000075,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 112,
+    "timestamp": 3.8620689655172415,
+    "elapsed": 0.005543000000000298,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 126,
+    "timestamp": 4.344827586206897,
+    "elapsed": 0.00476130000000019,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 140,
+    "timestamp": 4.827586206896552,
+    "elapsed": 0.01037829999999973,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 154,
+    "timestamp": 5.310344827586207,
+    "elapsed": 0.0053867000000003,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 168,
+    "timestamp": 5.793103448275862,
+    "elapsed": 0.004803700000000077,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 182,
+    "timestamp": 6.275862068965517,
+    "elapsed": 0.006296700000000044,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 196,
+    "timestamp": 6.758620689655173,
+    "elapsed": 0.004834299999999736,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 210,
+    "timestamp": 7.241379310344827,
+    "elapsed": 0.004503399999999935,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 224,
+    "timestamp": 7.724137931034483,
+    "elapsed": 0.004423999999999317,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 238,
+    "timestamp": 8.206896551724139,
+    "elapsed": 0.005096899999999849,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 252,
+    "timestamp": 8.689655172413794,
+    "elapsed": 0.0039351999999999165,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 266,
+    "timestamp": 9.172413793103448,
+    "elapsed": 0.004647600000000196,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 280,
+    "timestamp": 9.655172413793103,
+    "elapsed": 0.005156999999999634,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 294,
+    "timestamp": 10.137931034482758,
+    "elapsed": 0.0055688000000007065,
+    "motion": false,
+    "changed_area": 0,
+    "num_contours": 0
+  },
+  {
+    "frame_index": 308,
+    "timestamp": 10.620689655172415,
+    "elapsed": 0.00435590000000019,
+    "motion": true,
+    "changed_area": 12817,
+    "num_contours": 1
+  },
+  {
+    "frame_index": 322,
+    "timestamp": 11.10344827586207,
+    "elapsed": 0.004760399999999443,
+    "motion": true,
+    "changed_area": 338254,
+    "num_contours": 5
+  },
+  {
+    "frame_index": 336,
+    "timestamp": 11.586206896551724,
+    "elapsed": 0.006180900000000378,
+    "motion": true,
+    "changed_area": 362638,
+    "num_contours": 4
+  },
+  {
+    "frame_index": 350,
+    "timestamp": 12.068965517241379,
+    "elapsed": 0.005185400000000229,
+    "motion": true,
+    "changed_area": 28982,
+    "num_contours": 2
+  }
+]

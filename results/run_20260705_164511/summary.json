@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "video_path": "C:\\Users\\yashn\\Desktop\\PawPrints - HackTheKitty Hackathon\\data\\cat_inbag.mp4",
+    "fps": 29,
+    "total_run_time_sec": 6.4393839,
+    "frames_dir": "C:\\Users\\yashn\\Desktop\\PawPrints - HackTheKitty Hackathon\\data\\frames\\cat_inbag"
+  },
+  "framediff_full": {
+    "motion_flagged_frames": 23,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.0043070384615384255
+  },
+  "framediff_contours_full": {
+    "motion_flagged_frames": 7,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.005314200000000021
+  },
+  "mog2_full": {
+    "motion_flagged_frames": 21,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.044378288461538414
+  },
+  "mog2_contours_full": {
+    "motion_flagged_frames": 16,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.06169646153846158
+  },
+  "framediff_small": {
+    "motion_flagged_frames": 9,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.0005405153846152861
+  },
+  "framediff_contours_small": {
+    "motion_flagged_frames": 7,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.0005050346153845791
+  },
+  "mog2_small": {
+    "motion_flagged_frames": 21,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.0028112038461538622
+  },
+  "mog2_contours_small": {
+    "motion_flagged_frames": 16,
+    "sampled_frames": 26,
+    "avg_processing_time_sec": 0.006537534615384695
+  }
+}

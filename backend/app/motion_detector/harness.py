@@ -11,6 +11,7 @@ from .mog2 import MOG2Detector
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RESULTS_DIR = REPO_ROOT / "results"
+FRAMES_DIR = REPO_ROOT / "data" / "frames"
 DEFAULT_VIDEO = REPO_ROOT / "data" / "cat_inbag.mp4"
 
 SMALL_WIDTH = 320
@@ -36,7 +37,7 @@ def resize_keep_aspect(frame, target_width=SMALL_WIDTH):
     return cv.resize(frame, (target_width, int(h * scale)))
 
 
-def run(video_path):
+def run(video_path, save_frames=False):
     vid = cv.VideoCapture(str(video_path))
     if not vid.isOpened():
         raise RuntimeError(f"Could not open video: {video_path}")
@@ -46,6 +47,11 @@ def run(video_path):
 
     detectors = build_detectors()
     logs = {name: [] for name in detectors}
+
+    frames_dir = None
+    if save_frames:
+        frames_dir = FRAMES_DIR / Path(video_path).stem
+        frames_dir.mkdir(parents=True, exist_ok=True)
 
     frame_index = 0
     run_start = time.perf_counter()
@@ -61,6 +67,9 @@ def run(video_path):
 
         timestamp = frame_index / fps
         small_frame = resize_keep_aspect(frame)
+
+        if frames_dir is not None:
+            cv.imwrite(str(frames_dir / f"frame_{frame_index}.jpg"), frame)
 
         for name, detector in detectors.items():
             target_frame = small_frame if name.endswith("_small") else frame
@@ -82,6 +91,8 @@ def run(video_path):
     vid.release()
 
     meta = {"video_path": str(video_path), "fps": fps, "total_run_time_sec": total_run_time}
+    if frames_dir is not None:
+        meta["frames_dir"] = str(frames_dir)
     return logs, meta
 
 
@@ -113,9 +124,10 @@ def write_results(logs, meta):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("video_path", nargs="?", default=str(DEFAULT_VIDEO))
+    parser.add_argument("--save-frames", action="store_true", help="save each sampled frame as a jpg for visual inspection")
     args = parser.parse_args()
 
-    logs, meta = run(args.video_path)
+    logs, meta = run(args.video_path, save_frames=args.save_frames)
     run_dir, summary = write_results(logs, meta)
 
     print(f"Results written to {run_dir}")
