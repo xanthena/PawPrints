@@ -1,1 +1,3 @@
 cat-videos.zip
+__pycache__/
+*.pyc
