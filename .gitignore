@@ -17,3 +17,4 @@ frontend/build/
 # generated data (not source)
 data/frames/*
 !data/frames/.gitkeep
+data/*.mp4
