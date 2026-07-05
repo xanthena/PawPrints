@@ -3,13 +3,14 @@ import ollama
 
 from prompt import SYSTEM_PROMPT
 from image_validation import validate_image_path
+from config import OLLAMA_MODEL
 
 
 def analyze(image_path: str, allowed_dir: str) -> str:
     image = validate_image_path(image_path, allowed_dir)
 
     print("\n" + "=" * 60)
-    print("Qwen Analysis Started")
+    print(f"Ollama Analysis Started ({OLLAMA_MODEL})")
     print("=" * 60)
 
     print(f"Image : {image.name}")
@@ -21,7 +22,7 @@ def analyze(image_path: str, allowed_dir: str) -> str:
 
     response = ollama.chat(
 
-        model="qwen2.5vl:3b",
+        model=OLLAMA_MODEL,
         options={
             "num_ctx": 8192
         },
