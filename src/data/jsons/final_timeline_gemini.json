@@ -1,0 +1,712 @@
+[
+    {
+        "event_id": 1,
+        "activity": "sleeping",
+        "start_time": 0.0,
+        "end_time": 4.0,
+        "duration": 4.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_000120_4.00s.jpg",
+        "objects": [
+            "cat",
+            "chair",
+            "cushion"
+        ],
+        "interaction": "resting on chair",
+        "summary": "A tabby and white cat is peacefully sleeping on an orange cushion on a wooden chair.",
+        "clip_start": 0.0,
+        "clip_end": 9.0
+    },
+    {
+        "event_id": 2,
+        "activity": "drinking",
+        "start_time": 8.0,
+        "end_time": 12.0,
+        "duration": 4.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_000360_12.00s.jpg",
+        "objects": [
+            "cat",
+            "bowl",
+            "liquid"
+        ],
+        "interaction": "bowl",
+        "summary": "An orange kitten is drinking liquid from a white bowl with a floral design.",
+        "clip_start": 3.0,
+        "clip_end": 17.0
+    },
+    {
+        "event_id": 3,
+        "activity": "observing_liquid",
+        "start_time": 16.0,
+        "end_time": 16.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_000480_16.00s.jpg",
+        "objects": [
+            "cat",
+            "bowl",
+            "liquid"
+        ],
+        "interaction": "bowl",
+        "summary": "An orange kitten is attentively observing a white bowl filled with liquid, appearing ready to drink.",
+        "clip_start": 11.0,
+        "clip_end": 21.0
+    },
+    {
+        "event_id": 4,
+        "activity": "eating",
+        "start_time": 20.0,
+        "end_time": 28.0,
+        "duration": 8.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_000840_28.00s.jpg",
+        "objects": [
+            "cat",
+            "bowl",
+            "pet food"
+        ],
+        "interaction": "bowl",
+        "summary": "Two cats are eating from separate bowls, a black cat from a pink bowl and a grey cat in the background.",
+        "clip_start": 15.0,
+        "clip_end": 33.0
+    },
+    {
+        "event_id": 5,
+        "activity": "resting,_observing",
+        "start_time": 32.0,
+        "end_time": 32.0,
+        "duration": 0.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_000960_32.00s.jpg",
+        "objects": [
+            "cat",
+            "carpet",
+            "heater"
+        ],
+        "interaction": "other_cat",
+        "summary": "Two cats are resting on a sunlit carpet, appearing to observe each other.",
+        "clip_start": 27.0,
+        "clip_end": 37.0
+    },
+    {
+        "event_id": 6,
+        "activity": "watching",
+        "start_time": 36.0,
+        "end_time": 36.0,
+        "duration": 0.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_001080_36.00s.jpg",
+        "objects": [
+            "cat",
+            "heater",
+            "carpet"
+        ],
+        "interaction": "mutual observation",
+        "summary": "A white cat is resting on a sunlit carpet, observing a standing tabby cat with a heater nearby.",
+        "clip_start": 31.0,
+        "clip_end": 41.0
+    },
+    {
+        "event_id": 7,
+        "activity": "grooming",
+        "start_time": 40.0,
+        "end_time": 40.0,
+        "duration": 0.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_001200_40.00s.jpg",
+        "objects": [
+            "cat",
+            "blanket",
+            "furniture"
+        ],
+        "interaction": "none",
+        "summary": "A black and white cat is grooming its paw while resting on a blanket, with another cat sleeping in the background.",
+        "clip_start": 35.0,
+        "clip_end": 45.0
+    },
+    {
+        "event_id": 8,
+        "activity": "sleeping",
+        "start_time": 44.0,
+        "end_time": 44.0,
+        "duration": 0.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_001320_44.00s.jpg",
+        "objects": [
+            "cat",
+            "blanket"
+        ],
+        "interaction": "proximity",
+        "summary": "Two cats are resting peacefully on a blanket, with a black and white cat in the foreground looking relaxed, and another cat sleeping in the background.",
+        "clip_start": 39.0,
+        "clip_end": 49.0
+    },
+    {
+        "event_id": 9,
+        "activity": "grooming,_sleeping",
+        "start_time": 48.0,
+        "end_time": 48.0,
+        "duration": 0.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_001440_48.00s.jpg",
+        "objects": [
+            "cat",
+            "blanket"
+        ],
+        "interaction": "none",
+        "summary": "One white and black cat is actively grooming its paw with its eyes closed, while a second calico cat rests peacefully in the background on a patterned blanket.",
+        "clip_start": 43.0,
+        "clip_end": 53.0
+    },
+    {
+        "event_id": 10,
+        "activity": "sleeping",
+        "start_time": 52.0,
+        "end_time": 56.0,
+        "duration": 4.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_001680_56.00s.jpg",
+        "objects": [
+            "cat",
+            "blanket"
+        ],
+        "interaction": "none",
+        "summary": "Two cats are sleeping together on a patterned blanket.",
+        "clip_start": 47.0,
+        "clip_end": 61.0
+    },
+    {
+        "event_id": 11,
+        "activity": "playing",
+        "start_time": 60.0,
+        "end_time": 60.0,
+        "duration": 0.0,
+        "importance": 12,
+        "thumbnail_frame": "frame_001800_60.00s.jpg",
+        "objects": [
+            "cat",
+            "box"
+        ],
+        "interaction": "cat interacting with a box",
+        "summary": "A cat is partially visible on the right, playing with a decorative box on a tiled floor.",
+        "clip_start": 55.0,
+        "clip_end": 65.0
+    },
+    {
+        "event_id": 12,
+        "activity": "looking_out",
+        "start_time": 68.0,
+        "end_time": 68.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_002040_68.00s.jpg",
+        "objects": [
+            "cat",
+            "box",
+            "floor"
+        ],
+        "interaction": "with object",
+        "summary": "A tabby cat is peeking its head out of a decorative floral box on a tiled floor.",
+        "clip_start": 63.0,
+        "clip_end": 73.0
+    },
+    {
+        "event_id": 13,
+        "activity": "exploring",
+        "start_time": 72.0,
+        "end_time": 72.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_002160_72.00s.jpg",
+        "objects": [
+            "cat",
+            "piano",
+            "lamp",
+            "plant",
+            "stool"
+        ],
+        "interaction": "piano",
+        "summary": "A white cat is perched on a black piano, curiously looking down near a lamp in a cozy room with several potted plants.",
+        "clip_start": 67.0,
+        "clip_end": 77.0
+    },
+    {
+        "event_id": 14,
+        "activity": "walking",
+        "start_time": 76.0,
+        "end_time": 76.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_002280_76.00s.jpg",
+        "objects": [
+            "cat",
+            "piano",
+            "stool",
+            "potted plants",
+            "rug",
+            "wooden floor"
+        ],
+        "interaction": "none",
+        "summary": "A white cat is walking on a wooden floor near a round stool and a black piano, in a room featuring several potted plants.",
+        "clip_start": 71.0,
+        "clip_end": 81.0
+    },
+    {
+        "event_id": 15,
+        "activity": "sleeping",
+        "start_time": 80.0,
+        "end_time": 80.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_002400_80.00s.jpg",
+        "objects": [
+            "cat",
+            "bench",
+            "tree",
+            "leaves"
+        ],
+        "interaction": "none",
+        "summary": "A fluffy tabby cat is sleeping curled up on a wooden park bench in an outdoor setting with fallen autumn leaves.",
+        "clip_start": 75.0,
+        "clip_end": 85.0
+    },
+    {
+        "event_id": 16,
+        "activity": "sitting",
+        "start_time": 84.0,
+        "end_time": 84.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_002520_84.00s.jpg",
+        "objects": [
+            "cat",
+            "bench",
+            "tree",
+            "leaves"
+        ],
+        "interaction": "none",
+        "summary": "A fluffy tabby cat is sitting on a wooden bench outdoors amidst fallen leaves, looking intently to its side.",
+        "clip_start": 79.0,
+        "clip_end": 89.0
+    },
+    {
+        "event_id": 17,
+        "activity": "sleeping",
+        "start_time": 88.0,
+        "end_time": 88.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_002640_88.00s.jpg",
+        "objects": [
+            "cat",
+            "sofa",
+            "coffee table",
+            "plant"
+        ],
+        "interaction": "",
+        "summary": "A black cat is resting on a grey sofa in a living room with a cat scratcher nearby.",
+        "clip_start": 83.0,
+        "clip_end": 93.0
+    },
+    {
+        "event_id": 18,
+        "activity": "looking_at_camera",
+        "start_time": 92.0,
+        "end_time": 92.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_002760_92.00s.jpg",
+        "objects": [
+            "dog",
+            "couch",
+            "plant",
+            "picture frame",
+            "dresser",
+            "pet bed"
+        ],
+        "interaction": "the pet is looking directly into the camera, likely sniffing or investigating it",
+        "summary": "A dog's head is very close to the camera, appearing to investigate it, while a living room with furniture and a plant is visible in the background.",
+        "clip_start": 87.0,
+        "clip_end": 97.0
+    },
+    {
+        "event_id": 19,
+        "activity": "sniffing_camera",
+        "start_time": 96.0,
+        "end_time": 96.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_002880_96.00s.jpg",
+        "objects": [
+            "cat",
+            "houseplant",
+            "lamp",
+            "furniture"
+        ],
+        "interaction": "interacting with camera",
+        "summary": "A curious cat is very close to the camera, appearing to sniff it, with a houseplant and lamp visible in the background.",
+        "clip_start": 91.0,
+        "clip_end": 101.0
+    },
+    {
+        "event_id": 20,
+        "activity": "approaching_camera",
+        "start_time": 100.0,
+        "end_time": 100.0,
+        "duration": 0.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_003000_100.00s.jpg",
+        "objects": [
+            "cat",
+            "sofa",
+            "coffee table",
+            "houseplant",
+            "simplisafe logo"
+        ],
+        "interaction": "cat interacting with camera",
+        "summary": "An orange cat is very close to the CCTV camera, potentially investigating it, while a black cat is resting on the sofa in the living room.",
+        "clip_start": 95.0,
+        "clip_end": 105.0
+    },
+    {
+        "event_id": 21,
+        "activity": "sleeping",
+        "start_time": 104.0,
+        "end_time": 124.0,
+        "duration": 20.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_003720_124.00s.jpg",
+        "objects": [
+            "cat",
+            "sofa",
+            "plant",
+            "coffee table",
+            "pet bed",
+            "picture frame",
+            "lamp",
+            "door",
+            "bed",
+            "sheet"
+        ],
+        "interaction": "camera interaction",
+        "summary": "An orange tabby cat is peacefully sleeping, curled up on a white bed with blue patterned sheets.",
+        "clip_start": 99.0,
+        "clip_end": 129.0
+    },
+    {
+        "event_id": 22,
+        "activity": "watching",
+        "start_time": 128.0,
+        "end_time": 128.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_003840_128.00s.jpg",
+        "objects": [
+            "cat",
+            "ball",
+            "furniture",
+            "tiled floor"
+        ],
+        "interaction": "none",
+        "summary": "A small tabby kitten is sitting on a tiled floor under a wooden cabinet, looking intently to the left, with a colorful toy ball nearby.",
+        "clip_start": 123.0,
+        "clip_end": 133.0
+    },
+    {
+        "event_id": 23,
+        "activity": "walking",
+        "start_time": 132.0,
+        "end_time": 132.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_003960_132.00s.jpg",
+        "objects": [
+            "cat",
+            "ball",
+            "furniture",
+            "floor"
+        ],
+        "interaction": "toy",
+        "summary": "A small tabby kitten is walking towards a colorful toy on a tiled floor near wooden furniture, with sunlight casting shadows.",
+        "clip_start": 127.0,
+        "clip_end": 137.0
+    },
+    {
+        "event_id": 24,
+        "activity": "playing",
+        "start_time": 136.0,
+        "end_time": 148.0,
+        "duration": 12.0,
+        "importance": 13,
+        "thumbnail_frame": "frame_004320_144.00s.jpg",
+        "objects": [
+            "cat",
+            "toy",
+            "paper",
+            "ball",
+            "floor",
+            "cardboard box",
+            "blanket",
+            "newspaper",
+            "fabric"
+        ],
+        "interaction": "toy",
+        "summary": "A small tabby kitten is actively playing with a red and orange ball attached to a multi-colored rope toy on a light-colored floor.",
+        "clip_start": 131.0,
+        "clip_end": 153.0
+    },
+    {
+        "event_id": 25,
+        "activity": "watching",
+        "start_time": 152.0,
+        "end_time": 152.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_004560_152.00s.jpg",
+        "objects": [
+            "cat",
+            "toy",
+            "cardboard box",
+            "newspaper"
+        ],
+        "interaction": "toy",
+        "summary": "A kitten is attentively observing its colorful tennis ball and rope toys on a tiled floor.",
+        "clip_start": 147.0,
+        "clip_end": 157.0
+    },
+    {
+        "event_id": 26,
+        "activity": "standing",
+        "start_time": 156.0,
+        "end_time": 156.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_004680_156.00s.jpg",
+        "objects": [
+            "cat",
+            "toy",
+            "furniture",
+            "cardboard box"
+        ],
+        "interaction": "toy",
+        "summary": "A small tabby kitten stands on a tiled floor near an orange ball and a braided rope toy, looking alertly at its surroundings.",
+        "clip_start": 151.0,
+        "clip_end": 161.0
+    },
+    {
+        "event_id": 27,
+        "activity": "sitting",
+        "start_time": 160.0,
+        "end_time": 160.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_004800_160.00s.jpg",
+        "objects": [
+            "cat",
+            "toy",
+            "furniture",
+            "newspaper",
+            "box with fabric"
+        ],
+        "interaction": "looking at camera",
+        "summary": "A small striped kitten is sitting on a tiled floor next to its red and orange ball and rope toys, looking directly at the camera.",
+        "clip_start": 155.0,
+        "clip_end": 165.0
+    },
+    {
+        "event_id": 28,
+        "activity": "watching",
+        "start_time": 164.0,
+        "end_time": 176.0,
+        "duration": 12.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_005280_176.00s.jpg",
+        "objects": [
+            "cat",
+            "ball",
+            "toy",
+            "newspaper",
+            "cardboard box",
+            "furniture",
+            "window",
+            "balcony",
+            "table"
+        ],
+        "interaction": "none",
+        "summary": "A domestic short-haired cat with white and tabby markings is intently observing something near a window.",
+        "clip_start": 159.0,
+        "clip_end": 181.0
+    },
+    {
+        "event_id": 29,
+        "activity": "looking_out",
+        "start_time": 180.0,
+        "end_time": 180.0,
+        "duration": 0.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_005400_180.00s.jpg",
+        "objects": [
+            "cat",
+            "window"
+        ],
+        "interaction": "",
+        "summary": "A white and brown tabby cat is looking intently out a window, observing its surroundings.",
+        "clip_start": 175.0,
+        "clip_end": 185.0
+    },
+    {
+        "event_id": 30,
+        "activity": "observing_outside",
+        "start_time": 184.0,
+        "end_time": 184.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_005520_184.00s.jpg",
+        "objects": [
+            "cat",
+            "window",
+            "table"
+        ],
+        "interaction": "none",
+        "summary": "A domestic cat with white and tabby markings is intently observing the outdoors through a window from a tabletop.",
+        "clip_start": 179.0,
+        "clip_end": 189.0
+    },
+    {
+        "event_id": 31,
+        "activity": "looking_out",
+        "start_time": 188.0,
+        "end_time": 192.0,
+        "duration": 4.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_005760_192.00s.jpg",
+        "objects": [
+            "cat",
+            "window",
+            "balcony",
+            "building",
+            "table surface"
+        ],
+        "interaction": "watching outside",
+        "summary": "A tabby and white cat is perched on a patterned surface, intently looking out a window at a balcony and buildings under a cloudy sky.",
+        "clip_start": 183.0,
+        "clip_end": 197.0
+    },
+    {
+        "event_id": 32,
+        "activity": "watching",
+        "start_time": 196.0,
+        "end_time": 200.0,
+        "duration": 4.0,
+        "importance": 3,
+        "thumbnail_frame": "frame_006000_200.00s.jpg",
+        "objects": [
+            "cat",
+            "window",
+            "balcony",
+            "building",
+            "table",
+            "outdoor view"
+        ],
+        "interaction": "none",
+        "summary": "A domestic shorthair cat is sitting on a table, intently observing the outdoor environment through a large window.",
+        "clip_start": 191.0,
+        "clip_end": 205.0
+    },
+    {
+        "event_id": 33,
+        "activity": "looking_out",
+        "start_time": 204.0,
+        "end_time": 204.0,
+        "duration": 0.0,
+        "importance": 7,
+        "thumbnail_frame": "frame_006120_204.00s.jpg",
+        "objects": [
+            "cat",
+            "window",
+            "ledge"
+        ],
+        "interaction": "none",
+        "summary": "A domestic short-haired cat is perched on a ledge, intently looking out a window towards the outdoor environment.",
+        "clip_start": 199.0,
+        "clip_end": 209.0
+    },
+    {
+        "event_id": 34,
+        "activity": "watching",
+        "start_time": 208.0,
+        "end_time": 208.0,
+        "duration": 0.0,
+        "importance": 7,
+        "thumbnail_frame": "frame_006240_208.00s.jpg",
+        "objects": [
+            "cat",
+            "window",
+            "outside"
+        ],
+        "interaction": "looking at view",
+        "summary": "A domestic short-haired cat is sitting attentively on a ledge by a window, looking out at the buildings and sky beyond.",
+        "clip_start": 203.0,
+        "clip_end": 213.0
+    },
+    {
+        "event_id": 35,
+        "activity": "playing",
+        "start_time": 212.0,
+        "end_time": 212.0,
+        "duration": 0.0,
+        "importance": 12,
+        "thumbnail_frame": "frame_006360_212.00s.jpg",
+        "objects": [
+            "cat",
+            "person",
+            "toy",
+            "blanket",
+            "wooden floor"
+        ],
+        "interaction": "toy",
+        "summary": "A white cat is seen actively playing with a dangling mouse toy, held by a person's foot, on a wooden floor.",
+        "clip_start": 207.0,
+        "clip_end": 217.0
+    },
+    {
+        "event_id": 36,
+        "activity": "walking",
+        "start_time": 216.0,
+        "end_time": 216.0,
+        "duration": 0.0,
+        "importance": 4,
+        "thumbnail_frame": "frame_006480_216.00s.jpg",
+        "objects": [
+            "cat",
+            "wooden floor",
+            "bed",
+            "blanket",
+            "toy",
+            "socks"
+        ],
+        "interaction": "toy",
+        "summary": "A white cat is walking across a wooden floor, seemingly towards a dangling toy, with a bed and blue blanket visible in the background.",
+        "clip_start": 211.0,
+        "clip_end": 221.0
+    },
+    {
+        "event_id": 37,
+        "activity": "playing",
+        "start_time": 220.0,
+        "end_time": 220.0,
+        "duration": 0.0,
+        "importance": 12,
+        "thumbnail_frame": "frame_006600_220.00s.jpg",
+        "objects": [
+            "cat",
+            "toy",
+            "person"
+        ],
+        "interaction": "toy",
+        "summary": "A white cat is actively playing with a wand toy on a wooden floor, with a person's legs visible in the background.",
+        "clip_start": 215.0,
+        "clip_end": 225.0
+    }
+]
