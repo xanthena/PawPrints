@@ -1,6 +1,34 @@
 [
     {
-        "frame": "resized_frame_0.jpg",
+        "frame": "frame_000000_0.00s.jpg",
+        "timestamp": 0.0,
+        "frame_number": 0,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "chair",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "cushion",
+                    "confidence": 0.92
+                }
+            ],
+            "interaction": "resting on chair",
+            "summary": "A tabby and white cat is peacefully sleeping on an orange chair cushion."
+        }
+    },
+    {
+        "frame": "frame_000120_4.00s.jpg",
+        "timestamp": 4.0,
+        "frame_number": 120,
         "result": {
             "pet_detected": true,
             "activity": "sleeping",
@@ -16,42 +44,230 @@
                 },
                 {
                     "name": "cushion",
-                    "confidence": 0.92
-                }
-            ],
-            "interaction": "none",
-            "summary": "A cat is sleeping peacefully on a chair cushion."
-        }
-    },
-    {
-        "frame": "resized_frame_1200.jpg",
-        "result": {
-            "pet_detected": true,
-            "activity": "grooming",
-            "activity_confidence": 0.9,
-            "objects": [
-                {
-                    "name": "cat (black and white)",
-                    "confidence": 0.95
-                },
-                {
-                    "name": "cat (tortoiseshell)",
-                    "confidence": 0.8
-                },
-                {
-                    "name": "blanket",
                     "confidence": 0.9
                 }
             ],
-            "interaction": "resting near each other",
-            "summary": "One black and white cat is grooming on a blanket while another cat rests in the background."
+            "interaction": "resting on cushion",
+            "summary": "A tabby and white cat is peacefully sleeping on an orange cushion on a wooden chair."
         }
     },
     {
-        "frame": "resized_frame_1500.jpg",
+        "frame": "frame_000240_8.00s.jpg",
+        "timestamp": 8.0,
+        "frame_number": 240,
         "result": {
             "pet_detected": true,
-            "activity": "grooming",
+            "activity": "Drinking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Bowl",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Liquid",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "Pet drinking from bowl",
+            "summary": "An orange tabby kitten is drinking from a white bowl with liquid in it."
+        }
+    },
+    {
+        "frame": "frame_000360_12.00s.jpg",
+        "timestamp": 12.0,
+        "frame_number": 360,
+        "result": {
+            "pet_detected": true,
+            "activity": "drinking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "bowl",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "liquid",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "pet drinking from bowl",
+            "summary": "An orange kitten is drinking liquid from a white bowl with a floral design."
+        }
+    },
+    {
+        "frame": "frame_000480_16.00s.jpg",
+        "timestamp": 16.0,
+        "frame_number": 480,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing liquid",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "bowl",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "liquid",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "Kitten observing liquid in bowl",
+            "summary": "An orange kitten is attentively observing a white bowl filled with liquid, appearing ready to drink."
+        }
+    },
+    {
+        "frame": "frame_000600_20.00s.jpg",
+        "timestamp": 20.0,
+        "frame_number": 600,
+        "result": {
+            "pet_detected": true,
+            "activity": "Eating",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Food bowl",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Water bowl",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Cat food",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Cat (background)",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "One cat is eating from a bowl while another cat is nearby.",
+            "summary": "A black and white cat is eating from a pink food bowl with a blue water bowl nearby and another cat in the background."
+        }
+    },
+    {
+        "frame": "frame_000720_24.00s.jpg",
+        "timestamp": 24.0,
+        "frame_number": 720,
+        "result": {
+            "pet_detected": true,
+            "activity": "Eating",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "black cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "gray cat",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "pink food bowl",
+                    "confidence": 0.97
+                },
+                {
+                    "name": "blue water bowl",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "cat food",
+                    "confidence": 0.95
+                }
+            ],
+            "interaction": "Cat eating from bowl",
+            "summary": "A black cat is eating from a pink food bowl while another cat is partially visible in the background."
+        }
+    },
+    {
+        "frame": "frame_000840_28.00s.jpg",
+        "timestamp": 28.0,
+        "frame_number": 840,
+        "result": {
+            "pet_detected": true,
+            "activity": "Eating",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "black cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "grey cat",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "pink food bowl",
+                    "confidence": 0.97
+                },
+                {
+                    "name": "blue water bowl",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "pet food",
+                    "confidence": 0.92
+                }
+            ],
+            "interaction": "Feeding",
+            "summary": "Two cats are eating from separate bowls, a black cat from a pink bowl and a grey cat in the background."
+        }
+    },
+    {
+        "frame": "frame_000960_32.00s.jpg",
+        "timestamp": 32.0,
+        "frame_number": 960,
+        "result": {
+            "pet_detected": true,
+            "activity": "resting, observing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "white cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "tabby cat",
+                    "confidence": 0.97
+                },
+                {
+                    "name": "carpet",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "heater",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "observing each other",
+            "summary": "Two cats are resting on a sunlit carpet, appearing to observe each other."
+        }
+    },
+    {
+        "frame": "frame_001080_36.00s.jpg",
+        "timestamp": 36.0,
+        "frame_number": 1080,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing",
             "activity_confidence": 0.95,
             "objects": [
                 {
@@ -60,19 +276,159 @@
                 },
                 {
                     "name": "cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "heater",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "carpet",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "Mutual observation",
+            "summary": "A white cat is resting on a sunlit carpet, observing a standing tabby cat with a heater nearby."
+        }
+    },
+    {
+        "frame": "frame_001200_40.00s.jpg",
+        "timestamp": 40.0,
+        "frame_number": 1200,
+        "result": {
+            "pet_detected": true,
+            "activity": "Grooming",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat (black and white)",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Cat (calico)",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "Blanket",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Furniture",
                     "confidence": 0.7
+                }
+            ],
+            "interaction": "None",
+            "summary": "A black and white cat is grooming its paw while resting on a blanket, with another cat sleeping in the background."
+        }
+    },
+    {
+        "frame": "frame_001320_44.00s.jpg",
+        "timestamp": 44.0,
+        "frame_number": 1320,
+        "result": {
+            "pet_detected": true,
+            "activity": "resting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "cat",
+                    "confidence": 0.85
                 },
                 {
                     "name": "blanket",
                     "confidence": 0.9
                 }
             ],
-            "interaction": "resting together",
-            "summary": "A white and black cat grooms itself on a blanket while another cat rests nearby."
+            "interaction": "proximity",
+            "summary": "Two cats are resting peacefully on a blanket, with a black and white cat in the foreground looking relaxed, and another cat sleeping in the background."
         }
     },
     {
-        "frame": "resized_frame_1800.jpg",
+        "frame": "frame_001440_48.00s.jpg",
+        "timestamp": 48.0,
+        "frame_number": 1440,
+        "result": {
+            "pet_detected": true,
+            "activity": "Grooming, sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat (white and black)",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "cat (calico/tabby)",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "blanket",
+                    "confidence": 0.95
+                }
+            ],
+            "interaction": "None",
+            "summary": "One white and black cat is actively grooming its paw with its eyes closed, while a second calico cat rests peacefully in the background on a patterned blanket."
+        }
+    },
+    {
+        "frame": "frame_001560_52.00s.jpg",
+        "timestamp": 52.0,
+        "frame_number": 1560,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "cat",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "blanket",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "none",
+            "summary": "Two cats are sleeping peacefully on a textured blanket."
+        }
+    },
+    {
+        "frame": "frame_001680_56.00s.jpg",
+        "timestamp": 56.0,
+        "frame_number": 1680,
+        "result": {
+            "pet_detected": true,
+            "activity": "Sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Cat",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Blanket",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "Cuddling",
+            "summary": "Two cats are sleeping together on a patterned blanket."
+        }
+    },
+    {
+        "frame": "frame_001800_60.00s.jpg",
+        "timestamp": 60.0,
+        "frame_number": 1800,
         "result": {
             "pet_detected": true,
             "activity": "Playing",
@@ -87,15 +443,30 @@
                     "confidence": 0.95
                 }
             ],
-            "interaction": "Cat playing with a box",
-            "summary": "A cat is playing with a decorative box."
+            "interaction": "Cat interacting with a box",
+            "summary": "A cat is partially visible on the right, playing with a decorative box on a tiled floor."
         }
     },
     {
-        "frame": "resized_frame_2100.jpg",
+        "frame": "frame_001920_64.00s.jpg",
+        "timestamp": 64.0,
+        "frame_number": 1920,
+        "result": {
+            "pet_detected": false,
+            "activity": "",
+            "activity_confidence": 0.0,
+            "objects": [],
+            "interaction": "",
+            "summary": "No pet detected in the image."
+        }
+    },
+    {
+        "frame": "frame_002040_68.00s.jpg",
+        "timestamp": 68.0,
+        "frame_number": 2040,
         "result": {
             "pet_detected": true,
-            "activity": "Sitting",
+            "activity": "Peeking",
             "activity_confidence": 0.95,
             "objects": [
                 {
@@ -111,40 +482,324 @@
                     "confidence": 0.9
                 }
             ],
-            "interaction": "None",
-            "summary": "A cat is sitting inside a decorative box on a tiled floor."
+            "interaction": "With object",
+            "summary": "A tabby cat is peeking its head out of a decorative floral box on a tiled floor."
         }
     },
     {
-        "frame": "resized_frame_2400.jpg",
+        "frame": "frame_002160_72.00s.jpg",
+        "timestamp": 72.0,
+        "frame_number": 2160,
         "result": {
             "pet_detected": true,
-            "activity": "sleeping",
-            "activity_confidence": 0.95,
+            "activity": "Exploring",
+            "activity_confidence": 0.9,
             "objects": [
                 {
                     "name": "cat",
-                    "confidence": 0.98
+                    "confidence": 0.95
                 },
                 {
-                    "name": "bench",
-                    "confidence": 0.92
+                    "name": "piano",
+                    "confidence": 0.9
                 },
                 {
-                    "name": "tree",
+                    "name": "lamp",
                     "confidence": 0.85
                 },
                 {
-                    "name": "leaves",
-                    "confidence": 0.78
+                    "name": "plant",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "stool",
+                    "confidence": 0.75
                 }
             ],
-            "interaction": "none",
-            "summary": "A cat is sleeping on a wooden bench in an outdoor setting."
+            "interaction": "Cat is on top of the piano, looking down towards a lamp.",
+            "summary": "A white cat is perched on a black piano, curiously looking down near a lamp in a cozy room with several potted plants."
         }
     },
     {
-        "frame": "resized_frame_2700.jpg",
+        "frame": "frame_002280_76.00s.jpg",
+        "timestamp": 76.0,
+        "frame_number": 2280,
+        "result": {
+            "pet_detected": true,
+            "activity": "walking",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "piano",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "stool",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "potted plants",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "rug",
+                    "confidence": 0.7
+                },
+                {
+                    "name": "wooden floor",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "none",
+            "summary": "A white cat is walking on a wooden floor near a round stool and a black piano, in a room featuring several potted plants."
+        }
+    },
+    {
+        "frame": "frame_002400_80.00s.jpg",
+        "timestamp": 80.0,
+        "frame_number": 2400,
+        "result": {
+            "pet_detected": true,
+            "activity": "Sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Bench",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Tree",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Leaves",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "None",
+            "summary": "A fluffy tabby cat is sleeping curled up on a wooden park bench in an outdoor setting with fallen autumn leaves."
+        }
+    },
+    {
+        "frame": "frame_002520_84.00s.jpg",
+        "timestamp": 84.0,
+        "frame_number": 2520,
+        "result": {
+            "pet_detected": true,
+            "activity": "Sitting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "Bench",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Tree",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "Leaves",
+                    "confidence": 0.75
+                }
+            ],
+            "interaction": "none",
+            "summary": "A fluffy tabby cat is sitting on a wooden bench outdoors amidst fallen leaves, looking intently to its side."
+        }
+    },
+    {
+        "frame": "frame_002640_88.00s.jpg",
+        "timestamp": 88.0,
+        "frame_number": 2640,
+        "result": {
+            "pet_detected": true,
+            "activity": "Resting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Sofa",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Cat scratcher",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Coffee table",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Plant",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "",
+            "summary": "A black cat is resting on a grey sofa in a living room with a cat scratcher nearby."
+        }
+    },
+    {
+        "frame": "frame_002760_92.00s.jpg",
+        "timestamp": 92.0,
+        "frame_number": 2760,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking at camera",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "dog",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "couch",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "plant",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "picture frame",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "dresser",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "pet bed",
+                    "confidence": 0.75
+                }
+            ],
+            "interaction": "The pet is looking directly into the camera, likely sniffing or investigating it.",
+            "summary": "A dog's head is very close to the camera, appearing to investigate it, while a living room with furniture and a plant is visible in the background."
+        }
+    },
+    {
+        "frame": "frame_002880_96.00s.jpg",
+        "timestamp": 96.0,
+        "frame_number": 2880,
+        "result": {
+            "pet_detected": true,
+            "activity": "Sniffing camera",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Houseplant",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "Lamp",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "Furniture",
+                    "confidence": 0.75
+                }
+            ],
+            "interaction": "Interacting with camera",
+            "summary": "A curious cat is very close to the camera, appearing to sniff it, with a houseplant and lamp visible in the background."
+        }
+    },
+    {
+        "frame": "frame_003000_100.00s.jpg",
+        "timestamp": 100.0,
+        "frame_number": 3000,
+        "result": {
+            "pet_detected": true,
+            "activity": "Approaching camera",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Orange cat (foreground)",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Black cat (on sofa)",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Sofa",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Coffee table",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Houseplant",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "SimpliSafe logo",
+                    "confidence": 0.99
+                }
+            ],
+            "interaction": "Cat interacting with camera",
+            "summary": "An orange cat is very close to the CCTV camera, potentially investigating it, while a black cat is resting on the sofa in the living room."
+        }
+    },
+    {
+        "frame": "frame_003120_104.00s.jpg",
+        "timestamp": 104.0,
+        "frame_number": 3120,
+        "result": {
+            "pet_detected": true,
+            "activity": "resting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "black cat",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "cat paw",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "sofa",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "plant",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "coffee table",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "cat scratcher",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "camera interaction",
+            "summary": "A black cat is resting on the sofa in a living room while a cat's paw is prominently in the foreground, seemingly interacting with the camera."
+        }
+    },
+    {
+        "frame": "frame_003240_108.00s.jpg",
+        "timestamp": 108.0,
+        "frame_number": 3240,
         "result": {
             "pet_detected": true,
             "activity": "Resting",
@@ -167,116 +822,52 @@
                     "confidence": 0.85
                 },
                 {
-                    "name": "cat bed",
-                    "confidence": 0.8
+                    "name": "pet bed",
+                    "confidence": 0.7
                 },
                 {
                     "name": "picture frame",
-                    "confidence": 0.88
+                    "confidence": 0.8
                 },
                 {
                     "name": "lamp",
                     "confidence": 0.8
                 },
                 {
-                    "name": "throw pillow",
+                    "name": "door",
                     "confidence": 0.8
                 }
             ],
-            "interaction": "",
-            "summary": "A black cat is resting on the sofa in the living room."
+            "interaction": "None",
+            "summary": "A black cat is resting peacefully on a gray sofa in a living room."
         }
     },
     {
-        "frame": "resized_frame_300.jpg",
+        "frame": "frame_003360_112.00s.jpg",
+        "timestamp": 112.0,
+        "frame_number": 3360,
         "result": {
             "pet_detected": true,
-            "activity": "drinking",
+            "activity": "sleeping",
             "activity_confidence": 0.95,
             "objects": [
                 {
-                    "name": "kitten",
-                    "confidence": 0.98
-                },
-                {
-                    "name": "bowl",
-                    "confidence": 0.95
-                },
-                {
-                    "name": "liquid",
-                    "confidence": 0.9
-                }
-            ],
-            "interaction": "kitten drinking from bowl",
-            "summary": "A kitten is about to drink from a bowl."
-        }
-    },
-    {
-        "frame": "resized_frame_3000.jpg",
-        "result": {
-            "pet_detected": true,
-            "activity": "Observing camera",
-            "activity_confidence": 0.9,
-            "objects": [
-                {
-                    "name": "Orange cat",
-                    "confidence": 0.95
-                },
-                {
-                    "name": "Black cat",
-                    "confidence": 0.9
-                },
-                {
-                    "name": "Sofa",
-                    "confidence": 0.9
-                },
-                {
-                    "name": "Coffee table",
-                    "confidence": 0.85
-                },
-                {
-                    "name": "Plant",
-                    "confidence": 0.85
-                }
-            ],
-            "interaction": "Pet interacting with camera",
-            "summary": "An orange cat is observing the camera while a black cat rests on the sofa."
-        }
-    },
-    {
-        "frame": "resized_frame_3300.jpg",
-        "result": {
-            "pet_detected": true,
-            "activity": "resting",
-            "activity_confidence": 0.98,
-            "objects": [
-                {
                     "name": "cat",
-                    "confidence": 0.95
+                    "confidence": 0.99
                 },
                 {
-                    "name": "sofa",
+                    "name": "bed",
                     "confidence": 0.9
-                },
-                {
-                    "name": "plant",
-                    "confidence": 0.85
-                },
-                {
-                    "name": "coffee table",
-                    "confidence": 0.8
-                },
-                {
-                    "name": "scratching post",
-                    "confidence": 0.75
                 }
             ],
             "interaction": "none",
-            "summary": "A black cat is resting on the sofa in the living room."
+            "summary": "An orange cat is peacefully sleeping, curled up on a white bed."
         }
     },
     {
-        "frame": "resized_frame_3600.jpg",
+        "frame": "frame_003480_116.00s.jpg",
+        "timestamp": 116.0,
+        "frame_number": 3480,
         "result": {
             "pet_detected": true,
             "activity": "sleeping",
@@ -292,122 +883,150 @@
                 }
             ],
             "interaction": "",
-            "summary": "An orange cat is peacefully sleeping on a white bed."
+            "summary": "An orange cat is observed sleeping peacefully on a white bed sheet."
         }
     },
     {
-        "frame": "resized_frame_3900.jpg",
+        "frame": "frame_003600_120.00s.jpg",
+        "timestamp": 120.0,
+        "frame_number": 3600,
         "result": {
             "pet_detected": true,
-            "activity": "Observing",
-            "activity_confidence": 0.9,
-            "objects": [
-                {
-                    "name": "kitten",
-                    "confidence": 1.0
-                },
-                {
-                    "name": "tennis ball",
-                    "confidence": 0.9
-                },
-                {
-                    "name": "furniture",
-                    "confidence": 0.9
-                }
-            ],
-            "interaction": "The kitten is looking forward, observing its surroundings.",
-            "summary": "A small tabby kitten is sitting on the floor under furniture, observing its surroundings."
-        }
-    },
-    {
-        "frame": "resized_frame_4200.jpg",
-        "result": {
-            "pet_detected": true,
-            "activity": "Playing",
-            "activity_confidence": 0.9,
-            "objects": [
-                {
-                    "name": "kitten",
-                    "confidence": 0.95
-                },
-                {
-                    "name": "toy",
-                    "confidence": 0.9
-                },
-                {
-                    "name": "cardboard box",
-                    "confidence": 0.7
-                },
-                {
-                    "name": "textiles",
-                    "confidence": 0.6
-                },
-                {
-                    "name": "wooden furniture",
-                    "confidence": 0.6
-                }
-            ],
-            "interaction": "Kitten interacting with toy",
-            "summary": "A kitten is playing with a toy on the floor."
-        }
-    },
-    {
-        "frame": "resized_frame_4500.jpg",
-        "result": {
-            "pet_detected": true,
-            "activity": "Observing",
-            "activity_confidence": 0.95,
+            "activity": "sleeping",
+            "activity_confidence": 1.0,
             "objects": [
                 {
                     "name": "cat",
-                    "confidence": 0.98
+                    "confidence": 1.0
                 },
                 {
-                    "name": "pet toy",
+                    "name": "bed",
                     "confidence": 0.95
-                },
-                {
-                    "name": "floor",
-                    "confidence": 0.9
-                },
-                {
-                    "name": "furniture",
-                    "confidence": 0.85
                 }
             ],
-            "interaction": "Observing toy",
-            "summary": "A kitten is observing its surroundings next to a pet toy."
+            "interaction": "none",
+            "summary": "An orange tabby cat is soundly sleeping curled up on a white patterned bed with its eyes closed."
         }
     },
     {
-        "frame": "resized_frame_4800.jpg",
+        "frame": "frame_003720_124.00s.jpg",
+        "timestamp": 124.0,
+        "frame_number": 3720,
         "result": {
             "pet_detected": true,
-            "activity": "Crouching",
+            "activity": "sleeping",
+            "activity_confidence": 1.0,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 1.0
+                },
+                {
+                    "name": "bed",
+                    "confidence": 1.0
+                },
+                {
+                    "name": "sheet",
+                    "confidence": 1.0
+                }
+            ],
+            "interaction": "none",
+            "summary": "An orange tabby cat is peacefully sleeping, curled up on a white bed with blue patterned sheets."
+        }
+    },
+    {
+        "frame": "frame_003840_128.00s.jpg",
+        "timestamp": 128.0,
+        "frame_number": 3840,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "toy ball",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "wooden furniture",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "tiled floor",
+                    "confidence": 0.95
+                }
+            ],
+            "interaction": "None",
+            "summary": "A small tabby kitten is sitting on a tiled floor under a wooden cabinet, looking intently to the left, with a colorful toy ball nearby."
+        }
+    },
+    {
+        "frame": "frame_003960_132.00s.jpg",
+        "timestamp": 132.0,
+        "frame_number": 3960,
+        "result": {
+            "pet_detected": true,
+            "activity": "walking",
             "activity_confidence": 0.95,
             "objects": [
                 {
                     "name": "kitten",
-                    "confidence": 0.99
+                    "confidence": 0.98
                 },
                 {
                     "name": "toy ball",
                     "confidence": 0.95
                 },
                 {
-                    "name": "rope toy",
-                    "confidence": 0.94
+                    "name": "furniture",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "floor",
+                    "confidence": 0.92
                 }
             ],
-            "interaction": "None",
-            "summary": "A small kitten is crouching on the floor next to its toys."
+            "interaction": "approaching toy",
+            "summary": "A small tabby kitten is walking towards a colorful toy on a tiled floor near wooden furniture, with sunlight casting shadows."
         }
     },
     {
-        "frame": "resized_frame_5100.jpg",
+        "frame": "frame_004080_136.00s.jpg",
+        "timestamp": 136.0,
+        "frame_number": 4080,
         "result": {
             "pet_detected": true,
-            "activity": "Sitting",
+            "activity": "playing",
+            "activity_confidence": 0.98,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "pet toy",
+                    "confidence": 0.97
+                },
+                {
+                    "name": "paper",
+                    "confidence": 0.95
+                }
+            ],
+            "interaction": "playing with toy and paper",
+            "summary": "A small tabby kitten is playfully batting at a piece of paper near a colorful rope and ball toy on a light-colored floor."
+        }
+    },
+    {
+        "frame": "frame_004200_140.00s.jpg",
+        "timestamp": 140.0,
+        "frame_number": 4200,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
             "activity_confidence": 0.95,
             "objects": [
                 {
@@ -420,7 +1039,245 @@
                 },
                 {
                     "name": "ball",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "kitten interacting with toy",
+            "summary": "A small tabby kitten with gray fur is observing a red and orange ball pet toy on a light-colored floor, appearing ready to play."
+        }
+    },
+    {
+        "frame": "frame_004320_144.00s.jpg",
+        "timestamp": 144.0,
+        "frame_number": 4320,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.98,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "toy",
+                    "confidence": 0.97
+                },
+                {
+                    "name": "floor",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "cardboard box",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "blanket",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "Pet interacting with toy",
+            "summary": "A small tabby kitten is actively playing with a red and orange ball attached to a multi-colored rope toy on a light-colored floor."
+        }
+    },
+    {
+        "frame": "frame_004440_148.00s.jpg",
+        "timestamp": 148.0,
+        "frame_number": 4440,
+        "result": {
+            "pet_detected": true,
+            "activity": "Playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "Kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Toy ball",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Toy rope",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Newspaper",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "Cardboard box",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "Fabric",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "Playing with toys",
+            "summary": "A small tabby kitten with big blue eyes is focused on a red and orange toy ball and a green and red rope toy on a light-colored floor, likely preparing to play."
+        }
+    },
+    {
+        "frame": "frame_004560_152.00s.jpg",
+        "timestamp": 152.0,
+        "frame_number": 4560,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "tennis ball toy",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "rope toy",
+                    "confidence": 0.97
+                },
+                {
+                    "name": "cardboard box",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "newspaper",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "Observing toys",
+            "summary": "A kitten is attentively observing its colorful tennis ball and rope toys on a tiled floor."
+        }
+    },
+    {
+        "frame": "frame_004680_156.00s.jpg",
+        "timestamp": 156.0,
+        "frame_number": 4680,
+        "result": {
+            "pet_detected": true,
+            "activity": "Standing",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Kitten",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "Ball toy",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Rope toy",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "Furniture",
+                    "confidence": 0.7
+                },
+                {
+                    "name": "Cardboard box",
+                    "confidence": 0.75
+                }
+            ],
+            "interaction": "Near toys",
+            "summary": "A small tabby kitten stands on a tiled floor near an orange ball and a braided rope toy, looking alertly at its surroundings."
+        }
+    },
+    {
+        "frame": "frame_004800_160.00s.jpg",
+        "timestamp": 160.0,
+        "frame_number": 4800,
+        "result": {
+            "pet_detected": true,
+            "activity": "Sitting",
+            "activity_confidence": 0.98,
+            "objects": [
+                {
+                    "name": "Kitten",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "Ball toy",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "Rope toy",
                     "confidence": 0.92
+                },
+                {
+                    "name": "Furniture",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "Newspaper",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "Box with fabric",
+                    "confidence": 0.75
+                }
+            ],
+            "interaction": "Looking at camera",
+            "summary": "A small striped kitten is sitting on a tiled floor next to its red and orange ball and rope toys, looking directly at the camera."
+        }
+    },
+    {
+        "frame": "frame_004920_164.00s.jpg",
+        "timestamp": 164.0,
+        "frame_number": 4920,
+        "result": {
+            "pet_detected": true,
+            "activity": "observing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "toy ball",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "rope toy",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "newspaper",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "cardboard box",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "wooden furniture",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "none",
+            "summary": "A small tabby kitten is sitting on a tiled floor near a toy ball and rope toy, appearing to observe its surroundings."
+        }
+    },
+    {
+        "frame": "frame_005040_168.00s.jpg",
+        "timestamp": 168.0,
+        "frame_number": 5040,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "kitten",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "pet toy",
+                    "confidence": 0.95
                 },
                 {
                     "name": "newspaper",
@@ -428,42 +1285,24 @@
                 },
                 {
                     "name": "cardboard box",
-                    "confidence": 0.75
+                    "confidence": 0.8
                 },
                 {
                     "name": "furniture",
-                    "confidence": 0.8
+                    "confidence": 0.7
                 }
             ],
-            "interaction": "Observing toy",
-            "summary": "A small kitten is sitting on the floor next to its toys."
+            "interaction": "Kitten observing toy",
+            "summary": "A small tabby kitten is sitting on a tiled floor, attentively looking at a colorful pet toy next to some newspaper and a cardboard box."
         }
     },
     {
-        "frame": "resized_frame_5400.jpg",
+        "frame": "frame_005160_172.00s.jpg",
+        "timestamp": 172.0,
+        "frame_number": 5160,
         "result": {
             "pet_detected": true,
-            "activity": "Looking out",
-            "activity_confidence": 0.95,
-            "objects": [
-                {
-                    "name": "cat",
-                    "confidence": 0.99
-                },
-                {
-                    "name": "window",
-                    "confidence": 0.9
-                }
-            ],
-            "interaction": "Environmental observation",
-            "summary": "A cat is looking out of a window."
-        }
-    },
-    {
-        "frame": "resized_frame_5700.jpg",
-        "result": {
-            "pet_detected": true,
-            "activity": "Watching",
+            "activity": "observing",
             "activity_confidence": 0.95,
             "objects": [
                 {
@@ -475,23 +1314,29 @@
                     "confidence": 0.98
                 },
                 {
-                    "name": "table",
-                    "confidence": 0.9
+                    "name": "cat tree",
+                    "confidence": 0.85
                 },
                 {
                     "name": "balcony",
-                    "confidence": 0.85
+                    "confidence": 0.9
+                },
+                {
+                    "name": "table",
+                    "confidence": 0.8
                 }
             ],
-            "interaction": "Observing outside",
-            "summary": "A cat is observing the view outside through a window."
+            "interaction": "observing environment",
+            "summary": "A white and tabby cat is sitting on a surface near a window, attentively looking outside at the view, with a cat tree in the background."
         }
     },
     {
-        "frame": "resized_frame_600.jpg",
+        "frame": "frame_005280_176.00s.jpg",
+        "timestamp": 176.0,
+        "frame_number": 5280,
         "result": {
             "pet_detected": true,
-            "activity": "eating",
+            "activity": "Observing",
             "activity_confidence": 0.95,
             "objects": [
                 {
@@ -499,20 +1344,66 @@
                     "confidence": 0.98
                 },
                 {
-                    "name": "food bowl",
-                    "confidence": 0.95
-                },
-                {
-                    "name": "water bowl",
-                    "confidence": 0.9
+                    "name": "window",
+                    "confidence": 0.85
                 }
             ],
-            "interaction": "cat eating",
-            "summary": "A black and white cat is eating from a pink food bowl while another cat is in the background."
+            "interaction": "None visible",
+            "summary": "A domestic short-haired cat with white and tabby markings is intently observing something near a window."
         }
     },
     {
-        "frame": "resized_frame_6000.jpg",
+        "frame": "frame_005400_180.00s.jpg",
+        "timestamp": 180.0,
+        "frame_number": 5400,
+        "result": {
+            "pet_detected": true,
+            "activity": "Looking out",
+            "activity_confidence": 0.98,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "window",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "",
+            "summary": "A white and brown tabby cat is looking intently out a window, observing its surroundings."
+        }
+    },
+    {
+        "frame": "frame_005520_184.00s.jpg",
+        "timestamp": 184.0,
+        "frame_number": 5520,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing outside",
+            "activity_confidence": 0.98,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "window",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "table",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "None",
+            "summary": "A domestic cat with white and tabby markings is intently observing the outdoors through a window from a tabletop."
+        }
+    },
+    {
+        "frame": "frame_005640_188.00s.jpg",
+        "timestamp": 188.0,
+        "frame_number": 5640,
         "result": {
             "pet_detected": true,
             "activity": "looking out",
@@ -520,14 +1411,36 @@
             "objects": [
                 {
                     "name": "cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "window",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "balcony",
+                    "confidence": 0.75
+                }
+            ],
+            "interaction": "watching outside",
+            "summary": "A domestic cat is sitting on a ledge, intently observing the outdoor scene through a window."
+        }
+    },
+    {
+        "frame": "frame_005760_192.00s.jpg",
+        "timestamp": 192.0,
+        "frame_number": 5760,
+        "result": {
+            "pet_detected": true,
+            "activity": "Looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
                     "confidence": 0.98
                 },
                 {
                     "name": "window",
-                    "confidence": 0.95
-                },
-                {
-                    "name": "table",
                     "confidence": 0.9
                 },
                 {
@@ -537,17 +1450,83 @@
                 {
                     "name": "building",
                     "confidence": 0.8
+                },
+                {
+                    "name": "table surface",
+                    "confidence": 0.9
                 }
             ],
-            "interaction": "The cat is observing the outdoors through the window.",
-            "summary": "A cat is looking out a window from a table."
+            "interaction": "The cat is observing the outside world through the window.",
+            "summary": "A tabby and white cat is perched on a patterned surface, intently looking out a window at a balcony and buildings under a cloudy sky."
         }
     },
     {
-        "frame": "resized_frame_6300.jpg",
+        "frame": "frame_005880_196.00s.jpg",
+        "timestamp": 196.0,
+        "frame_number": 5880,
         "result": {
             "pet_detected": true,
-            "activity": "watching",
+            "activity": "Watching",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 1.0
+                },
+                {
+                    "name": "window",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "balcony",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "building",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "None",
+            "summary": "A domestic cat is sitting by a window, intently observing the outside view from a balcony."
+        }
+    },
+    {
+        "frame": "frame_006000_200.00s.jpg",
+        "timestamp": 200.0,
+        "frame_number": 6000,
+        "result": {
+            "pet_detected": true,
+            "activity": "Observing",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "Window",
+                    "confidence": 0.98
+                },
+                {
+                    "name": "Table",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "Outdoor view",
+                    "confidence": 0.85
+                }
+            ],
+            "interaction": "Looking at external environment",
+            "summary": "A domestic shorthair cat is sitting on a table, intently observing the outdoor environment through a large window."
+        }
+    },
+    {
+        "frame": "frame_006120_204.00s.jpg",
+        "timestamp": 204.0,
+        "frame_number": 6120,
+        "result": {
+            "pet_detected": true,
+            "activity": "Looking outside",
             "activity_confidence": 0.95,
             "objects": [
                 {
@@ -559,24 +1538,52 @@
                     "confidence": 0.98
                 },
                 {
-                    "name": "balcony",
+                    "name": "ledge",
                     "confidence": 0.9
                 },
                 {
-                    "name": "scratching post",
-                    "confidence": 0.85
-                },
-                {
-                    "name": "building",
-                    "confidence": 0.88
+                    "name": "cat tree",
+                    "confidence": 0.75
                 }
             ],
-            "interaction": "The cat is observing the outdoors through the window.",
-            "summary": "A cat is attentively watching outside through a window."
+            "interaction": "None",
+            "summary": "A domestic short-haired cat is perched on a ledge, intently looking out a window towards the outdoor environment."
         }
     },
     {
-        "frame": "resized_frame_6600.jpg",
+        "frame": "frame_006240_208.00s.jpg",
+        "timestamp": 208.0,
+        "frame_number": 6240,
+        "result": {
+            "pet_detected": true,
+            "activity": "observing",
+            "activity_confidence": 0.98,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.99
+                },
+                {
+                    "name": "window",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "cat tree",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "outside",
+                    "confidence": 0.9
+                }
+            ],
+            "interaction": "looking at view",
+            "summary": "A domestic short-haired cat is sitting attentively on a ledge by a window, looking out at the buildings and sky beyond."
+        }
+    },
+    {
+        "frame": "frame_006360_212.00s.jpg",
+        "timestamp": 212.0,
+        "frame_number": 6360,
         "result": {
             "pet_detected": true,
             "activity": "playing",
@@ -587,52 +1594,92 @@
                     "confidence": 0.98
                 },
                 {
-                    "name": "toy",
+                    "name": "person",
                     "confidence": 0.9
                 },
                 {
-                    "name": "human leg",
-                    "confidence": 0.8
+                    "name": "cat toy",
+                    "confidence": 0.95
                 },
                 {
-                    "name": "fabric",
+                    "name": "blanket",
                     "confidence": 0.85
                 },
                 {
                     "name": "wooden floor",
-                    "confidence": 0.95
+                    "confidence": 0.9
                 }
             ],
-            "interaction": "playing with toy",
-            "summary": "A white cat is actively playing with a toy on a wooden floor."
+            "interaction": "The cat is engaging with a dangling toy being held by a person's foot.",
+            "summary": "A white cat is seen actively playing with a dangling mouse toy, held by a person's foot, on a wooden floor."
         }
     },
     {
-        "frame": "resized_frame_900.jpg",
+        "frame": "frame_006480_216.00s.jpg",
+        "timestamp": 216.0,
+        "frame_number": 6480,
         "result": {
             "pet_detected": true,
-            "activity": "Eating",
-            "activity_confidence": 0.98,
+            "activity": "Walking",
+            "activity_confidence": 0.95,
             "objects": [
                 {
-                    "name": "Cat",
-                    "confidence": 0.99
-                },
-                {
-                    "name": "Food bowl",
+                    "name": "cat",
                     "confidence": 0.98
                 },
                 {
-                    "name": "Water bowl",
+                    "name": "wooden floor",
+                    "confidence": 0.95
+                },
+                {
+                    "name": "bed",
+                    "confidence": 0.85
+                },
+                {
+                    "name": "blanket",
                     "confidence": 0.9
                 },
                 {
-                    "name": "Cat",
-                    "confidence": 0.85
+                    "name": "cat toy",
+                    "confidence": 0.88
+                },
+                {
+                    "name": "socks",
+                    "confidence": 0.8
                 }
             ],
-            "interaction": "Eating food",
-            "summary": "Two cats are eating from bowls."
+            "interaction": "Cat is walking towards a dangling toy.",
+            "summary": "A white cat is walking across a wooden floor, seemingly towards a dangling toy, with a bed and blue blanket visible in the background."
+        }
+    },
+    {
+        "frame": "frame_006600_220.00s.jpg",
+        "timestamp": 220.0,
+        "frame_number": 6600,
+        "result": {
+            "pet_detected": true,
+            "activity": "Playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 1.0
+                },
+                {
+                    "name": "cat toy",
+                    "confidence": 0.9
+                },
+                {
+                    "name": "person",
+                    "confidence": 0.7
+                },
+                {
+                    "name": "wand toy",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "Cat playing with wand toy",
+            "summary": "A white cat is actively playing with a wand toy on a wooden floor, with a person's legs visible in the background."
         }
     }
 ]
