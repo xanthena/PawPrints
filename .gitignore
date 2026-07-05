@@ -17,3 +17,7 @@ frontend/build/
 # generated data (not source)
 data/frames/*
 !data/frames/.gitkeep
+
+# md files
+AGENTS.md
+changes.md
