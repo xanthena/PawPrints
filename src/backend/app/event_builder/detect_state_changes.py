@@ -11,8 +11,8 @@ def detect_state_changes(results):
         activity = result.get("activity", "unknown")
         timestamp = float(frame.get("timestamp", 0.0))
         # frames from a motion detector with real burst timing (see
-        # run_on_candidates.py) can supply an actual end_time; frames with
-        # no such signal fall back to the original instantaneous behavior.
+        # main_run_on_candidates.py) can supply an actual end_time; frames
+        # with no such signal fall back to the original instantaneous behavior.
         end_time = float(frame.get("end_time", timestamp))
 
         candidates.append({
