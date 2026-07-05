@@ -8,7 +8,7 @@ from .candidate_queue import CandidateFrameQueue
 from .frame_diff import FrameDiffDetector
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-CANDIDATES_DIR = REPO_ROOT / "data" / "candidates"
+EVENTS_DIR = REPO_ROOT / "data" / "events"
 DEFAULT_VIDEO = REPO_ROOT / "data" / "cat_inbag.mp4"
 
 SMALL_WIDTH = 320
@@ -22,13 +22,14 @@ def resize_keep_aspect(frame, target_width=SMALL_WIDTH):
     return cv.resize(frame, (target_width, int(h * scale)))
 
 
-def stream_candidates(video_source, cooldown_sec=COOLDOWN_SEC):
+def stream_events(video_source, cooldown_sec=COOLDOWN_SEC):
     """
     Reads video_source sequentially -- a finished file today, a live
     camera/RTSP URL tomorrow, cv.VideoCapture treats both identically --
-    and yields one candidate dict per representative motion event, as
-    soon as it's found. Never assumes a known total length, so the same
-    loop works unchanged for a finished file or a feed that never ends.
+    and yields one event dict per motion burst start/continuation
+    ("candidate") or end ("burst_end"), as soon as it's found. Never
+    assumes a known total length, so the same loop works unchanged for a
+    finished file or a feed that never ends.
     """
     vid = cv.VideoCapture(str(video_source))
     if not vid.isOpened():
@@ -54,27 +55,28 @@ def stream_candidates(video_source, cooldown_sec=COOLDOWN_SEC):
             timestamp = frame_index / fps
             small_frame = resize_keep_aspect(frame)
 
-            candidate = queue.observe(frame, small_frame, timestamp, frame_index)
-            if candidate is not None:
-                yield candidate
+            event = queue.observe(frame, small_frame, timestamp, frame_index)
+            if event is not None:
+                yield event
 
             frame_index += 1
     finally:
         vid.release()
 
 
-def persist_candidate(candidate, out_dir):
+def persist_event(event, out_dir):
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    frame = candidate.pop("frame")
-    frame_path = out_dir / f"frame_{candidate['frame_index']}.jpg"
-    cv.imwrite(str(frame_path), frame)
-    candidate["frame_path"] = str(frame_path)
+    if event["kind"] == "candidate":
+        frame = event.pop("frame")
+        frame_path = out_dir / f"frame_{event['frame_index']}.jpg"
+        cv.imwrite(str(frame_path), frame)
+        event["frame_path"] = str(frame_path)
 
-    with open(out_dir / "candidates.jsonl", "a") as f:
-        f.write(json.dumps(candidate) + "\n")
+    with open(out_dir / "events.jsonl", "a") as f:
+        f.write(json.dumps(event) + "\n")
 
-    return candidate
+    return event
 
 
 if __name__ == "__main__":
@@ -83,12 +85,12 @@ if __name__ == "__main__":
     parser.add_argument("--cooldown", type=float, default=COOLDOWN_SEC)
     args = parser.parse_args()
 
-    out_dir = CANDIDATES_DIR / Path(args.video_path).stem
+    out_dir = EVENTS_DIR / Path(args.video_path).stem
 
-    count = 0
-    for candidate in stream_candidates(args.video_path, cooldown_sec=args.cooldown):
-        persist_candidate(candidate, out_dir)
-        count += 1
-        print(f"candidate {count}: frame {candidate['frame_index']} @ {candidate['timestamp']:.2f}s")
+    counts = {"candidate": 0, "burst_end": 0}
+    for event in stream_events(args.video_path, cooldown_sec=args.cooldown):
+        persist_event(event, out_dir)
+        counts[event["kind"]] += 1
+        print(f"{event['kind']}: frame {event['frame_index']} @ {event['timestamp']:.2f}s")
 
-    print(f"{count} candidate(s) written to {out_dir}")
+    print(f"{counts['candidate']} candidate(s), {counts['burst_end']} burst_end(s) written to {out_dir}")
