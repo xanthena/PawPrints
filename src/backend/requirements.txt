@@ -1,0 +1,6 @@
+opencv-python
+ollama
+python-dotenv
+google-genai
+anthropic
+openai

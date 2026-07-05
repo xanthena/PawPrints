@@ -32,7 +32,7 @@ Contains the shared vision prompt. The prompt asks the model to return only JSON
 
 ## `config.py`
 
-Loads environment configuration. Gemini uses `GOOGLE_PROJECT_ID`, and image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
+Loads environment configuration. Gemini authenticates via `GEMINI_AUTH_MODE`: `"api_key"` (default) uses `GEMINI_API_KEY` through the Developer API/AI Studio; `"vertex"` uses `GOOGLE_PROJECT_ID` through Vertex AI + Application Default Credentials instead. Image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
 
 ## `image_validation.py`
 
@@ -44,8 +44,20 @@ Parses frame filenames such as `frame_000120_4.00s.jpg` and returns the frame nu
 
 ## `models/local_qwen.py`
 
-Sends a validated image to the local Ollama Qwen model, using `qwen2.5vl:3b`, and returns the model response text.
+Sends a validated image to a local Ollama model, using whichever model `OLLAMA_MODEL` names (defaults to `qwen2.5vl:3b`), and returns the model response text.
 
 ## `models/google_gemini.py`
 
-Sends a validated image to Gemini through Vertex AI, using `gemini-2.5-flash`, and returns the model response text.
+Sends a validated image to Gemini through the Gemini Developer API (AI Studio), authenticated with `GEMINI_API_KEY`, using `gemini-2.5-flash`, and returns the model response text.
+
+## `models/anthropic_claude.py`
+
+Sends a validated image to Claude through the Anthropic Messages API, authenticated with `ANTHROPIC_API_KEY`, using whichever model `ANTHROPIC_MODEL` names, and returns the model response text. Not yet tested against a real key.
+
+## `models/openai_gpt.py`
+
+Sends a validated image to OpenAI through the Chat Completions API, authenticated with `OPENAI_API_KEY`, using whichever model `OPENAI_MODEL` names, and returns the model response text. Not yet tested against a real key.
+
+## `model_router.py`
+
+Picks which of the four adapters above to call, via `VISION_MODEL_PREFERENCE` or an explicit override -- this is what makes the model swappable without touching any other code. If Gemini is preferred and unavailable, it falls back to the local model once; Claude/OpenAI have no such fallback.

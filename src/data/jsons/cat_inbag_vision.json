@@ -1,0 +1,45 @@
+[
+    {
+        "frame": "frame_cat_inbag_000000_0.00s.jpg",
+        "timestamp": 0.0,
+        "end_time": 0.4827586206896552,
+        "frame_number": 0,
+        "result": {
+            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"standing\",\n    \"activity_confidence\": 0.95,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.8\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is standing near a gift bag on the floor.\"\n}\n```"
+        },
+        "model_used": "qwen",
+        "fell_back": false
+    },
+    {
+        "frame": "frame_cat_inbag_000014_0.48s.jpg",
+        "timestamp": 0.4827586206896552,
+        "end_time": 1.9310344827586208,
+        "frame_number": 14,
+        "result": {
+            "pet_detected": true,
+            "activity": "jumping",
+            "activity_confidence": 0.8,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.95
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is jumping over a box on the floor."
+        },
+        "model_used": "qwen",
+        "fell_back": false
+    },
+    {
+        "frame": "frame_cat_inbag_000308_10.62s.jpg",
+        "timestamp": 10.620689655172415,
+        "end_time": 10.620689655172415,
+        "frame_number": 308,
+        "result": {
+            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"sitting\",\n    \"activity_confidence\": 0.95,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.8\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is sitting inside a box on the floor.\"\n}\n```"
+        },
+        "model_used": "qwen",
+        "fell_back": false
+    }
+]

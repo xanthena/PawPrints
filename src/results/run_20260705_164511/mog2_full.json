@@ -1,0 +1,210 @@
+[
+  {
+    "frame_index": 0,
+    "timestamp": 0.0,
+    "elapsed": 0.055080099999999965,
+    "motion": false,
+    "changed_area": 130,
+    "num_contours": null
+  },
+  {
+    "frame_index": 14,
+    "timestamp": 0.4827586206896552,
+    "elapsed": 0.04390139999999998,
+    "motion": false,
+    "changed_area": 148,
+    "num_contours": null
+  },
+  {
+    "frame_index": 28,
+    "timestamp": 0.9655172413793104,
+    "elapsed": 0.04448810000000014,
+    "motion": false,
+    "changed_area": 122,
+    "num_contours": null
+  },
+  {
+    "frame_index": 42,
+    "timestamp": 1.4482758620689655,
+    "elapsed": 0.044656200000000146,
+    "motion": false,
+    "changed_area": 92,
+    "num_contours": null
+  },
+  {
+    "frame_index": 56,
+    "timestamp": 1.9310344827586208,
+    "elapsed": 0.045521900000000004,
+    "motion": false,
+    "changed_area": 3459,
+    "num_contours": null
+  },
+  {
+    "frame_index": 70,
+    "timestamp": 2.413793103448276,
+    "elapsed": 0.0460566,
+    "motion": true,
+    "changed_area": 73788,
+    "num_contours": null
+  },
+  {
+    "frame_index": 84,
+    "timestamp": 2.896551724137931,
+    "elapsed": 0.04295850000000012,
+    "motion": true,
+    "changed_area": 86285,
+    "num_contours": null
+  },
+  {
+    "frame_index": 98,
+    "timestamp": 3.3793103448275863,
+    "elapsed": 0.0439712000000001,
+    "motion": true,
+    "changed_area": 74690,
+    "num_contours": null
+  },
+  {
+    "frame_index": 112,
+    "timestamp": 3.8620689655172415,
+    "elapsed": 0.042508599999999674,
+    "motion": true,
+    "changed_area": 67383,
+    "num_contours": null
+  },
+  {
+    "frame_index": 126,
+    "timestamp": 4.344827586206897,
+    "elapsed": 0.04353949999999962,
+    "motion": true,
+    "changed_area": 49742,
+    "num_contours": null
+  },
+  {
+    "frame_index": 140,
+    "timestamp": 4.827586206896552,
+    "elapsed": 0.04392089999999982,
+    "motion": true,
+    "changed_area": 94338,
+    "num_contours": null
+  },
+  {
+    "frame_index": 154,
+    "timestamp": 5.310344827586207,
+    "elapsed": 0.04298650000000004,
+    "motion": true,
+    "changed_area": 84149,
+    "num_contours": null
+  },
+  {
+    "frame_index": 168,
+    "timestamp": 5.793103448275862,
+    "elapsed": 0.04283949999999992,
+    "motion": true,
+    "changed_area": 71184,
+    "num_contours": null
+  },
+  {
+    "frame_index": 182,
+    "timestamp": 6.275862068965517,
+    "elapsed": 0.04380890000000015,
+    "motion": true,
+    "changed_area": 86777,
+    "num_contours": null
+  },
+  {
+    "frame_index": 196,
+    "timestamp": 6.758620689655173,
+    "elapsed": 0.04334020000000027,
+    "motion": true,
+    "changed_area": 80702,
+    "num_contours": null
+  },
+  {
+    "frame_index": 210,
+    "timestamp": 7.241379310344827,
+    "elapsed": 0.04400860000000062,
+    "motion": true,
+    "changed_area": 89123,
+    "num_contours": null
+  },
+  {
+    "frame_index": 224,
+    "timestamp": 7.724137931034483,
+    "elapsed": 0.04525230000000047,
+    "motion": true,
+    "changed_area": 100242,
+    "num_contours": null
+  },
+  {
+    "frame_index": 238,
+    "timestamp": 8.206896551724139,
+    "elapsed": 0.0434398999999992,
+    "motion": true,
+    "changed_area": 101916,
+    "num_contours": null
+  },
+  {
+    "frame_index": 252,
+    "timestamp": 8.689655172413794,
+    "elapsed": 0.044137199999999766,
+    "motion": true,
+    "changed_area": 100559,
+    "num_contours": null
+  },
+  {
+    "frame_index": 266,
+    "timestamp": 9.172413793103448,
+    "elapsed": 0.042407500000000375,
+    "motion": true,
+    "changed_area": 93101,
+    "num_contours": null
+  },
+  {
+    "frame_index": 280,
+    "timestamp": 9.655172413793103,
+    "elapsed": 0.044269299999999845,
+    "motion": true,
+    "changed_area": 104540,
+    "num_contours": null
+  },
+  {
+    "frame_index": 294,
+    "timestamp": 10.137931034482758,
+    "elapsed": 0.04199419999999954,
+    "motion": true,
+    "changed_area": 106957,
+    "num_contours": null
+  },
+  {
+    "frame_index": 308,
+    "timestamp": 10.620689655172415,
+    "elapsed": 0.04459789999999941,
+    "motion": true,
+    "changed_area": 116147,
+    "num_contours": null
+  },
+  {
+    "frame_index": 322,
+    "timestamp": 11.10344827586207,
+    "elapsed": 0.044758100000000134,
+    "motion": true,
+    "changed_area": 340776,
+    "num_contours": null
+  },
+  {
+    "frame_index": 336,
+    "timestamp": 11.586206896551724,
+    "elapsed": 0.04275249999999975,
+    "motion": true,
+    "changed_area": 181582,
+    "num_contours": null
+  },
+  {
+    "frame_index": 350,
+    "timestamp": 12.068965517241379,
+    "elapsed": 0.046639899999999734,
+    "motion": true,
+    "changed_area": 117978,
+    "num_contours": null
+  }
+]
