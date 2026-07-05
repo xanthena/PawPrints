@@ -10,9 +10,9 @@ def timestamp_extractor_from_file(frame):
     # Split by "_"
     parts = filename.split("_")
 
-    frame_number = int(parts[2])
+    frame_number = int(parts[1])
 
-    timestamp = float(parts[3].replace("s", ""))
+    timestamp = float(parts[2].replace("s", ""))
 
     print(frame_number)
     print(timestamp)

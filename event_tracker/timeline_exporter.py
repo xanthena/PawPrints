@@ -4,7 +4,7 @@ Loads benchmark JSON, builds a timeline and saves it.
 
 import json
 
-from PawPrints.event_tracker.timeline_builder import build_timeline
+from timeline_builder import build_timeline
 
 
 def generate_timeline(input_file, output_file):

@@ -1,4 +1,4 @@
-from PawPrints.event_tracker.timeline_exporter import generate_timeline
+from timeline_exporter import generate_timeline
 
 INPUT_JSON = r"PawPrints/jsons/qwen.json"
 

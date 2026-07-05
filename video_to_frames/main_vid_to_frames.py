@@ -11,7 +11,7 @@ frames_folder = r"C:\Users\rizla\Documents\kitty-hacks\cat-videos\frames"
 resized_folder = r"C:\Users\rizla\Documents\kitty-hacks\cat-videos\resized_imgs"
 os.makedirs(resized_folder, exist_ok=True)
 
-extract_frames(video_path, frames_folder, 10)
+extract_frames(video_path, frames_folder, 4)
 print("-"*80)
 
 count = 0
