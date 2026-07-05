@@ -11,23 +11,23 @@
             "cat"
         ],
         "interaction": "",
-        "summary": "A cat is standing near a box on the floor.",
+        "summary": "A cat is standing near a gift bag on the floor.",
         "clip_start": 0.0,
         "clip_end": 5.482758620689655
     },
     {
         "event_id": 2,
-        "activity": "walking",
+        "activity": "jumping",
         "start_time": 0.4827586206896552,
         "end_time": 1.9310344827586208,
         "duration": 1.4482758620689655,
-        "importance": 2,
+        "importance": 10,
         "thumbnail_frame": "frame_cat_inbag_000014_0.48s.jpg",
         "objects": [
             "cat"
         ],
         "interaction": "",
-        "summary": "A cat is walking on a tiled floor, with its paw raised.",
+        "summary": "A cat is jumping over a box on the floor.",
         "clip_start": 0.0,
         "clip_end": 6.931034482758621
     },

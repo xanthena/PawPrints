@@ -17,21 +17,18 @@ def load_events(video_stem):
 
 def compute_end_time(all_events, index):
     """
-    Motion candidates end when the burst containing them ends (the next
-    burst_end in the stream) -- exact, and free since it costs no extra
-    vision-model call. Still-ping candidates end when the next event of
-    any kind begins, i.e. "still going as of then." Either way, if
-    nothing follows (the feed ended first), end_time falls back to the
+    Every candidate ends when the next event of any kind begins --
+    another candidate (new evidence arrived) or a burst_end (the motion
+    it was part of stopped). For the last candidate before a burst_end,
+    that next event naturally *is* the burst_end, so a long multi-ping
+    burst still gets its true end without special-casing "motion" vs
+    "still_ping": each candidate only ever claims the span it actually
+    had evidence for, so consecutive events never overlap. If nothing
+    follows (the feed ended first), end_time falls back to the
     candidate's own timestamp -- duration 0, rather than guessing how
     long an unclosed event ran.
     """
     candidate = all_events[index]
-
-    if candidate["trigger"] == "motion":
-        for event in all_events[index + 1:]:
-            if event["kind"] == "burst_end":
-                return event["timestamp"]
-        return candidate["timestamp"]
 
     if index + 1 < len(all_events):
         return all_events[index + 1]["timestamp"]

@@ -1,0 +1,34 @@
+[
+    {
+        "event_id": 1,
+        "activity": "sleeping",
+        "start_time": 0.0,
+        "end_time": 4.5,
+        "duration": 4.5,
+        "importance": 1,
+        "thumbnail_frame": "frame_cat_wakeup_000015_0.50s.jpg",
+        "objects": [
+            "cat"
+        ],
+        "interaction": "",
+        "summary": "A cat is sleeping on a park bench, surrounded by autumn leaves.",
+        "clip_start": 0.0,
+        "clip_end": 9.5
+    },
+    {
+        "event_id": 2,
+        "activity": "standing",
+        "start_time": 4.5,
+        "end_time": 7.5,
+        "duration": 3.0,
+        "importance": 1,
+        "thumbnail_frame": "frame_cat_wakeup_000135_4.50s.jpg",
+        "objects": [
+            "cat"
+        ],
+        "interaction": "",
+        "summary": "A cat is standing on a park bench, looking up at the tree.",
+        "clip_start": 0.0,
+        "clip_end": 12.5
+    }
+]
