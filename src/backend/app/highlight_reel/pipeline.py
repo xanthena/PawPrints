@@ -13,6 +13,8 @@ def generate_highlight_reel(
     max_clips=5,
     max_clip_duration=10.0,
     ffmpeg_path=None,
+    timeline_model=None,
+    timeline_fell_back=False,
 ):
     """Select highlights, render the reel, and write its selection manifest."""
     timeline = Path(timeline_path).resolve()
@@ -38,6 +40,8 @@ def generate_highlight_reel(
 
     manifest = {
         "timeline_file": str(timeline),
+        "timeline_model": timeline_model,
+        "timeline_fell_back": timeline_fell_back,
         "source_video": str(video),
         "output_video": str(reel_path),
         "generated_at": datetime.now(timezone.utc).isoformat(),

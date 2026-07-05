@@ -6,7 +6,6 @@ from pathlib import Path
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.highlight_reel.main_highlight_reel import INPUT_MODE, get_input_json
 from app.highlight_reel.selector import select_highlights
 
 
@@ -85,17 +84,5 @@ class HighlightSelectorTests(unittest.TestCase):
         self.assertEqual(select_highlights([]), [])
 
 
-class HighlightInputModeTests(unittest.TestCase):
-    def test_cloud_gemini_is_default_and_local_qwen_is_available(self):
-        self.assertEqual(INPUT_MODE, "cloud")
-        self.assertEqual(get_input_json("cloud").name, "final_timeline_gemini.json")
-        self.assertEqual(get_input_json("local").name, "final_timeline_qwen.json")
-
-    def test_unknown_mode_is_rejected(self):
-        with self.assertRaises(ValueError):
-            get_input_json("other")
-
-
 if __name__ == "__main__":
     unittest.main()
-

@@ -1,8 +1,10 @@
 {
     "timeline_file": "C:\\Users\\Riz\\Music\\kitty\\PawPrints\\src\\data\\jsons\\final_timeline_gemini.json",
+    "timeline_model": "gemini",
+    "timeline_fell_back": false,
     "source_video": "C:\\Users\\Riz\\Music\\kitty\\PawPrints\\src\\data\\source_video\\full-cat-video.mp4",
     "output_video": "C:\\Users\\Riz\\Music\\kitty\\PawPrints\\src\\results\\highlight-reel\\highlight_reel.mp4",
-    "generated_at": "2026-07-05T18:00:26.944554+00:00",
+    "generated_at": "2026-07-05T18:36:23.724383+00:00",
     "selection_strategy": "relative importance plus diversity; no fixed importance threshold",
     "max_clips": 5,
     "max_clip_duration": 10.0,

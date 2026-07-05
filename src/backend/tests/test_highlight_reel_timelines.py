@@ -6,14 +6,15 @@ from pathlib import Path
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.highlight_reel.main_highlight_reel import INPUT_OPTIONS
 from app.highlight_reel.selector import load_timeline, select_highlights
+from app.highlight_reel.timeline_router import timeline_path_for
 
 
 class FinalTimelineCompatibilityTests(unittest.TestCase):
     def test_gemini_and_qwen_timelines_both_select_a_short_reel(self):
-        for mode, timeline_path in INPUT_OPTIONS.items():
-            with self.subTest(mode=mode):
+        for model in ("gemini", "qwen"):
+            with self.subTest(model=model):
+                timeline_path = timeline_path_for(model)
                 events = load_timeline(timeline_path)
                 clips = select_highlights(events, max_clips=5, max_clip_duration=10)
                 selected_ids = {clip.event["event_id"] for clip in clips}
