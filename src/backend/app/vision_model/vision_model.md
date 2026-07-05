@@ -32,7 +32,7 @@ Contains the shared vision prompt. The prompt asks the model to return only JSON
 
 ## `config.py`
 
-Loads environment configuration. Gemini uses `GEMINI_API_KEY`, and image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
+Loads environment configuration. Gemini authenticates via `GEMINI_AUTH_MODE`: `"api_key"` (default) uses `GEMINI_API_KEY` through the Developer API/AI Studio; `"vertex"` uses `GOOGLE_PROJECT_ID` through Vertex AI + Application Default Credentials instead. Image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
 
 ## `image_validation.py`
 
