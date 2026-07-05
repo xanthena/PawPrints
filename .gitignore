@@ -11,11 +11,15 @@ venv/
 
 # node / electron
 node_modules/
-frontend/dist/
-frontend/build/
+src/frontend/dist/
+src/frontend/build/
 
 # generated data (not source)
-data/frames/*
-!data/frames/.gitkeep
-data/*.mp4
-data/events/
+src/data/frames/*
+!src/data/frames/.gitkeep
+src/data/*.mp4
+src/data/events/
+
+# md files
+AGENTS.md
+changes.md

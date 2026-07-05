@@ -7,9 +7,10 @@ import cv2 as cv
 from .candidate_queue import CandidateFrameQueue
 from .frame_diff import FrameDiffDetector
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-EVENTS_DIR = REPO_ROOT / "data" / "events"
-DEFAULT_VIDEO = REPO_ROOT / "data" / "cat_inbag.mp4"
+REPO_ROOT = Path(__file__).resolve().parents[4]
+SRC_ROOT = REPO_ROOT / "src"
+EVENTS_DIR = SRC_ROOT / "data" / "events"
+DEFAULT_VIDEO = SRC_ROOT / "data" / "cat_inbag.mp4"
 
 SMALL_WIDTH = 320
 SAMPLE_INTERVAL_SEC = 0.5

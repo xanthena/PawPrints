@@ -9,10 +9,11 @@ import cv2 as cv
 from .frame_diff import FrameDiffDetector
 from .mog2 import MOG2Detector
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-RESULTS_DIR = REPO_ROOT / "results"
-FRAMES_DIR = REPO_ROOT / "data" / "frames"
-DEFAULT_VIDEO = REPO_ROOT / "data" / "cat_inbag.mp4"
+REPO_ROOT = Path(__file__).resolve().parents[4]
+SRC_ROOT = REPO_ROOT / "src"
+RESULTS_DIR = SRC_ROOT / "results"
+FRAMES_DIR = SRC_ROOT / "data" / "frames"
+DEFAULT_VIDEO = SRC_ROOT / "data" / "cat_inbag.mp4"
 
 SMALL_WIDTH = 320
 SAMPLE_INTERVAL_SEC = 0.5
