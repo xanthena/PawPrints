@@ -1,0 +1,23 @@
+{
+    "event_id": 7,
+    "activity": "playing",
+    "start_time": 135,
+    "end_time": 170,
+    "duration": 35,
+
+    "importance": 9,
+
+    "thumbnail_frame": "resized_frame_004350_145.00s.jpg",
+
+    "objects": [
+        "cat",
+        "toy"
+    ],
+
+    "interaction": "playing with toy",
+
+    "summary": "Kitten playing with colorful toy",
+
+    "clip_start": 130,
+    "clip_end": 175
+}

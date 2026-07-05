@@ -1,0 +1,841 @@
+[
+    {
+        "frame": "resized_frame_000000_0.00s.jpg",
+        "timestamp": 0.0,
+        "frame_number": 0,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sleeping on a cushion in front of a chair."
+        }
+    },
+    {
+        "frame": "resized_frame_000150_5.00s.jpg",
+        "timestamp": 5.0,
+        "frame_number": 150,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sleeping on a cushion in front of a chair."
+        }
+    },
+    {
+        "frame": "resized_frame_000300_10.00s.jpg",
+        "timestamp": 10.0,
+        "frame_number": 300,
+        "result": {
+            "pet_detected": true,
+            "activity": "drinking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "bowl",
+            "summary": "An orange cat is drinking from a bowl."
+        }
+    },
+    {
+        "frame": "resized_frame_000450_15.00s.jpg",
+        "timestamp": 15.0,
+        "frame_number": 450,
+        "result": {
+            "pet_detected": true,
+            "activity": "drinking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 1.0
+                }
+            ],
+            "interaction": "bowl",
+            "summary": "An orange cat is drinking from a bowl."
+        }
+    },
+    {
+        "frame": "resized_frame_000600_20.00s.jpg",
+        "timestamp": 20.0,
+        "frame_number": 600,
+        "result": {
+            "pet_detected": true,
+            "activity": "eating",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "eating from a pink bowl",
+            "summary": "A black cat is eating food from a pink bowl."
+        }
+    },
+    {
+        "frame": "resized_frame_000750_25.00s.jpg",
+        "timestamp": 25.0,
+        "frame_number": 750,
+        "result": {
+            "pet_detected": true,
+            "activity": "eating",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "in a pink bowl",
+            "summary": "A black cat is eating from a pink bowl."
+        }
+    },
+    {
+        "frame": "resized_frame_000900_30.00s.jpg",
+        "timestamp": 30.0,
+        "frame_number": 900,
+        "result": {
+            "pet_detected": true,
+            "activity": "eating",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "black cat",
+                    "confidence": 1.0
+                }
+            ],
+            "interaction": "in a pink cup",
+            "summary": "A black cat is eating from a pink cup."
+        }
+    },
+    {
+        "frame": "resized_frame_001050_35.00s.jpg",
+        "timestamp": 35.0,
+        "frame_number": 1050,
+        "result": {
+            "pet_detected": true,
+            "activity": "resting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "white cat",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "striped cat",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "looking at each other",
+            "summary": "A white cat is lying down while a striped cat stands nearby, both facing each other."
+        }
+    },
+    {
+        "frame": "resized_frame_001200_40.00s.jpg",
+        "timestamp": 40.0,
+        "frame_number": 1200,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "black and white cat",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "orange tabby cat",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "",
+            "summary": "A black and white cat is sleeping on a blanket, with an orange tabby cat nearby."
+        }
+    },
+    {
+        "frame": "resized_frame_001350_45.00s.jpg",
+        "timestamp": 45.0,
+        "frame_number": 1350,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "white and black cat",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "orange tabby cat",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "",
+            "summary": "Two cats are sleeping on a couch, one white with black patches and the other orange tabby."
+        }
+    },
+    {
+        "frame": "resized_frame_001500_50.00s.jpg",
+        "timestamp": 50.0,
+        "frame_number": 1500,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A black and white cat is sleeping on a couch."
+        }
+    },
+    {
+        "frame": "resized_frame_001650_55.00s.jpg",
+        "timestamp": 55.0,
+        "frame_number": 1650,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "black and white cat",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "orange tabby cat",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "",
+            "summary": "A black and white cat is sleeping on a blanket, with an orange tabby cat nearby."
+        }
+    },
+    {
+        "frame": "resized_frame_001800_60.00s.jpg",
+        "timestamp": 60.0,
+        "frame_number": 1800,
+        "result": {
+            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"scratching\",\n    \"activity_confidence\": 0.8,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.95\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is scratching a box on the floor.\"\n}\n```"
+        }
+    },
+    {
+        "frame": "resized_frame_001950_65.00s.jpg",
+        "timestamp": 65.0,
+        "frame_number": 1950,
+        "result": {
+            "pet_detected": true,
+            "activity": "walking",
+            "activity_confidence": 0.8,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.95
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is walking on the floor in front of a box."
+        }
+    },
+    {
+        "frame": "resized_frame_002100_70.00s.jpg",
+        "timestamp": 70.0,
+        "frame_number": 2100,
+        "result": {
+            "pet_detected": true,
+            "activity": "sitting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sitting inside a box on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_002250_75.00s.jpg",
+        "timestamp": 75.0,
+        "frame_number": 2250,
+        "result": {
+            "pet_detected": true,
+            "activity": "jumping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "white cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "playing with piano",
+            "summary": "A white cat is jumping towards a piano in a cozy living room."
+        }
+    },
+    {
+        "frame": "resized_frame_002400_80.00s.jpg",
+        "timestamp": 80.0,
+        "frame_number": 2400,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sleeping on a picnic table in an outdoor setting."
+        }
+    },
+    {
+        "frame": "resized_frame_002550_85.00s.jpg",
+        "timestamp": 85.0,
+        "frame_number": 2550,
+        "result": {
+            "pet_detected": true,
+            "activity": "sitting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sitting on a bench in an outdoor setting with autumn leaves and trees."
+        }
+    },
+    {
+        "frame": "resized_frame_002700_90.00s.jpg",
+        "timestamp": 90.0,
+        "frame_number": 2700,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "black cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A black cat is sleeping on the couch in a cozy living room."
+        }
+    },
+    {
+        "frame": "resized_frame_002850_95.00s.jpg",
+        "timestamp": 95.0,
+        "frame_number": 2850,
+        "result": {
+            "pet_detected": true,
+            "activity": "scratching",
+            "activity_confidence": 0.8,
+            "objects": [
+                {
+                    "name": "cat paw",
+                    "confidence": 1.0
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is scratching a door, with high confidence in the activity."
+        }
+    },
+    {
+        "frame": "resized_frame_003000_100.00s.jpg",
+        "timestamp": 100.0,
+        "frame_number": 3000,
+        "result": {
+            "pet_detected": true,
+            "activity": "Looking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat's head",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking at the TV in a living room."
+        }
+    },
+    {
+        "frame": "resized_frame_003150_105.00s.jpg",
+        "timestamp": 105.0,
+        "frame_number": 3150,
+        "result": {
+            "pet_detected": true,
+            "activity": "walking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "dog",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A dog is walking in the living room."
+        }
+    },
+    {
+        "frame": "resized_frame_003300_110.00s.jpg",
+        "timestamp": 110.0,
+        "frame_number": 3300,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sleeping on a couch in the living room."
+        }
+    },
+    {
+        "frame": "resized_frame_003450_115.00s.jpg",
+        "timestamp": 115.0,
+        "frame_number": 3450,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 1.0
+                }
+            ],
+            "interaction": "",
+            "summary": "An orange tabby cat is sleeping on a white bedspread."
+        }
+    },
+    {
+        "frame": "resized_frame_003600_120.00s.jpg",
+        "timestamp": 120.0,
+        "frame_number": 3600,
+        "result": {
+            "pet_detected": true,
+            "activity": "sleeping",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.98
+                }
+            ],
+            "interaction": "",
+            "summary": "A ginger cat is sleeping soundly on a white bedspread with blue floral patterns."
+        }
+    },
+    {
+        "frame": "resized_frame_003750_125.00s.jpg",
+        "timestamp": 125.0,
+        "frame_number": 3750,
+        "result": {
+            "pet_detected": true,
+            "activity": "sitting",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "tennis ball",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A gray kitten is sitting under a wooden structure, looking up with wide eyes."
+        }
+    },
+    {
+        "frame": "resized_frame_003900_130.00s.jpg",
+        "timestamp": 130.0,
+        "frame_number": 3900,
+        "result": {
+            "pet_detected": true,
+            "activity": "Peeking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Tennis ball",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "Looking under furniture",
+            "summary": "A curious kitten is peeking out from under a piece of furniture, with a tennis ball nearby."
+        }
+    },
+    {
+        "frame": "resized_frame_004050_135.00s.jpg",
+        "timestamp": 135.0,
+        "frame_number": 4050,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat toy with ball and rope",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "newspaper on floor",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "kitten interacting with toy",
+            "summary": "A playful kitten is engaging with a colorful cat toy and a newspaper on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_004200_140.00s.jpg",
+        "timestamp": 140.0,
+        "frame_number": 4200,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat toy with colorful rope and ball",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "kitten approaching the cat toy",
+            "summary": "A playful kitten is interacting with a colorful cat toy on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_004350_145.00s.jpg",
+        "timestamp": 145.0,
+        "frame_number": 4350,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat playing with a colorful toy"
+                }
+            ],
+            "interaction": "The cat is interacting with the toy by pawing at it.",
+            "summary": "A gray tabby kitten is enthusiastically playing with a colorful, striped toy on a wooden floor."
+        }
+    },
+    {
+        "frame": "resized_frame_004500_150.00s.jpg",
+        "timestamp": 150.0,
+        "frame_number": 4500,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat toy",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "newspaper",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "playing with cat toy",
+            "summary": "A playful kitten is interacting with a colorful cat toy on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_004650_155.00s.jpg",
+        "timestamp": 155.0,
+        "frame_number": 4650,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat toy with a ball and rope",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "newspaper",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "the cat is interacting with the toy",
+            "summary": "A playful kitten is engaging with a colorful ball and rope toy on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_004800_160.00s.jpg",
+        "timestamp": 160.0,
+        "frame_number": 4800,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "toy ball",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "toothbrush toy",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "playing with toys",
+            "summary": "A playful kitten is interacting with a colorful toy ball and a toothbrush toy on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_004950_165.00s.jpg",
+        "timestamp": 165.0,
+        "frame_number": 4950,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat toy with ball and rope",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "newspaper",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "playing with cat toy",
+            "summary": "A playful kitten is interacting with a colorful cat toy on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_005100_170.00s.jpg",
+        "timestamp": 170.0,
+        "frame_number": 5100,
+        "result": {
+            "pet_detected": true,
+            "activity": "playing",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat toy with ball and rope",
+                    "confidence": 0.8
+                },
+                {
+                    "name": "newspaper",
+                    "confidence": 0.7
+                }
+            ],
+            "interaction": "playing with cat toy",
+            "summary": "A playful kitten is interacting with a colorful cat toy on the floor."
+        }
+    },
+    {
+        "frame": "resized_frame_005250_175.00s.jpg",
+        "timestamp": 175.0,
+        "frame_number": 5250,
+        "result": {
+            "pet_detected": true,
+            "activity": "Looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_005400_180.00s.jpg",
+        "timestamp": 180.0,
+        "frame_number": 5400,
+        "result": {
+            "pet_detected": true,
+            "activity": "Peering",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "Cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is peering out from behind a door, showing curiosity."
+        }
+    },
+    {
+        "frame": "resized_frame_005550_185.00s.jpg",
+        "timestamp": 185.0,
+        "frame_number": 5550,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_005700_190.00s.jpg",
+        "timestamp": 190.0,
+        "frame_number": 5700,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_005850_195.00s.jpg",
+        "timestamp": 195.0,
+        "frame_number": 5850,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_006000_200.00s.jpg",
+        "timestamp": 200.0,
+        "frame_number": 6000,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_006150_205.00s.jpg",
+        "timestamp": 205.0,
+        "frame_number": 6150,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_006300_210.00s.jpg",
+        "timestamp": 210.0,
+        "frame_number": 6300,
+        "result": {
+            "pet_detected": true,
+            "activity": "looking out",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is looking out of a window with high confidence."
+        }
+    },
+    {
+        "frame": "resized_frame_006450_215.00s.jpg",
+        "timestamp": 215.0,
+        "frame_number": 6450,
+        "result": {
+            "pet_detected": true,
+            "activity": "walking",
+            "activity_confidence": 0.95,
+            "objects": [
+                {
+                    "name": "white cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A white cat is walking on a wooden floor."
+        }
+    },
+    {
+        "frame": "resized_frame_006600_220.00s.jpg",
+        "timestamp": 220.0,
+        "frame_number": 6600,
+        "result": {
+            "pet_detected": true,
+            "activity": "scratching",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "underneath person's leg",
+            "summary": "A white cat is scratching under a person's leg on a wooden floor."
+        }
+    }
+]
