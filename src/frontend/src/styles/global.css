@@ -1,0 +1,34 @@
+:root {
+  --cream: #fbf3e7;
+  --cream-soft: #f3e6d4;
+  --paw-orange: #d97d45;
+  --paw-orange-dark: #b8622f;
+  --brown-deep: #4a3728;
+  --brown-soft: #7a6152;
+  --white: #ffffff;
+  --shadow: 0 4px 16px rgba(74, 55, 40, 0.12);
+  --shadow-lift: 0 8px 24px rgba(74, 55, 40, 0.18);
+  --radius: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--cream);
+  color: var(--brown-deep);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}

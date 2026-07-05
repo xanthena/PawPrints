@@ -2,24 +2,14 @@
 
 The vision model folder turns extracted video frames into frame-by-frame model analysis JSON. The generated JSON is later consumed by the event builder.
 
-## `test_qwen.py`
+## `main_run_on_candidates.py`
 
-Runs the local Qwen vision flow. It reads image frames from `src/data/frames`, calls the Qwen adapter for each frame, extracts the timestamp from the filename, and writes results to `src/data/jsons/qwen.json`.
-
-Run it from the `src/backend/app/vision_model` folder:
-
-```powershell
-python test_qwen.py
-```
-
-## `test_gemini.py`
-
-Runs the Gemini vision flow. It reads image frames from `src/data/frames`, calls the Gemini adapter for each frame, extracts the timestamp from the filename, and writes results to `src/data/jsons/gemini.json`.
+The real entry point. Reads a video's `events.jsonl` (written by the motion detector), skips `burst_end` markers, computes each candidate's real `end_time`, and calls the configured model (via `model_router.py`) for each one. Writes results to `src/data/jsons/<video_stem>_vision.json`.
 
 Run it from the `src/backend/app/vision_model` folder:
 
 ```powershell
-python test_gemini.py
+python main_run_on_candidates.py <video_stem> [primary_model] [fallback_model]
 ```
 
 ## `paths.py`
@@ -60,4 +50,4 @@ Sends a validated image to OpenAI through the Chat Completions API, authenticate
 
 ## `model_router.py`
 
-Picks which of the four adapters above to call, via `VISION_MODEL_PREFERENCE` or an explicit override -- this is what makes the model swappable without touching any other code. If Gemini is preferred and unavailable, it falls back to the local model once; Claude/OpenAI have no such fallback.
+Picks which of the four adapters above to call. `VISION_MODEL_PRIMARY` is tried first; if that call fails for any reason, `VISION_MODEL_FALLBACK` is tried once instead (both default to `"qwen"`, so a fresh clone with nothing configured still works). Either can be overridden per call instead of via env var -- this is what makes the model (and its backup) swappable without touching any other code.
