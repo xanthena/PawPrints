@@ -18,3 +18,4 @@ frontend/build/
 data/frames/*
 !data/frames/.gitkeep
 data/*.mp4
+data/candidates/
