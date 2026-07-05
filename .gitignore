@@ -1,1 +1,19 @@
 cat-videos.zip
+
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# node / electron
+node_modules/
+frontend/dist/
+frontend/build/
+
+# generated data (not source)
+data/frames/*
+!data/frames/.gitkeep
