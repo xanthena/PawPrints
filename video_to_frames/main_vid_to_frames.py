@@ -7,7 +7,11 @@ video_path = r"C:\Users\rizla\Documents\kitty-hacks\cat-videos\full-cat-video.mp
 
 frames_folder = r"C:\Users\rizla\Documents\kitty-hacks\cat-videos\frames"
 
-extract_frames(video_path, frames_folder, interval_seconds=5)
+# New folder for resized images
+resized_folder = r"C:\Users\rizla\Documents\kitty-hacks\cat-videos\resized_imgs"
+os.makedirs(resized_folder, exist_ok=True)
+
+extract_frames(video_path, frames_folder, 10)
 print("-"*80)
 
 count = 0
@@ -25,7 +29,7 @@ for filename in os.listdir(frames_folder):
 
     print(f"\nProcessing: {filename}")
 
-    resize_image(image_path)
+    resize_image(image_path,resized_folder)
 
     count += 1
 
