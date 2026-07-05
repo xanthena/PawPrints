@@ -5,7 +5,7 @@
         "end_time": 0.4827586206896552,
         "frame_number": 0,
         "result": {
-            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"standing\",\n    \"activity_confidence\": 0.95,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.8\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is standing near a gift bag on the floor.\"\n}\n```"
+            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"standing\",\n    \"activity_confidence\": 0.95,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.8\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is standing near a box on the floor.\"\n}\n```"
         },
         "model_used": "qwen",
         "fell_back": false
@@ -16,17 +16,7 @@
         "end_time": 1.9310344827586208,
         "frame_number": 14,
         "result": {
-            "pet_detected": true,
-            "activity": "jumping",
-            "activity_confidence": 0.8,
-            "objects": [
-                {
-                    "name": "cat",
-                    "confidence": 0.95
-                }
-            ],
-            "interaction": "",
-            "summary": "A cat is jumping over a box on the floor."
+            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"walking\",\n    \"activity_confidence\": 0.8,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.95\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is walking on a tiled floor, with its paw raised.\"\n}\n```"
         },
         "model_used": "qwen",
         "fell_back": false
@@ -37,7 +27,17 @@
         "end_time": 10.620689655172415,
         "frame_number": 308,
         "result": {
-            "raw_output": "```json\n{\n    \"pet_detected\": true,\n    \"activity\": \"sitting\",\n    \"activity_confidence\": 0.95,\n    \"objects\": [\n        {\n            \"name\": \"cat\",\n            \"confidence\": 0.8\n        }\n    ],\n    \"interaction\": \"\",\n    \"summary\": \"A cat is sitting inside a box on the floor.\"\n}\n```"
+            "pet_detected": true,
+            "activity": "sitting",
+            "activity_confidence": 0.9,
+            "objects": [
+                {
+                    "name": "cat",
+                    "confidence": 0.8
+                }
+            ],
+            "interaction": "",
+            "summary": "A cat is sitting inside a box on the floor."
         },
         "model_used": "qwen",
         "fell_back": false

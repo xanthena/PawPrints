@@ -35,9 +35,10 @@ def compute_end_time(all_events, index):
     return candidate["timestamp"]
 
 
-def run(video_stem, preferred_model=None):
-    """preferred_model overrides VISION_MODEL_PREFERENCE for this run --
-    this is the hook a future API/UI toggle would call through."""
+def run(video_stem, primary_model=None, fallback_model=None):
+    """primary_model/fallback_model override VISION_MODEL_PRIMARY/
+    VISION_MODEL_FALLBACK for this run -- this is the hook a future
+    API/UI toggle would call through."""
     all_events = load_events(video_stem)
     results = []
 
@@ -49,7 +50,12 @@ def run(video_stem, preferred_model=None):
         end_time = compute_end_time(all_events, index)
         print(f"Analyzing candidate: {Path(frame_path).name} (trigger={event['trigger']})")
 
-        outcome = model_router.analyze(frame_path, allowed_dir=str(FRAMES_DIR), preferred=preferred_model)
+        outcome = model_router.analyze(
+            frame_path,
+            allowed_dir=str(FRAMES_DIR),
+            primary=primary_model,
+            fallback=fallback_model,
+        )
         raw_output = outcome["output"]
 
         if isinstance(raw_output, str):
@@ -81,5 +87,6 @@ def run(video_stem, preferred_model=None):
 
 if __name__ == "__main__":
     video_stem = sys.argv[1] if len(sys.argv) > 1 else "cat_inbag"
-    preferred_model = sys.argv[2] if len(sys.argv) > 2 else None
-    run(video_stem, preferred_model=preferred_model)
+    primary_model = sys.argv[2] if len(sys.argv) > 2 else None
+    fallback_model = sys.argv[3] if len(sys.argv) > 3 else None
+    run(video_stem, primary_model=primary_model, fallback_model=fallback_model)

@@ -60,4 +60,4 @@ Sends a validated image to OpenAI through the Chat Completions API, authenticate
 
 ## `model_router.py`
 
-Picks which of the four adapters above to call, via `VISION_MODEL_PREFERENCE` or an explicit override -- this is what makes the model swappable without touching any other code. If Gemini is preferred and unavailable, it falls back to the local model once; Claude/OpenAI have no such fallback.
+Picks which of the four adapters above to call. `VISION_MODEL_PRIMARY` is tried first; if that call fails for any reason, `VISION_MODEL_FALLBACK` is tried once instead (both default to `"qwen"`, so a fresh clone with nothing configured still works). Either can be overridden per call instead of via env var -- this is what makes the model (and its backup) swappable without touching any other code.
