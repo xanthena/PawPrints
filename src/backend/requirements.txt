@@ -1,1 +1,3 @@
 opencv-python
+ollama
+python-dotenv
