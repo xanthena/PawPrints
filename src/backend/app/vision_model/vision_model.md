@@ -1,0 +1,51 @@
+﻿# Vision Model Guide
+
+The vision model folder turns extracted video frames into frame-by-frame model analysis JSON. The generated JSON is later consumed by the event builder.
+
+## `test_qwen.py`
+
+Runs the local Qwen vision flow. It reads image frames from `src/data/frames`, calls the Qwen adapter for each frame, extracts the timestamp from the filename, and writes results to `src/data/jsons/qwen.json`.
+
+Run it from the `src/backend/app/vision_model` folder:
+
+```powershell
+python test_qwen.py
+```
+
+## `test_gemini.py`
+
+Runs the Gemini vision flow. It reads image frames from `src/data/frames`, calls the Gemini adapter for each frame, extracts the timestamp from the filename, and writes results to `src/data/jsons/gemini.json`.
+
+Run it from the `src/backend/app/vision_model` folder:
+
+```powershell
+python test_gemini.py
+```
+
+## `paths.py`
+
+Defines shared data paths for frame input and JSON output. The runners use `FRAMES_DIR` for image input and `JSONS_DIR` for generated model output.
+
+## `prompt.py`
+
+Contains the shared vision prompt. The prompt asks the model to return only JSON with pet detection, activity, confidence, objects, interaction, and summary.
+
+## `config.py`
+
+Loads environment configuration. Gemini uses `GOOGLE_PROJECT_ID`, and image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
+
+## `image_validation.py`
+
+Validates image paths before sending them to a model. It ensures each image is inside the configured frames folder, uses a supported image extension, is not empty, and does not exceed the configured size limit.
+
+## `timestamp_extractor_from_file.py`
+
+Parses frame filenames such as `frame_000120_4.00s.jpg` and returns the frame number and timestamp.
+
+## `models/local_qwen.py`
+
+Sends a validated image to the local Ollama Qwen model, using `qwen2.5vl:3b`, and returns the model response text.
+
+## `models/google_gemini.py`
+
+Sends a validated image to Gemini through Vertex AI, using `gemini-2.5-flash`, and returns the model response text.
