@@ -2,15 +2,17 @@ import time
 import ollama
 
 from prompt import SYSTEM_PROMPT
+from image_validation import validate_image_path
 
 
-def analyze(image_path: str) -> str:
+def analyze(image_path: str, allowed_dir: str) -> str:
+    image = validate_image_path(image_path, allowed_dir)
 
     print("\n" + "=" * 60)
     print("Qwen Analysis Started")
     print("=" * 60)
 
-    print(f"Image : {image_path}")
+    print(f"Image : {image.name}")
     print(f"Start Time : {time.strftime('%H:%M:%S')}")
 
     start = time.perf_counter()
@@ -27,7 +29,7 @@ def analyze(image_path: str) -> str:
             {
                 "role": "user",
                 "content": SYSTEM_PROMPT,
-                "images": [image_path]
+                "images": [str(image.path)]
             }
         ]
 

@@ -12,6 +12,7 @@ from google.genai import types
 from prompt import SYSTEM_PROMPT
 
 from config import GOOGLE_PROJECT_ID
+from image_validation import validate_image_path
 
 GOOGLE_PROJECT_ID = GOOGLE_PROJECT_ID
 
@@ -23,20 +24,21 @@ client = genai.Client(
 )
 
 
-def analyze(image_path: str) -> str:
+def analyze(image_path: str, allowed_dir: str) -> str:
+    image = validate_image_path(image_path, allowed_dir)
 
     print("\n" + "=" * 60)
     print("Gemini Analysis Started")
     print("=" * 60)
 
-    print(f"Image : {image_path}")
+    print(f"Image : {image.name}")
     print(f"Start Time : {time.strftime('%H:%M:%S')}")
 
     start = time.perf_counter()
 
     print("\nSending request to Gemini...")
 
-    with open(image_path, "rb") as f:
+    with open(image.path, "rb") as f:
         image_bytes = f.read()
 
     response = client.models.generate_content(
@@ -45,7 +47,7 @@ def analyze(image_path: str) -> str:
             SYSTEM_PROMPT,
             types.Part.from_bytes(
                 data=image_bytes,
-                mime_type="image/jpeg",
+                mime_type=image.mime_type,
             ),
         ],
     )
