@@ -1,8 +1,8 @@
 """
 google_gemini.py
 
-Communicates with Google's Gemini Vision model
-using Application Default Credentials.
+Communicates with Google's Gemini Vision model through the Gemini
+Developer API (AI Studio), authenticated with a plain API key.
 """
 
 import time
@@ -11,20 +11,26 @@ from google.genai import types
 
 from prompt import SYSTEM_PROMPT
 
-from config import GOOGLE_PROJECT_ID
+from config import GEMINI_API_KEY
 from image_validation import validate_image_path
 
-GOOGLE_PROJECT_ID = GOOGLE_PROJECT_ID
+_client = None
 
-# Uses Application Default Credentials automatically
-client = genai.Client(
-    vertexai=True,
-    project=GOOGLE_PROJECT_ID,
-    location="global",
-)
+
+def _get_client():
+    # Built lazily, not at import time, so importing this module (e.g. from
+    # a router that also supports the local model) doesn't fail just
+    # because GEMINI_API_KEY isn't configured in this environment.
+    global _client
+    if _client is None:
+        if not GEMINI_API_KEY:
+            raise RuntimeError("GEMINI_API_KEY is not set. Add it to your .env file.")
+        _client = genai.Client(api_key=GEMINI_API_KEY)
+    return _client
 
 
 def analyze(image_path: str, allowed_dir: str) -> str:
+    client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
     print("\n" + "=" * 60)

@@ -32,7 +32,7 @@ Contains the shared vision prompt. The prompt asks the model to return only JSON
 
 ## `config.py`
 
-Loads environment configuration. Gemini uses `GOOGLE_PROJECT_ID`, and image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
+Loads environment configuration. Gemini uses `GEMINI_API_KEY`, and image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
 
 ## `image_validation.py`
 
@@ -48,4 +48,4 @@ Sends a validated image to the local Ollama Qwen model, using `qwen2.5vl:3b`, an
 
 ## `models/google_gemini.py`
 
-Sends a validated image to Gemini through Vertex AI, using `gemini-2.5-flash`, and returns the model response text.
+Sends a validated image to Gemini through the Gemini Developer API (AI Studio), authenticated with `GEMINI_API_KEY`, using `gemini-2.5-flash`, and returns the model response text.

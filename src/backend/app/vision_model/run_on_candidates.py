@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 from paths import DATA_DIR, FRAMES_DIR, JSONS_DIR, REPO_ROOT
-from models.local_qwen import analyze
+import model_router
 
 EVENTS_DIR = DATA_DIR / "events"
 
@@ -20,7 +20,9 @@ def load_candidates(video_stem):
     return [event for event in events if event["kind"] == "candidate"]
 
 
-def run(video_stem, analyze_fn=analyze):
+def run(video_stem, preferred_model=None):
+    """preferred_model overrides VISION_MODEL_PREFERENCE for this run --
+    this is the hook a future API/UI toggle would call through."""
     candidates = load_candidates(video_stem)
     results = []
 
@@ -28,7 +30,8 @@ def run(video_stem, analyze_fn=analyze):
         frame_path = candidate["frame_path"]
         print(f"Analyzing candidate: {Path(frame_path).name} (trigger={candidate['trigger']})")
 
-        raw_output = analyze_fn(frame_path, allowed_dir=str(FRAMES_DIR))
+        outcome = model_router.analyze(frame_path, allowed_dir=str(FRAMES_DIR), preferred=preferred_model)
+        raw_output = outcome["output"]
 
         if isinstance(raw_output, str):
             try:
@@ -43,10 +46,12 @@ def run(video_stem, analyze_fn=analyze):
             "timestamp": candidate["timestamp"],
             "frame_number": candidate["frame_index"],
             "result": result,
+            "model_used": outcome["model_used"],
+            "fell_back": outcome["fell_back"],
         })
 
     JSONS_DIR.mkdir(parents=True, exist_ok=True)
-    output_file = JSONS_DIR / f"{video_stem}_qwen.json"
+    output_file = JSONS_DIR / f"{video_stem}_vision.json"
     with output_file.open("w", encoding="utf-8") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
 
@@ -56,4 +61,5 @@ def run(video_stem, analyze_fn=analyze):
 
 if __name__ == "__main__":
     video_stem = sys.argv[1] if len(sys.argv) > 1 else "cat_inbag"
-    run(video_stem)
+    preferred_model = sys.argv[2] if len(sys.argv) > 2 else None
+    run(video_stem, preferred_model=preferred_model)
