@@ -10,6 +10,7 @@ from unittest.mock import patch
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
+from app.query_layer.path_utils import REPO_ROOT
 from app.query_layer.service import answer_query
 
 
@@ -37,18 +38,25 @@ def write_timeline(root, date_value, video_stem, events):
     return path
 
 
+def query_paths(root):
+    return {
+        "final_timeline_dir": root / "timelines",
+        "source_video_dir": root / "videos",
+        "proof_root": root / "proofs",
+        "response_root": root / "responses",
+    }
+
+
 class QueryServiceTests(unittest.TestCase):
-    def test_yes_answer_contains_exact_source_and_timestamp_evidence(self):
+    def test_yes_answer_uses_reduced_relative_path_contract(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            timelines = root / "timelines"
-            videos = root / "videos"
-            proofs = root / "proofs"
-            videos.mkdir()
-            video = videos / "kitchen.mp4"
+            paths = query_paths(root)
+            paths["source_video_dir"].mkdir()
+            video = paths["source_video_dir"] / "kitchen.mp4"
             video.write_bytes(b"video")
             timeline = write_timeline(
-                timelines,
+                paths["final_timeline_dir"],
                 "2026-07-06",
                 "kitchen",
                 [
@@ -60,34 +68,50 @@ class QueryServiceTests(unittest.TestCase):
             response = answer_query(
                 "Did my cat eat today?",
                 today="2026-07-06",
-                final_timeline_dir=timelines,
-                source_video_dir=videos,
-                proof_root=proofs,
+                **paths,
             )
 
             self.assertEqual(response["status"], "yes")
             self.assertEqual(response["match_count"], 2)
             self.assertEqual(response["total_duration"], 18.0)
             self.assertIn("twice", response["answer"])
-            self.assertEqual(response["proof"]["status"], "not_requested")
+            self.assertEqual(
+                response["proof"],
+                {"requested": False, "status": "not_requested", "error": ""},
+            )
             first = response["evidence"][0]
-            self.assertEqual(first["source_json_file"], timeline.name)
-            self.assertEqual(first["source_json_path"], str(timeline.resolve()))
-            self.assertEqual(first["source_video_name"], video.name)
-            self.assertEqual(first["source_video_path"], str(video.resolve()))
-            self.assertEqual(first["event_start_timestamp"], "00:00:20.000")
+            for removed_field in (
+                "importance",
+                "source_json_file",
+                "source_video_name",
+                "event_start_seconds",
+                "event_end_seconds",
+                "event_start_timestamp",
+                "event_end_timestamp",
+            ):
+                self.assertNotIn(removed_field, first)
+            self.assertFalse(Path(first["source_json_path"]).is_absolute())
+            self.assertFalse(Path(first["source_video_path"]).is_absolute())
+            self.assertTrue(first["source_json_path"].endswith(timeline.name))
+            self.assertTrue(first["source_video_path"].endswith(video.name))
             self.assertEqual(first["clip_start_timestamp"], "00:00:15.000")
             self.assertEqual(first["clip_duration"], 18.0)
+            self.assertFalse(Path(response["timeline_files"][0]).is_absolute())
+
+            saved = list(
+                (paths["response_root"] / "2026-07-06" / "proof_not_requested").glob("*.json")
+            )
+            self.assertEqual(len(saved), 1)
+            self.assertEqual(json.loads(saved[0].read_text()), response)
 
     def test_distinguishes_no_match_from_no_data(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            timelines = root / "timelines"
-            videos = root / "videos"
-            videos.mkdir()
-            (videos / "kitchen.mp4").write_bytes(b"video")
+            paths = query_paths(root)
+            paths["source_video_dir"].mkdir()
+            (paths["source_video_dir"] / "kitchen.mp4").write_bytes(b"video")
             write_timeline(
-                timelines,
+                paths["final_timeline_dir"],
                 "2026-07-06",
                 "kitchen",
                 [timeline_event(1, "sleeping", 0, 10, "A cat is sleeping.")],
@@ -96,14 +120,12 @@ class QueryServiceTests(unittest.TestCase):
             no_match = answer_query(
                 "Did my cat eat today?",
                 today="2026-07-06",
-                final_timeline_dir=timelines,
-                source_video_dir=videos,
+                **paths,
             )
             no_data = answer_query(
                 "Did my cat eat today?",
                 today="2026-07-07",
-                final_timeline_dir=timelines,
-                source_video_dir=videos,
+                **paths,
             )
 
         self.assertEqual(no_match["status"], "no")
@@ -112,13 +134,12 @@ class QueryServiceTests(unittest.TestCase):
     def test_queries_multiple_days(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            timelines = root / "timelines"
-            videos = root / "videos"
-            videos.mkdir()
-            (videos / "kitchen.mp4").write_bytes(b"video")
+            paths = query_paths(root)
+            paths["source_video_dir"].mkdir()
+            (paths["source_video_dir"] / "kitchen.mp4").write_bytes(b"video")
             for date_value in ("2026-07-05", "2026-07-06"):
                 write_timeline(
-                    timelines,
+                    paths["final_timeline_dir"],
                     date_value,
                     "kitchen",
                     [timeline_event(1, "jumping", 10, 12, "A cat is jumping.")],
@@ -126,24 +147,21 @@ class QueryServiceTests(unittest.TestCase):
 
             response = answer_query(
                 "Did my cat jump from 2026-07-05 to 2026-07-06?",
-                final_timeline_dir=timelines,
-                source_video_dir=videos,
+                **paths,
             )
 
         self.assertEqual(response["status"], "yes")
         self.assertEqual(response["match_count"], 2)
         self.assertEqual(response["available_dates"], ["2026-07-05", "2026-07-06"])
 
-    def test_requested_proof_stitches_multiple_ranges(self):
+    def test_requested_proof_uses_reduced_contract_and_proof_folder(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            timelines = root / "timelines"
-            videos = root / "videos"
-            proofs = root / "proofs"
-            videos.mkdir()
-            (videos / "kitchen.mp4").write_bytes(b"video")
+            paths = query_paths(root)
+            paths["source_video_dir"].mkdir()
+            (paths["source_video_dir"] / "kitchen.mp4").write_bytes(b"video")
             write_timeline(
-                timelines,
+                paths["final_timeline_dir"],
                 "2026-07-06",
                 "kitchen",
                 [
@@ -165,30 +183,39 @@ class QueryServiceTests(unittest.TestCase):
                     "Did my cat eat today?",
                     today="2026-07-06",
                     include_proof=True,
-                    final_timeline_dir=timelines,
-                    source_video_dir=videos,
-                    proof_root=proofs,
                     now=datetime(2026, 7, 6, 12, tzinfo=timezone.utc),
+                    **paths,
                 )
 
-            self.assertEqual(response["proof"]["status"], "created")
-            self.assertTrue(response["proof"]["stitched"])
-            self.assertEqual(response["proof"]["segment_count"], 2)
-            self.assertEqual(response["proof"]["total_duration"], 38.0)
+            proof = response["proof"]
+            self.assertEqual(proof["status"], "created")
+            self.assertEqual(proof["error"], "")
+            self.assertTrue(proof["stitched"])
+            self.assertEqual(proof["segment_count"], 2)
+            self.assertNotIn("video_name", proof)
+            self.assertFalse(Path(proof["video_path"]).is_absolute())
             self.assertEqual(
                 [item["proof_segment"] for item in response["evidence"]],
                 [1, 2],
             )
-            self.assertTrue(Path(response["proof"]["video_path"]).is_file())
+            for segment in proof["segments"]:
+                self.assertNotIn("source_video_path", segment)
+                self.assertNotIn("evidence_indices", segment)
 
-    def test_missing_video_keeps_answer_but_marks_proof_unavailable(self):
+            proof_file = (REPO_ROOT / proof["video_path"]).resolve()
+            self.assertTrue(proof_file.is_file())
+            saved = list(
+                (paths["response_root"] / "2026-07-06" / "proof_requested").glob("*.json")
+            )
+            self.assertEqual(len(saved), 1)
+
+    def test_missing_video_keeps_answer_and_puts_message_in_error(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            timelines = root / "timelines"
-            videos = root / "videos"
-            videos.mkdir()
+            paths = query_paths(root)
+            paths["source_video_dir"].mkdir()
             write_timeline(
-                timelines,
+                paths["final_timeline_dir"],
                 "2026-07-06",
                 "kitchen",
                 [timeline_event(1, "eating", 20, 28, "A cat is eating.")],
@@ -198,13 +225,13 @@ class QueryServiceTests(unittest.TestCase):
                 "Did my cat eat today?",
                 today="2026-07-06",
                 include_proof=True,
-                final_timeline_dir=timelines,
-                source_video_dir=videos,
-                proof_root=root / "proofs",
+                **paths,
             )
 
         self.assertEqual(response["status"], "yes")
         self.assertEqual(response["proof"]["status"], "not_available")
+        self.assertTrue(response["proof"]["error"])
+        self.assertNotIn("reason", response["proof"])
 
 
 if __name__ == "__main__":

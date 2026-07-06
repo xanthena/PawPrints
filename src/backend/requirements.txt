@@ -4,3 +4,4 @@ python-dotenv
 google-genai
 anthropic
 openai
+imageio-ffmpeg>=0.5.1,<1.0

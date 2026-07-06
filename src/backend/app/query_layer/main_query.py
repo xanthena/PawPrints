@@ -12,11 +12,13 @@ if __package__ in (None, ""):
     from app.event_builder.timeline_storage import FINAL_TIMELINE_DIR
     from app.highlight_reel.video_resolver import SOURCE_VIDEO_DIR
     from app.query_layer.proof_storage import DEFAULT_PROOF_ROOT
+    from app.query_layer.response_storage import DEFAULT_RESPONSE_ROOT
     from app.query_layer.service import answer_query
 else:
     from app.event_builder.timeline_storage import FINAL_TIMELINE_DIR
     from app.highlight_reel.video_resolver import SOURCE_VIDEO_DIR
     from .proof_storage import DEFAULT_PROOF_ROOT
+    from .response_storage import DEFAULT_RESPONSE_ROOT
     from .service import answer_query
 
 
@@ -50,12 +52,23 @@ def _parser():
         default=DEFAULT_PROOF_ROOT,
         help="Managed temporary proof folder.",
     )
+    parser.add_argument(
+        "--response-root",
+        type=Path,
+        default=DEFAULT_RESPONSE_ROOT,
+        help="Root for dated proof/non-proof response JSON folders.",
+    )
+    parser.add_argument(
+        "--no-save-response",
+        action="store_true",
+        help="Print the response without adding it to the dated response archive.",
+    )
     parser.add_argument("--proof-ttl-hours", type=float, default=24)
     parser.add_argument("--ffmpeg", type=Path)
     parser.add_argument(
         "--output-json",
         type=Path,
-        help="Optionally save the response JSON as well as printing it.",
+        help="Optionally save an additional copy at an explicit path.",
     )
     return parser
 
@@ -72,6 +85,8 @@ def main(argv=None):
         proof_root=args.proof_root,
         proof_ttl_hours=args.proof_ttl_hours,
         ffmpeg_path=args.ffmpeg,
+        response_root=args.response_root,
+        persist_response=not args.no_save_response,
     )
     output = json.dumps(response, indent=4, ensure_ascii=False)
     print(output)
@@ -86,4 +101,3 @@ def main(argv=None):
 
 if __name__ == "__main__":
     main()
-
