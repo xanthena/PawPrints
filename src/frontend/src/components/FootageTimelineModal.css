@@ -1,0 +1,121 @@
+.timeline-modal {
+  width: 860px;
+  max-width: 92vw;
+}
+
+.timeline-modal__body {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.timeline-modal__video {
+  width: 100%;
+  max-height: 480px;
+  border-radius: var(--radius);
+  background: #000;
+  display: block;
+}
+
+.timeline-modal__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 480px;
+}
+
+.timeline-modal__panel-title {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--brown-soft);
+}
+
+.timeline-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.timeline-modal__empty {
+  font-size: 0.85rem;
+  color: var(--brown-soft);
+  padding: 8px 0;
+}
+
+.timeline-modal__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--cream);
+}
+
+.timeline-modal__timestamp {
+  background: var(--paw-orange);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.timeline-modal__timestamp:hover {
+  background: var(--paw-orange-dark);
+}
+
+.timeline-modal__activity {
+  font-size: 0.88rem;
+  color: var(--brown-deep);
+  text-transform: capitalize;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeline-modal__analyzing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--cream);
+  font-size: 0.82rem;
+  color: var(--brown-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-modal__reel-link {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--cream);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--paw-orange-dark);
+  text-align: center;
+}
+
+.timeline-modal__reel-note {
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--cream);
+  font-size: 0.82rem;
+  color: var(--brown-soft);
+}
+
+@media (max-width: 640px) {
+  .timeline-modal__body {
+    grid-template-columns: 1fr;
+  }
+}

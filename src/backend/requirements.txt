@@ -4,4 +4,7 @@ python-dotenv
 google-genai
 anthropic
 openai
+fastapi
+uvicorn[standard]
+python-multipart
 imageio-ffmpeg>=0.5.1,<1.0
