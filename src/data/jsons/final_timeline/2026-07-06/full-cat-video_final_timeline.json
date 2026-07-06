@@ -1,0 +1,89 @@
+[
+    {
+        "event_id": 1,
+        "activity": "eating",
+        "start_time": 20.0,
+        "end_time": 28.0,
+        "duration": 8.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_000840_28.00s.jpg",
+        "objects": [
+            "cat",
+            "bowl",
+            "pet food"
+        ],
+        "interaction": "bowl",
+        "summary": "A black cat is eating food from a bowl in the kitchen.",
+        "clip_start": 15.0,
+        "clip_end": 33.0
+    },
+    {
+        "event_id": 2,
+        "activity": "running",
+        "start_time": 72.0,
+        "end_time": 78.0,
+        "duration": 6.0,
+        "importance": 8,
+        "thumbnail_frame": "frame_002280_76.00s.jpg",
+        "objects": [
+            "cat",
+            "floor"
+        ],
+        "interaction": "",
+        "summary": "A white cat is running around quickly across the living room floor.",
+        "clip_start": 67.0,
+        "clip_end": 83.0
+    },
+    {
+        "event_id": 3,
+        "activity": "walking",
+        "start_time": 96.0,
+        "end_time": 102.0,
+        "duration": 6.0,
+        "importance": 5,
+        "thumbnail_frame": "frame_003000_100.00s.jpg",
+        "objects": [
+            "cat",
+            "sofa"
+        ],
+        "interaction": "approaching sofa",
+        "summary": "An orange cat walked near the sofa and stopped beside it.",
+        "clip_start": 91.0,
+        "clip_end": 107.0
+    },
+    {
+        "event_id": 4,
+        "activity": "jumping",
+        "start_time": 132.0,
+        "end_time": 138.0,
+        "duration": 6.0,
+        "importance": 10,
+        "thumbnail_frame": "frame_004080_136.00s.jpg",
+        "objects": [
+            "cat",
+            "toy"
+        ],
+        "interaction": "toy",
+        "summary": "A playful cat is jumping toward a colorful toy on the floor.",
+        "clip_start": 127.0,
+        "clip_end": 143.0
+    },
+    {
+        "event_id": 5,
+        "activity": "eating",
+        "start_time": 180.0,
+        "end_time": 190.0,
+        "duration": 10.0,
+        "importance": 6,
+        "thumbnail_frame": "frame_005520_184.00s.jpg",
+        "objects": [
+            "cat",
+            "bowl",
+            "pet food"
+        ],
+        "interaction": "bowl",
+        "summary": "The cat returned to the food bowl and started eating again.",
+        "clip_start": 175.0,
+        "clip_end": 195.0
+    }
+]
