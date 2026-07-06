@@ -23,6 +23,19 @@
   text-align: left;
 }
 
+.dashboard__days {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.dashboard__day-heading {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--brown-deep);
+}
+
 .dashboard__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

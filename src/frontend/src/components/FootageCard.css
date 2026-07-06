@@ -28,19 +28,3 @@
 .footage-card:hover .footage-card__thumb {
   box-shadow: var(--shadow-lift);
 }
-
-.footage-card__label {
-  display: flex;
-  flex-direction: column;
-}
-
-.footage-card__day {
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--brown-deep);
-}
-
-.footage-card__date {
-  font-size: 0.85rem;
-  color: var(--brown-soft);
-}

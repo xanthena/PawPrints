@@ -3,13 +3,17 @@ import CatCaptureAnimation from './CatCaptureAnimation.jsx'
 import PawStamp from './PawStamp.jsx'
 import './SplashScreen.css'
 
+// Kept well outside the title's own footprint (roughly the center 40%
+// of the screen, both axes) so the trail never collides with the
+// cat-capture animation, the title text, or the paw-stamp between the
+// two words.
 const PAW_STEPS = [
-  { left: '18%', top: '62%', rotate: -18 },
-  { left: '30%', top: '46%', rotate: -8 },
-  { left: '43%', top: '58%', rotate: -18 },
-  { left: '56%', top: '42%', rotate: -8 },
-  { left: '69%', top: '54%', rotate: -18 },
-  { left: '82%', top: '38%', rotate: -8 },
+  { left: '10%', top: '78%', rotate: -18 },
+  { left: '20%', top: '88%', rotate: -8 },
+  { left: '82%', top: '14%', rotate: -18 },
+  { left: '90%', top: '24%', rotate: -8 },
+  { left: '12%', top: '16%', rotate: -18 },
+  { left: '86%', top: '82%', rotate: -8 },
 ]
 
 export default function SplashScreen({ fadingOut = false }) {

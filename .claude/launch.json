@@ -7,6 +7,13 @@
       "runtimeArgs": ["run", "dev"],
       "cwd": "src/frontend",
       "port": 5173
+    },
+    {
+      "name": "pawprints-backend",
+      "runtimeExecutable": "py",
+      "runtimeArgs": ["-3.12", "-m", "uvicorn", "app.api.server:app", "--port", "8000"],
+      "cwd": "src/backend",
+      "port": 8000
     }
   ]
 }
