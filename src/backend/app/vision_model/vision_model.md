@@ -1,12 +1,25 @@
-﻿# Vision Model Guide
+# Vision Model Guide
 
-The vision model folder turns extracted video frames into frame-by-frame model analysis JSON. The generated JSON is later consumed by the event builder.
+The vision model folder turns extracted video frames into frame-by-frame model
+analysis JSON. The generated JSON is later consumed by the event builder.
 
 ## `main_run_on_candidates.py`
 
-The real entry point. Reads a video's `events.jsonl` (written by the motion detector), skips `burst_end` markers, computes each candidate's real `end_time`, and calls the configured model (via `model_router.py`) for each one. Writes results to `src/data/jsons/<video_stem>_vision.json`.
+The real entry point. It reads a video's `events.jsonl` from the motion
+detector, skips `burst_end` markers, computes each candidate's real `end_time`,
+and calls the configured model through `model_router.py`.
 
-Run it from the `src/backend/app/vision_model` folder:
+It writes to:
+
+```text
+src/data/jsons/<video_stem>_vision.json
+```
+
+This raw vision file intentionally uses write mode, so rerunning vision for the
+same video overwrites its previous `_vision.json`. Dated, non-overwriting
+history begins only after the event-builder stage.
+
+Run it from `src/backend/app/vision_model`:
 
 ```powershell
 python main_run_on_candidates.py <video_stem> [primary_model] [fallback_model]
@@ -14,40 +27,43 @@ python main_run_on_candidates.py <video_stem> [primary_model] [fallback_model]
 
 ## `paths.py`
 
-Defines shared data paths for frame input and JSON output. The runners use `FRAMES_DIR` for image input and `JSONS_DIR` for generated model output.
+Defines shared data paths for frame input and JSON output.
 
 ## `prompt.py`
 
-Contains the shared vision prompt. The prompt asks the model to return only JSON with pet detection, activity, confidence, objects, interaction, and summary.
+Contains the shared vision prompt. The prompt asks the model to return only
+JSON with pet detection, activity, confidence, objects, interaction, and
+summary.
 
 ## `config.py`
 
-Loads environment configuration. Gemini authenticates via `GEMINI_AUTH_MODE`: `"api_key"` (default) uses `GEMINI_API_KEY` through the Developer API/AI Studio; `"vertex"` uses `GOOGLE_PROJECT_ID` through Vertex AI + Application Default Credentials instead. Image validation uses `VISION_MAX_IMAGE_MB` to limit image size.
+Loads environment configuration. Gemini authenticates through the configured
+API-key or Vertex mode. Image validation uses `VISION_MAX_IMAGE_MB` to limit
+image size.
 
 ## `image_validation.py`
 
-Validates image paths before sending them to a model. It ensures each image is inside the configured frames folder, uses a supported image extension, is not empty, and does not exceed the configured size limit.
-
-## `timestamp_extractor_from_file.py`
-
-Parses frame filenames such as `frame_000120_4.00s.jpg` and returns the frame number and timestamp.
+Validates that images are inside the frames folder, supported, non-empty, and
+within the configured size limit.
 
 ## `models/local_qwen.py`
 
-Sends a validated image to a local Ollama model, using whichever model `OLLAMA_MODEL` names (defaults to `qwen2.5vl:3b`), and returns the model response text.
+Calls the configured local Ollama vision model.
 
 ## `models/google_gemini.py`
 
-Sends a validated image to Gemini through the Gemini Developer API (AI Studio), authenticated with `GEMINI_API_KEY`, using `gemini-2.5-flash`, and returns the model response text.
+Calls Gemini through the configured Google authentication mode.
 
 ## `models/anthropic_claude.py`
 
-Sends a validated image to Claude through the Anthropic Messages API, authenticated with `ANTHROPIC_API_KEY`, using whichever model `ANTHROPIC_MODEL` names, and returns the model response text. Not yet tested against a real key.
+Calls Claude through the Anthropic Messages API.
 
 ## `models/openai_gpt.py`
 
-Sends a validated image to OpenAI through the Chat Completions API, authenticated with `OPENAI_API_KEY`, using whichever model `OPENAI_MODEL` names, and returns the model response text. Not yet tested against a real key.
+Calls OpenAI through the Chat Completions API.
 
 ## `model_router.py`
 
-Picks which of the four adapters above to call. `VISION_MODEL_PRIMARY` is tried first; if that call fails for any reason, `VISION_MODEL_FALLBACK` is tried once instead (both default to `"qwen"`, so a fresh clone with nothing configured still works). Either can be overridden per call instead of via env var -- this is what makes the model (and its backup) swappable without touching any other code.
+Selects the primary vision model and retries once with the configured fallback
+when needed. Both values can be supplied explicitly or through environment
+configuration.
