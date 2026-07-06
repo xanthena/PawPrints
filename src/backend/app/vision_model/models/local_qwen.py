@@ -1,13 +1,19 @@
 import time
 import ollama
 
-from prompt import SYSTEM_PROMPT
-from image_validation import validate_image_path
-from config import OLLAMA_MODEL
+if __package__:
+    from ..config import OLLAMA_MODEL
+    from ..image_validation import validate_image_path
+    from ..prompt import SYSTEM_PROMPT
+else:
+    from config import OLLAMA_MODEL
+    from image_validation import validate_image_path
+    from prompt import SYSTEM_PROMPT
 
 
-def analyze(image_path: str, allowed_dir: str) -> str:
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
     image = validate_image_path(image_path, allowed_dir)
+    images = [str(image.path), *(str(item["path"]) for item in reference_images)]
 
     print("\n" + "=" * 60)
     print(f"Ollama Analysis Started ({OLLAMA_MODEL})")
@@ -29,8 +35,8 @@ def analyze(image_path: str, allowed_dir: str) -> str:
         messages=[
             {
                 "role": "user",
-                "content": SYSTEM_PROMPT,
-                "images": [str(image.path)]
+                "content": prompt,
+                "images": images,
             }
         ]
 

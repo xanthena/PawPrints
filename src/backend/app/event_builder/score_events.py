@@ -11,7 +11,10 @@ ACTIVITY_SCORES = {
 }
 
 
-def _has_multiple_cats(objects):
+def _has_multiple_cats(objects, pet_names):
+    if len(pet_names) > 1:
+        return True
+
     cat_count = 0
 
     for item in objects:
@@ -26,12 +29,19 @@ def score_events(events):
     scored_events = []
 
     for event in events:
-        score = ACTIVITY_SCORES.get(event.get("activity", "unknown"), 1)
+        activities = event.get("activities", ["unknown"])
+        score = max(
+            (ACTIVITY_SCORES.get(activity, 1) for activity in activities),
+            default=1,
+        )
 
         if event.get("interaction"):
             score += 2
 
-        if _has_multiple_cats(event.get("objects", [])):
+        if _has_multiple_cats(
+            event.get("objects", []),
+            event.get("name_of_pet", []),
+        ):
             score += 3
 
         if event.get("confidence", 0.0) > 0.95:

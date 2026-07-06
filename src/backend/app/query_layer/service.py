@@ -5,11 +5,12 @@ from pathlib import Path
 
 from app.event_builder.timeline_storage import FINAL_TIMELINE_DIR
 from app.highlight_reel.video_resolver import SOURCE_VIDEO_DIR
+from app.pet_profiles import DEFAULT_PROFILE_DIR, list_pet_profiles
 
 from .answer_builder import build_answer
 from .date_parser import parse_date_scope
 from .intent_parser import parse_query_intent
-from .matcher import find_matches
+from .matcher import find_matches, rank_matches
 from .path_utils import relative_repo_path
 from .proof_renderer import merge_evidence_ranges, render_proof_video
 from .proof_storage import (
@@ -32,10 +33,12 @@ def _evidence_item(match):
     return {
         "event_id": event.data.get("event_id"),
         "date": event.event_date.isoformat(),
-        "activity": event.activity,
+        "activities": list(event.activities),
+        "name_of_pet": list(event.pet_names),
         "summary": str(event.data.get("summary", "")),
         "objects": event.data.get("objects", []),
         "interaction": str(event.data.get("interaction", "")),
+        "relevance_score": _round_seconds(match.score),
         "duration": _round_seconds(event.duration),
         "source_json_path": str(event.source_json),
         "source_video_path": str(video) if video else None,
@@ -134,6 +137,7 @@ def _build_proof(
                 "clip_start_timestamp": format_video_timestamp(segment.clip_start),
                 "clip_end_timestamp": format_video_timestamp(segment.clip_end),
                 "clip_duration": _round_seconds(segment.duration),
+                "relevance_score": _round_seconds(segment.relevance_score),
             }
         )
 
@@ -179,6 +183,7 @@ def answer_query(
     source_video_dir=SOURCE_VIDEO_DIR,
     proof_root=DEFAULT_PROOF_ROOT,
     proof_ttl_hours=24,
+    pet_profile_dir=DEFAULT_PROFILE_DIR,
     ffmpeg_path=None,
     today=None,
     now=None,
@@ -193,7 +198,10 @@ def answer_query(
         end_date=end_date,
         today=today,
     )
-    intent = parse_query_intent(question)
+    profiles = list_pet_profiles(pet_profile_dir)
+    intent = parse_query_intent(
+        question, known_pet_names=(profile.name for profile in profiles)
+    )
 
     if not intent.supported:
         status = "unsupported"
@@ -212,6 +220,8 @@ def answer_query(
             matches = find_matches(repository.events, intent)
             status = "yes" if matches else "no"
 
+    if include_proof:
+        matches = rank_matches(matches)
     evidence = [_evidence_item(match) for match in matches]
     total_duration = _round_seconds(sum(match.event.duration for match in matches))
     proof = (

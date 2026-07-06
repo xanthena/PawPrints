@@ -45,13 +45,18 @@ the timeline date and the highlight output date.
 - Repeated activities, interactions, objects, overlapping ranges, and nearby
   times are penalized so one repetitive scene does not fill the reel.
 - The chosen clips are returned to chronological order before rendering.
+- A short, name-aware summary is burned into each clip as bracketed plain-white
+  text. Wrapped lines are individually centered over a tightly fitted, nearly
+  transparent black caption box, without outlines or shadows.
+- The manifest records grouped activities, pet names, and the exact caption.
+
 
 ## Run
 
 From `src/backend`:
 
 ```powershell
-python -m pip install -r app/highlight_reel/requirements.txt
+python -m pip install -r requirements.txt
 python -m app.highlight_reel
 ```
 
@@ -61,4 +66,5 @@ Useful options:
 python -m app.highlight_reel --timeline C:\path\to\final_timeline_custom.json --video C:\path\to\source_video.mp4
 python -m app.highlight_reel --max-clips 4 --max-clip-seconds 8
 python -m app.highlight_reel --ffmpeg C:\path\to\ffmpeg.exe
+python -m app.highlight_reel --caption-font C:\Windows\Fonts\arial.ttf
 ```

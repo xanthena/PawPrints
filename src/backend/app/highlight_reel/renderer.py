@@ -1,45 +1,80 @@
-import shutil
-import subprocess
 import tempfile
+import textwrap
 from pathlib import Path
 
-
-def resolve_ffmpeg(ffmpeg_path=None):
-    """Find FFmpeg from an explicit path, PATH, or imageio-ffmpeg."""
-    if ffmpeg_path:
-        executable = Path(ffmpeg_path).expanduser()
-        if executable.is_file():
-            return str(executable.resolve())
-        raise FileNotFoundError(f"FFmpeg executable does not exist: {executable}")
-
-    executable = shutil.which("ffmpeg")
-    if executable:
-        return executable
-
-    try:
-        import imageio_ffmpeg
-
-        return imageio_ffmpeg.get_ffmpeg_exe()
-    except (ImportError, RuntimeError) as error:
-        raise RuntimeError(
-            "FFmpeg was not found. Install highlight_reel/requirements.txt "
-            "or pass --ffmpeg."
-        ) from error
+from app.media_tools import concat_file_entry, resolve_ffmpeg, run_ffmpeg
 
 
-def _run(command, description):
-    result = subprocess.run(command, capture_output=True, text=True, check=False)
-    if result.returncode != 0:
-        details = result.stderr.strip() or result.stdout.strip()
-        raise RuntimeError(f"FFmpeg failed while {description}:\n{details}")
+FONT_CANDIDATES = (
+    # Prefer plain upright sans-serif faces on each supported platform.
+    Path("C:/Windows/Fonts/arial.ttf"),
+    Path("C:/Windows/Fonts/segoeui.ttf"),
+    Path("/System/Library/Fonts/HelveticaNeue.ttc"),
+    Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+)
 
 
-def _concat_entry(path):
-    escaped_path = path.as_posix().replace("'", "'\\''")
-    return f"file '{escaped_path}'\n"
+def resolve_caption_font(font_path=None):
+    if font_path:
+        font = Path(font_path).expanduser().resolve()
+        if not font.is_file():
+            raise FileNotFoundError(f"Caption font does not exist: {font}")
+        return font
+    return next((path for path in FONT_CANDIDATES if path.is_file()), None)
 
 
-def render_highlight_reel(video_path, clips, output_path, ffmpeg_path=None):
+def _escape_filter_path(path):
+    value = Path(path).resolve().as_posix()
+    return value.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+
+
+def _wrapped_caption(value, width=42):
+    normalized = " ".join(str(value or "").split())
+    lines = textwrap.wrap(
+        normalized,
+        width=max(width - 2, 1),
+        max_lines=2,
+        placeholder="...",
+    )
+    if not lines:
+        return "[]"
+    lines[0] = f"[{lines[0]}"
+    lines[-1] = f"{lines[-1]}]"
+    return "\n".join(lines)
+
+
+def build_caption_filter(caption_file, font_path=None):
+    """Build a warm-yellow, classic film-subtitle drawtext filter."""
+    options = []
+    font = resolve_caption_font(font_path)
+    if font:
+        options.append(f"fontfile='{_escape_filter_path(font)}'")
+    options.extend(
+        [
+            f"textfile='{_escape_filter_path(caption_file)}'",
+            "reload=0",
+            "expansion=none",
+            "fontcolor=white",
+            "fontsize=h/26",
+            "line_spacing=2",
+            "text_align=C",
+            "x=(w-text_w)/2",
+            "y=h-text_h-h*0.045",
+            "box=1",
+            "boxcolor=black@0.24",
+            "boxborderw=5",
+        ]
+    )
+    return f"drawtext={':'.join(options)}"
+
+
+def render_highlight_reel(
+    video_path,
+    clips,
+    output_path,
+    ffmpeg_path=None,
+    caption_font_path=None,
+):
     """Cut selected clips, normalize their streams, and concatenate an MP4."""
     source = Path(video_path).resolve()
     destination = Path(output_path).resolve()
@@ -60,6 +95,13 @@ def render_highlight_reel(video_path, clips, output_path, ffmpeg_path=None):
 
         for index, clip in enumerate(clips, start=1):
             segment = temporary / f"segment_{index:03d}.mp4"
+            caption_file = temporary / f"caption_{index:03d}.txt"
+            caption_file.write_text(
+                _wrapped_caption(clip.caption),
+                encoding="utf-8",
+                newline="\n",
+            )
+            video_filter = build_caption_filter(caption_file, caption_font_path)
             command = [
                 ffmpeg,
                 "-hide_banner",
@@ -78,12 +120,16 @@ def render_highlight_reel(video_path, clips, output_path, ffmpeg_path=None):
                 "0:a?",
                 "-c:v",
                 "libx264",
+                "-vf",
+                video_filter,
                 "-preset",
                 "fast",
                 "-crf",
                 "21",
                 "-c:a",
                 "aac",
+                "-pix_fmt",
+                "yuv420p",
                 "-b:a",
                 "160k",
                 "-avoid_negative_ts",
@@ -92,16 +138,16 @@ def render_highlight_reel(video_path, clips, output_path, ffmpeg_path=None):
                 "+faststart",
                 str(segment),
             ]
-            _run(command, f"creating segment {index}")
+            run_ffmpeg(command, f"creating segment {index}")
             segment_paths.append(segment)
 
         concat_file = temporary / "segments.txt"
         concat_file.write_text(
-            "".join(_concat_entry(path) for path in segment_paths),
+            "".join(concat_file_entry(path) for path in segment_paths),
             encoding="utf-8",
         )
         rendered = temporary / "highlight_reel.mp4"
-        _run(
+        run_ffmpeg(
             [
                 ffmpeg,
                 "-hide_banner",

@@ -163,6 +163,17 @@ def _normalize_activity(activity):
     return ACTIVITY_MAP.get(normalized, normalized.replace(" ", "_") or "unknown")
 
 
+def _normalize_activities(activities):
+    if not isinstance(activities, list):
+        activities = [activities]
+    normalized = []
+    for activity in activities:
+        canonical = _normalize_activity(activity)
+        if canonical not in normalized:
+            normalized.append(canonical)
+    return normalized or ["unknown"]
+
+
 def _normalize_interaction(interaction):
     normalized = _normalize_text(interaction)
     if not normalized:
@@ -191,7 +202,10 @@ def normalize_results(results):
 
     for frame in results:
         result = frame["result"].copy()
-        result["activity"] = _normalize_activity(result.get("activity"))
+        result["activities"] = _normalize_activities(
+            result.get("activities", result.get("activity", "unknown"))
+        )
+        result.pop("activity", None)
         result["interaction"] = _normalize_interaction(result.get("interaction"))
         result["objects"] = [
             {

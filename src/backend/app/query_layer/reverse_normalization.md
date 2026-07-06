@@ -5,12 +5,12 @@ different evidence forms that may appear in a final timeline.
 
 For example, a canonical `playing` query can be supported by:
 
-- `playing`, `pawing`, `chasing`, or `zoomies` in `activity`
+- `playing`, `pawing`, `chasing`, or `zoomies` in `activities`
 - `playful`, `toying around`, `running around`, or `zoomies` in `summary`
 - `toy`, `ball`, `wand`, or `rope toy` in `interaction`
 - matching toy terms in `objects`
 
-The matcher scores `activity`, `summary`, `objects`, and `interaction`
+The matcher scores `activities`, `summary`, `objects`, and `interaction`
 independently. Strong activity/summary evidence can match by itself, while
 weaker context generally needs support from more than one field. A sleeping
 cat with only a toy object nearby is therefore not reported as playing.

@@ -19,12 +19,37 @@ def _date_phrase(scope, question):
         return f"on {scope.start_date.isoformat()}"
     return f"from {scope.start_date.isoformat()} to {scope.end_date.isoformat()}"
 
+def _unique_names(values):
+    names = []
+    seen = set()
+    for value in values:
+        name = str(value or "").strip()
+        if name and name.casefold() not in seen:
+            names.append(name)
+            seen.add(name.casefold())
+    return names
+
+
+def _subject(intent, matches):
+    names = _unique_names(intent.pet_names)
+    if not names:
+        names = _unique_names(
+            name for match in matches for name in match.event.pet_names
+        )
+    if not names:
+        return "Your cat", "was"
+    if len(names) == 1:
+        return names[0], "was"
+    return f"{', '.join(names[:-1])} and {names[-1]}", "were"
+
+
 
 def build_answer(status, intent, scope, matches):
     """Build a concise answer while keeping status semantics explicit."""
     date_phrase = _date_phrase(scope, intent.original_question)
     target = intent.target_label
 
+    subject, subject_verb = _subject(intent, matches)
     if status == "unsupported":
         return (
             "I could not identify a supported activity or object in that question. "
@@ -40,14 +65,14 @@ def build_answer(status, intent, scope, matches):
     total_duration = sum(match.event.duration for match in matches)
     occurrence = _occurrence_phrase(count)
     if intent.answer_type == "count":
-        return f"Your cat was observed {target} {occurrence} {date_phrase}."
+        return f"{subject} {subject_verb} observed {target} {occurrence} {date_phrase}."
     if intent.answer_type == "duration":
         return (
-            f"Your cat was observed {target} for about {total_duration:.1f} seconds "
+            f"{subject} {subject_verb} observed {target} for about {total_duration:.1f} seconds "
             f"across {count} event{'s' if count != 1 else ''} {date_phrase}."
         )
     return (
-        f"Yes. Your cat was observed {target} {occurrence} {date_phrase} "
+        f"Yes. {subject} {subject_verb} observed {target} {occurrence} {date_phrase} "
         f"for about {total_duration:.1f} seconds."
     )
 

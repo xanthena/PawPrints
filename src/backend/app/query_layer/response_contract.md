@@ -22,7 +22,12 @@ Paths exposed by the response are repository-relative, for example:
 
 Evidence intentionally omits internal or redundant fields such as importance,
 source filenames duplicated by paths, and event-level timestamps. It retains
-the proof clip range, formatted clip timestamps, duration, match reasons, and
+
+When proof is requested, evidence and proof segments are ordered by descending
+relevance score; chronological fields are deterministic tie-breakers.
+
+grouped activities, pet names, the deterministic relevance score, proof clip
+range, formatted clip timestamps, duration, match reasons, and
 proof segment number.
 
 Every `proof` object includes `requested`, `status`, and `error`. Successful

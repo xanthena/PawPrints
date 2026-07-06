@@ -1,10 +1,9 @@
 """Cut and stitch evidence ranges from one or more source videos."""
 
-import subprocess
 import tempfile
 from pathlib import Path
 
-from app.highlight_reel.renderer import resolve_ffmpeg
+from app.media_tools import concat_file_entry, resolve_ffmpeg, run_ffmpeg
 
 from .models import ProofSegment
 
@@ -16,7 +15,7 @@ NORMALIZE_FILTER = (
 
 
 def merge_evidence_ranges(evidence):
-    """Merge overlapping ranges from the same date and source video."""
+    """Merge overlaps while preserving the incoming relevance-first order."""
     candidates = []
     for index, item in enumerate(evidence):
         source_path = item.get("source_video_path")
@@ -33,29 +32,44 @@ def merge_evidence_ranges(evidence):
                 "start": start,
                 "end": end,
                 "evidence_indices": [index],
+                "relevance_score": float(item.get("relevance_score", 0.0)),
             }
         )
 
-    candidates.sort(
-        key=lambda item: (
-            item["date"],
-            str(item["source"]).lower(),
-            item["start"],
-            item["end"],
-        )
-    )
     merged = []
     for candidate in candidates:
-        if (
-            merged
-            and merged[-1]["date"] == candidate["date"]
-            and merged[-1]["source"] == candidate["source"]
-            and candidate["start"] <= merged[-1]["end"]
-        ):
-            merged[-1]["end"] = max(merged[-1]["end"], candidate["end"])
-            merged[-1]["evidence_indices"].extend(candidate["evidence_indices"])
-        else:
+        overlap_indices = [
+            index
+            for index, existing in enumerate(merged)
+            if existing["date"] == candidate["date"]
+            and existing["source"] == candidate["source"]
+            and candidate["start"] <= existing["end"]
+            and existing["start"] <= candidate["end"]
+        ]
+        if not overlap_indices:
             merged.append(candidate)
+            continue
+
+        primary = merged[overlap_indices[0]]
+        primary["start"] = min(primary["start"], candidate["start"])
+        primary["end"] = max(primary["end"], candidate["end"])
+        primary["evidence_indices"].extend(candidate["evidence_indices"])
+        primary["relevance_score"] = max(
+            primary["relevance_score"],
+            candidate["relevance_score"],
+        )
+
+        for overlap_index in reversed(overlap_indices[1:]):
+            extra = merged.pop(overlap_index)
+            primary["start"] = min(primary["start"], extra["start"])
+            primary["end"] = max(primary["end"], extra["end"])
+            primary["evidence_indices"].extend(extra["evidence_indices"])
+            primary["relevance_score"] = max(
+                primary["relevance_score"],
+                extra["relevance_score"],
+            )
+
+    merged.sort(key=lambda item: min(item["evidence_indices"]))
 
     from datetime import date
 
@@ -66,21 +80,10 @@ def merge_evidence_ranges(evidence):
             clip_start=item["start"],
             clip_end=item["end"],
             evidence_indices=tuple(item["evidence_indices"]),
+            relevance_score=item["relevance_score"],
         )
         for item in merged
     ]
-
-
-def _run(command, description):
-    result = subprocess.run(command, capture_output=True, text=True, check=False)
-    if result.returncode != 0:
-        details = result.stderr.strip() or result.stdout.strip()
-        raise RuntimeError(f"FFmpeg failed while {description}:\n{details}")
-
-
-def _concat_entry(path):
-    escaped_path = path.as_posix().replace("'", "'\\''")
-    return f"file '{escaped_path}'\n"
 
 
 def render_proof_video(segments, output_path, ffmpeg_path=None):
@@ -105,7 +108,7 @@ def render_proof_video(segments, output_path, ffmpeg_path=None):
                     f"Proof source video does not exist: {segment.source_video}"
                 )
             clip_path = temporary / f"segment_{index:03d}.mp4"
-            _run(
+            run_ffmpeg(
                 [
                     ffmpeg,
                     "-hide_banner",
@@ -145,10 +148,10 @@ def render_proof_video(segments, output_path, ffmpeg_path=None):
         else:
             concat_file = temporary / "segments.txt"
             concat_file.write_text(
-                "".join(_concat_entry(path) for path in rendered_segments),
+                "".join(concat_file_entry(path) for path in rendered_segments),
                 encoding="utf-8",
             )
-            _run(
+            run_ffmpeg(
                 [
                     ffmpeg,
                     "-hide_banner",

@@ -5,12 +5,52 @@ from copy import deepcopy
 
 DEFAULT_RESULT = {
     "pet_detected": False,
-    "activity": "unknown",
+    "activities": ["unknown"],
+    "name_of_pet": [],
     "confidence": 0.0,
     "interaction": "",
     "summary": "",
     "objects": [],
 }
+
+
+def _clean_activities(value):
+    """Return one deduplicated list from legacy or list-shaped model output."""
+    if isinstance(value, list):
+        candidates = value
+    elif isinstance(value, str):
+        candidates = re.split(r"\s*(?:,|/|&|\band\b)\s*", value)
+    elif value is None:
+        candidates = []
+    else:
+        candidates = [value]
+
+    activities = []
+    for item in candidates:
+        activity = str(item or "").strip()
+        if activity and activity not in activities:
+            activities.append(activity)
+    return activities or ["unknown"]
+
+
+def _clean_pet_names(value):
+    """Keep identity list-shaped because a frame can contain both pets."""
+    if isinstance(value, list):
+        candidates = value
+    elif isinstance(value, str):
+        candidates = re.split(r"\s*(?:,|&|\band\b)\s*", value)
+    else:
+        candidates = []
+
+    names = []
+    seen = set()
+    for item in candidates:
+        name = " ".join(str(item or "").strip().split())
+        key = name.casefold()
+        if name and key not in seen:
+            names.append(name)
+            seen.add(key)
+    return names
 
 
 def _extract_json_text(raw_output):
@@ -86,7 +126,14 @@ def clean_results(results):
         else:
             result = DEFAULT_RESULT.copy()
             result["pet_detected"] = bool(parsed_result.get("pet_detected", False))
-            result["activity"] = str(parsed_result.get("activity", "unknown")).strip() or "unknown"
+            activity_value = parsed_result.get(
+                "activities",
+                parsed_result.get("activity", "unknown"),
+            )
+            result["activities"] = _clean_activities(activity_value)
+            result["name_of_pet"] = _clean_pet_names(
+                parsed_result.get("name_of_pet", [])
+            )
             result["interaction"] = str(parsed_result.get("interaction", "")).strip()
             result["summary"] = str(parsed_result.get("summary", "")).strip()
             result["objects"] = _clean_objects(parsed_result.get("objects", []))

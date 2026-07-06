@@ -9,7 +9,11 @@ def _object_names(objects):
     return names
 
 
-def generate_event_json(events, clip_padding_seconds=5):
+def generate_event_json(
+    events,
+    clip_start_padding_seconds=1,
+    clip_end_padding_seconds=2,
+):
     """Create the final JSON-ready event list."""
     final_events = []
 
@@ -20,7 +24,8 @@ def generate_event_json(events, clip_padding_seconds=5):
 
         final_events.append({
             "event_id": index,
-            "activity": event.get("activity", "unknown"),
+            "activities": list(event.get("activities", ["unknown"])),
+            "name_of_pet": list(event.get("name_of_pet", [])),
             "start_time": start_time,
             "end_time": end_time,
             "duration": duration,
@@ -29,8 +34,8 @@ def generate_event_json(events, clip_padding_seconds=5):
             "objects": _object_names(event.get("objects", [])),
             "interaction": event.get("interaction", ""),
             "summary": event.get("summary", ""),
-            "clip_start": max(0.0, start_time - clip_padding_seconds),
-            "clip_end": end_time + clip_padding_seconds,
+            "clip_start": max(0.0, start_time - clip_start_padding_seconds),
+            "clip_end": end_time + clip_end_padding_seconds,
         })
 
     return final_events

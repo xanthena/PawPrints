@@ -28,7 +28,7 @@ def _object_text(objects):
 def event_fields(event):
     """Return normalized fields independently so evidence remains explainable."""
     return {
-        "activity": normalize_text(event.data.get("activity", "")),
+        "activity": normalize_text(" ".join(event.activities)),
         "summary": normalize_text(event.data.get("summary", "")),
         "interaction": normalize_text(event.data.get("interaction", "")),
         "objects": _object_text(event.data.get("objects", [])),
@@ -73,6 +73,20 @@ def match_event(event, intent):
     fields = event_fields(event)
     reasons = []
     score = 0.0
+    if intent.pet_names:
+        event_names = {normalize_text(name) for name in event.pet_names}
+        requested_names = {
+            normalize_text(name): name for name in intent.pet_names
+        }
+        matched_names = [
+            original
+            for normalized, original in requested_names.items()
+            if normalized in event_names
+        ]
+        if not matched_names:
+            return None
+        score += 0.20
+        reasons.extend(f"identity.name:{name}" for name in matched_names)
 
     if intent.activities:
         activity_candidates = []
@@ -125,6 +139,21 @@ def find_matches(events, intent):
     return sorted(
         matches,
         key=lambda item: (
+            item.event.event_date,
+            item.event.source_json.name,
+            item.event.start_time,
+            item.event.data.get("event_id", 0),
+        ),
+    )
+
+
+def rank_matches(matches):
+    """Order proof evidence by relevance with deterministic tie-breakers."""
+    return sorted(
+        matches,
+        key=lambda item: (
+            -item.score,
+            -len(item.reasons),
             item.event.event_date,
             item.event.source_json.name,
             item.event.start_time,

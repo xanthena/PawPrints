@@ -1,0 +1,98 @@
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.pet_profiles import PetProfileStore
+
+
+PNG_BYTES = b"\x89PNG\r\n\x1a\n" + (b"test-image" * 4)
+
+
+class PetProfileStoreTests(unittest.TestCase):
+    def test_registers_lists_and_removes_managed_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            upload = root / "upload.png"
+            upload.write_bytes(PNG_BYTES)
+            store = PetProfileStore(root / "profiles")
+
+            registered = store.register("  Milo  ", upload)
+            listed = store.list()
+
+            self.assertEqual(registered.name, "Milo")
+            self.assertEqual([item.name for item in listed], ["Milo"])
+            self.assertTrue(registered.image_path.is_file())
+            self.assertNotEqual(registered.image_path, upload)
+            manifest = json.loads(store.manifest_path.read_text(encoding="utf-8"))
+            self.assertEqual(manifest["pets"][0]["name"], "Milo")
+            self.assertFalse(Path(manifest["pets"][0]["image_file"]).is_absolute())
+
+            removed = store.remove("milo")
+
+            self.assertEqual(removed.profile_id, registered.profile_id)
+            self.assertEqual(store.list(), [])
+            self.assertFalse(removed.image_path.exists())
+
+    def test_enforces_two_pet_limit_and_unique_names(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            store = PetProfileStore(root / "profiles")
+            uploads = []
+            for index in range(3):
+                upload = root / f"upload-{index}.png"
+                upload.write_bytes(PNG_BYTES)
+                uploads.append(upload)
+
+            store.register("Milo", uploads[0])
+            with self.assertRaisesRegex(ValueError, "already registered"):
+                store.register("mILO", uploads[1])
+            store.register("Luna", uploads[1])
+            with self.assertRaisesRegex(ValueError, "At most 2"):
+                store.register("Nova", uploads[2])
+
+    def test_rejects_extension_content_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            upload = root / "fake.png"
+            upload.write_bytes(b"not an image")
+            store = PetProfileStore(root / "profiles")
+
+            with self.assertRaisesRegex(ValueError, "content"):
+                store.register("Milo", upload)
+
+    def test_rejects_manifest_path_escape(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            profile_root = root / "profiles"
+            profile_root.mkdir()
+            outside = root / "outside.png"
+            outside.write_bytes(PNG_BYTES)
+            (profile_root / "profiles.json").write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "pets": [
+                            {
+                                "id": "safeid",
+                                "name": "Milo",
+                                "image_file": "../outside.png",
+                                "created_at": "now",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "escapes"):
+                PetProfileStore(profile_root).list()
+
+
+if __name__ == "__main__":
+    unittest.main()

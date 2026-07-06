@@ -41,6 +41,7 @@ def _parser():
     parser.add_argument("--max-clips", type=int, default=5)
     parser.add_argument("--max-clip-seconds", type=float, default=10.0)
     parser.add_argument("--ffmpeg", type=Path)
+    parser.add_argument("--caption-font", type=Path)
     return parser
 
 
@@ -56,6 +57,7 @@ def main(argv=None):
         max_clips=args.max_clips,
         max_clip_duration=args.max_clip_seconds,
         ffmpeg_path=args.ffmpeg,
+        caption_font_path=args.caption_font,
         timeline_date=timeline["timeline_date"],
         timeline_selection=timeline["selection"],
     )
@@ -68,7 +70,7 @@ def main(argv=None):
     print(f"Selected clips: {manifest['selected_clip_count']}")
     for clip in manifest["clips"]:
         print(
-            f"  event {clip['event_id']}: {clip['activity']} "
+            f"  event {clip['event_id']}: {', '.join(clip['activities'])} "
             f"(importance {clip['importance']}, "
             f"{clip['clip_start']:.1f}s-{clip['clip_end']:.1f}s)"
         )

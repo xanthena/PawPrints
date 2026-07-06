@@ -4,6 +4,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from .captions import caption_for_event, event_activities, event_pet_names
+
 
 GENERIC_OBJECTS = {
     "animal",
@@ -44,7 +46,7 @@ def _objects(event):
 
 def _interaction_group(event):
     interaction = _text(event.get("interaction"))
-    activity = _text(event.get("activity"))
+    activity = "_".join(_text(item) for item in event_activities(event))
     combined = f"{activity}_{interaction}"
     groups = (
         ("camera", ("camera",)),
@@ -61,7 +63,7 @@ def _interaction_group(event):
 
 
 def _activity_group(event):
-    activity = _text(event.get("activity")) or "unknown"
+    activity = "_".join(_text(item) for item in event_activities(event)) or "unknown"
     object_values = event.get("objects", [])
     if not isinstance(object_values, list):
         object_values = []
@@ -145,10 +147,15 @@ class HighlightClip:
     def duration(self):
         return self.clip_end - self.clip_start
 
+    @property
+    def caption(self):
+        return caption_for_event(self.event)
+
     def to_dict(self):
         return {
             "event_id": self.event.get("event_id"),
-            "activity": self.event.get("activity", "unknown"),
+            "activities": event_activities(self.event),
+            "name_of_pet": event_pet_names(self.event),
             "importance": self.event.get("importance", 0),
             "event_start": self.event.get("start_time", 0),
             "event_end": self.event.get("end_time", 0),
@@ -159,6 +166,7 @@ class HighlightClip:
             "interaction": self.event.get("interaction", ""),
             "summary": self.event.get("summary", ""),
             "selection_score": round(self.selection_score, 4),
+            "caption": self.caption,
             "selection_reasons": list(self.selection_reasons),
         }
 

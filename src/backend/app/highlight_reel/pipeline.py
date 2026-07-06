@@ -12,6 +12,7 @@ def generate_highlight_reel(
     video_path,
     output_dir,
     max_clips=5,
+    caption_font_path=None,
     max_clip_duration=10.0,
     ffmpeg_path=None,
     timeline_date=None,
@@ -42,6 +43,7 @@ def generate_highlight_reel(
         clips,
         reel_destination,
         ffmpeg_path=ffmpeg_path,
+        caption_font_path=caption_font_path,
     )
 
     manifest = {
@@ -55,6 +57,7 @@ def generate_highlight_reel(
         "selection_strategy": "relative importance plus diversity; no fixed importance threshold",
         "max_clips": max_clips,
         "max_clip_duration": max_clip_duration,
+        "captions_burned_in": True,
         "selected_clip_count": len(clips),
         "reel_duration": round(sum(clip.duration for clip in clips), 3),
         "clips": [clip.to_dict() for clip in clips],

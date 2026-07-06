@@ -9,10 +9,14 @@ import time
 import base64
 import openai
 
-from prompt import SYSTEM_PROMPT
-
-from config import OPENAI_API_KEY, OPENAI_MODEL
-from image_validation import validate_image_path
+if __package__:
+    from ..config import OPENAI_API_KEY, OPENAI_MODEL
+    from ..image_validation import validate_image_path
+    from ..prompt import SYSTEM_PROMPT
+else:
+    from config import OPENAI_API_KEY, OPENAI_MODEL
+    from image_validation import validate_image_path
+    from prompt import SYSTEM_PROMPT
 
 _client = None
 
@@ -29,7 +33,15 @@ def _get_client():
     return _client
 
 
-def analyze(image_path: str, allowed_dir: str) -> str:
+def _image_item(path, mime_type):
+    encoded = base64.standard_b64encode(path.read_bytes()).decode("utf-8")
+    return {
+        "type": "image_url",
+        "image_url": {"url": f"data:{mime_type};base64,{encoded}"},
+    }
+
+
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
     client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
@@ -44,21 +56,28 @@ def analyze(image_path: str, allowed_dir: str) -> str:
 
     print("\nSending request to OpenAI...")
 
-    with open(image.path, "rb") as f:
-        image_b64 = base64.standard_b64encode(f.read()).decode("utf-8")
+    content = [
+        {"type": "text", "text": prompt},
+        {"type": "text", "text": "CCTV candidate image:"},
+        _image_item(image.path, image.mime_type),
+    ]
+    for reference in reference_images:
+        content.extend(
+            [
+                {
+                    "type": "text",
+                    "text": f"Registered reference for {reference['name']}:",
+                },
+                _image_item(reference["path"], reference["mime_type"]),
+            ]
+        )
 
     response = client.chat.completions.create(
         model=OPENAI_MODEL,
         messages=[
             {
                 "role": "user",
-                "content": [
-                    {"type": "text", "text": SYSTEM_PROMPT},
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:{image.mime_type};base64,{image_b64}"},
-                    },
-                ],
+                "content": content,
             }
         ],
     )

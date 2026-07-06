@@ -50,7 +50,7 @@ Every match contains:
 - Event start/end in seconds and `HH:MM:SS.mmm`
 - Event duration
 - Proof clip start/end and duration
-- Objects, interaction, summary, importance, and match reasons
+- Grouped activities, pet names, context, relevance score, and match reasons
 - Proof segment number when a proof video was requested
 
 `no` means timeline data exists but no event matched. `no_data` means there was
@@ -60,7 +60,8 @@ a false negative.
 ## Optional proof video
 
 Set `include_proof=True` or pass `--proof`. Matching clip ranges are ordered by
-date, video, and timestamp. Overlapping ranges from the same video are merged;
+descending weighted relevance with stable chronological tie-breakers.
+Overlapping ranges from the same video are merged without losing that order;
 remaining ranges—even from different videos or days—are normalized and
 stitched into one video-only MP4.
 
@@ -100,6 +101,6 @@ Install `app/highlight_reel/requirements.txt` if FFmpeg is not already on PATH.
 ## Current limitations
 
 - Event timestamps are offsets within the source video, not wall-clock times.
-- Individual cats are not identified by name.
+- Identity quality depends on registered reference photos and the model match.
 - Spatial questions depend on the model recording the relationship in the
   activity, objects, interaction, or summary fields.

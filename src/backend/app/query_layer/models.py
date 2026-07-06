@@ -18,6 +18,7 @@ class QueryIntent:
     activities: tuple[str, ...] = ()
     objects: tuple[str, ...] = ()
     relation: str | None = None
+    pet_names: tuple[str, ...] = ()
 
     @property
     def supported(self):
@@ -41,8 +42,31 @@ class TimelineEvent:
     data: dict
 
     @property
+    def activities(self):
+        values = self.data.get("activities")
+        if not isinstance(values, list):
+            values = [self.data.get("activity", "unknown")]
+        return tuple(
+            text
+            for value in values
+            if (text := str(value or "").strip())
+        ) or ("unknown",)
+
+    @property
     def activity(self):
-        return str(self.data.get("activity", "unknown"))
+        """Legacy convenience accessor for callers expecting one label."""
+        return self.activities[0]
+
+    @property
+    def pet_names(self):
+        values = self.data.get("name_of_pet", [])
+        if isinstance(values, str):
+            values = [values]
+        if not isinstance(values, list):
+            return ()
+        return tuple(
+            text for value in values if (text := str(value or "").strip())
+        )
 
     @property
     def start_time(self):
@@ -88,6 +112,7 @@ class ProofSegment:
     clip_start: float
     clip_end: float
     evidence_indices: tuple[int, ...]
+    relevance_score: float = 0.0
 
     @property
     def duration(self):

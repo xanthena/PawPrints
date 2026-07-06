@@ -12,10 +12,14 @@ import time
 from google import genai
 from google.genai import types
 
-from prompt import SYSTEM_PROMPT
-
-from config import GEMINI_API_KEY, GEMINI_AUTH_MODE, GOOGLE_PROJECT_ID
-from image_validation import validate_image_path
+if __package__:
+    from ..config import GEMINI_API_KEY, GEMINI_AUTH_MODE, GOOGLE_PROJECT_ID
+    from ..image_validation import validate_image_path
+    from ..prompt import SYSTEM_PROMPT
+else:
+    from config import GEMINI_API_KEY, GEMINI_AUTH_MODE, GOOGLE_PROJECT_ID
+    from image_validation import validate_image_path
+    from prompt import SYSTEM_PROMPT
 
 _client = None
 
@@ -42,7 +46,7 @@ def _get_client():
     return _client
 
 
-def analyze(image_path: str, allowed_dir: str) -> str:
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
     client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
@@ -60,15 +64,25 @@ def analyze(image_path: str, allowed_dir: str) -> str:
     with open(image.path, "rb") as f:
         image_bytes = f.read()
 
+    contents = [
+        prompt,
+        "CCTV candidate image:",
+        types.Part.from_bytes(data=image_bytes, mime_type=image.mime_type),
+    ]
+    for reference in reference_images:
+        contents.extend(
+            [
+                f"Registered reference image for {reference['name']}:",
+                types.Part.from_bytes(
+                    data=reference["path"].read_bytes(),
+                    mime_type=reference["mime_type"],
+                ),
+            ]
+        )
+
     response = client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=[
-            SYSTEM_PROMPT,
-            types.Part.from_bytes(
-                data=image_bytes,
-                mime_type=image.mime_type,
-            ),
-        ],
+        contents=contents,
     )
 
     inference_time = time.perf_counter() - start
