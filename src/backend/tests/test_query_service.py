@@ -68,6 +68,7 @@ class QueryServiceTests(unittest.TestCase):
             response = answer_query(
                 "Did my cat eat today?",
                 today="2026-07-06",
+                now=datetime(2026, 7, 6, 12, tzinfo=timezone.utc),
                 **paths,
             )
 
