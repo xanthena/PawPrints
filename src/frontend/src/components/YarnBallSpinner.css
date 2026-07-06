@@ -1,0 +1,45 @@
+.yarn-spinner {
+  position: relative;
+  display: inline-block;
+}
+
+.yarn-spinner__ball {
+  display: block;
+  animation: yarn-spin 1.8s linear infinite;
+  transform-origin: center;
+}
+
+.yarn-spinner__tail {
+  transform-origin: 50px 20px;
+}
+
+.yarn-spinner__paw {
+  position: absolute;
+  right: -8%;
+  bottom: -12%;
+  transform-origin: bottom right;
+  animation: paw-bat 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 2px 2px rgba(74, 55, 40, 0.25));
+}
+
+@keyframes yarn-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes paw-bat {
+  0%,
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  30% {
+    transform: rotate(-22deg) translate(-3px, -2px);
+  }
+  50% {
+    transform: rotate(6deg) translate(1px, 1px);
+  }
+}

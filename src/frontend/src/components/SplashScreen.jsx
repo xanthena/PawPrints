@@ -1,4 +1,6 @@
 import PawIcon from './PawIcon.jsx'
+import CatCaptureAnimation from './CatCaptureAnimation.jsx'
+import PawStamp from './PawStamp.jsx'
 import './SplashScreen.css'
 
 const PAW_STEPS = [
@@ -30,8 +32,12 @@ export default function SplashScreen({ fadingOut = false }) {
         ))}
       </div>
       <div className="splash__title">
-        <PawIcon size={44} color="var(--paw-orange)" />
-        <h1>PawPrints</h1>
+        <CatCaptureAnimation size={88} />
+        <h1 className="brand-title">
+          <span>paw</span>
+          <PawStamp />
+          <span>prints</span>
+        </h1>
       </div>
     </div>
   )

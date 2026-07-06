@@ -9,6 +9,15 @@
   --shadow: 0 4px 16px rgba(74, 55, 40, 0.12);
   --shadow-lift: 0 8px 24px rgba(74, 55, 40, 0.18);
   --radius: 16px;
+  --font-display: "Fredoka", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  text-align: center;
 }
 
 * {

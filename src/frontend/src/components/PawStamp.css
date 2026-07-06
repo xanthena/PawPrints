@@ -1,0 +1,82 @@
+/* A real flex item between the "paw" and "prints" spans, starting at zero
+   width so the words sit flush together, then widening -- the words are
+   pushed apart by ordinary layout reflow, so the stamp is guaranteed to
+   land exactly between them (not an eyeballed offset). */
+.paw-stamp {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  height: 26px;
+  margin: 0;
+  overflow: visible;
+  animation: stamp-gap 0.35s ease-out 2.2s forwards;
+}
+
+@keyframes stamp-gap {
+  from {
+    width: 0;
+    margin: 0;
+  }
+  to {
+    width: 26px;
+    margin: 0 6px;
+  }
+}
+
+.paw-stamp__print,
+.paw-stamp__hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+/* the inked print left behind -- hidden until the hand "stamps" it down */
+.paw-stamp__print {
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(12deg) scale(0.5);
+  animation: print-appear 0.25s ease-out 2.85s forwards;
+}
+
+/* a chunkier paw swings in from above, presses down, then lifts away --
+   starts once the gap has finished opening (see stamp-gap above) */
+.paw-stamp__hand {
+  opacity: 0;
+  transform: translate(-50%, -170%) rotate(-18deg) scale(1.15);
+  animation: hand-stamp 0.6s ease-in-out 2.55s forwards;
+}
+
+@keyframes hand-stamp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -170%) rotate(-18deg) scale(1.15);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -170%) rotate(-18deg) scale(1.15);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(4deg) scale(0.95);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(4deg) scale(0.92);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -90%) rotate(-6deg) scale(1);
+  }
+}
+
+@keyframes print-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(12deg) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(12deg) scale(1);
+  }
+}

@@ -21,7 +21,7 @@ export default function Dashboard() {
       <header className="dashboard__header">
         <div className="dashboard__brand">
           <PawIcon size={30} color="var(--paw-orange)" />
-          <h1>PawPrints</h1>
+          <h1 className="brand-title">paw prints</h1>
         </div>
         <button className="btn btn--primary" onClick={() => setIsModalOpen(true)}>
           + Add Footage
