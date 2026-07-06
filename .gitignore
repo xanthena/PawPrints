@@ -18,7 +18,7 @@ src/frontend/build/
 src/data/frames/*
 !src/data/frames/.gitkeep
 src/data/pet_profiles/
-src/data/source_video/
+# src/data/source_video/
 src/results/*
 !src/results/.gitkeep
 
