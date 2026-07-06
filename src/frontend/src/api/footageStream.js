@@ -16,11 +16,16 @@ export function mediaUrl(path) {
  * that arrives once everything is done. `onEvent` is called once per
  * line, in order, as each one arrives.
  */
-export async function streamFootageAnalysis(file, { onEvent, signal } = {}) {
+export async function streamFootageAnalysis(file, { onEvent, signal, primaryModel, fallbackModel } = {}) {
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await fetch(`${API_BASE}/api/footage/analyze`, {
+  const params = new URLSearchParams()
+  if (primaryModel) params.set('primary_model', primaryModel)
+  if (fallbackModel) params.set('fallback_model', fallbackModel)
+  const query = params.toString() ? `?${params.toString()}` : ''
+
+  const response = await fetch(`${API_BASE}/api/footage/analyze${query}`, {
     method: 'POST',
     body: formData,
     signal,

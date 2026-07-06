@@ -15,11 +15,21 @@ itself IS the live progress feed.
 import asyncio
 import json
 import threading
+from pathlib import Path
 
-from fastapi import FastAPI, File, Request, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
+
+from app.pet_profiles import (
+    DEFAULT_PROFILE_DIR,
+    MAX_PETS,
+    list_pet_profiles,
+    register_pet_profile,
+    remove_pet_profile,
+)
+from app.vision_model.model_router import _VALID_MODELS as SUPPORTED_MODELS
 
 from . import pipeline_runner
 from .pipeline_runner import DATA_DIR, REEL_OUTPUT_DIR, UPLOADS_DIR
@@ -50,7 +60,70 @@ app.mount("/media/results", StaticFiles(directory=str(REEL_OUTPUT_DIR)), name="r
 # processing-detail modal) while it's still being analyzed.
 app.mount("/media/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 
+PET_IMAGES_DIR = DEFAULT_PROFILE_DIR / "images"
+PET_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/media/pet-profiles", StaticFiles(directory=str(PET_IMAGES_DIR)), name="pet-profiles")
+
 _SENTINEL = object()
+
+
+def _pet_profile_dict(profile):
+    return {
+        "id": profile.profile_id,
+        "name": profile.name,
+        "image_url": f"/media/pet-profiles/{profile.image_path.name}",
+        "created_at": profile.created_at,
+    }
+
+
+@app.get("/api/pets")
+async def get_pets():
+    return {
+        "pets": [_pet_profile_dict(profile) for profile in list_pet_profiles()],
+        "max_pets": MAX_PETS,
+    }
+
+
+@app.post("/api/pets")
+async def create_pet(name: str = Form(...), image: UploadFile = File(...)):
+    """Registers one named reference photo (JPEG/PNG) for pet identification.
+
+    The image is staged to a temp file first because PetProfileStore
+    validates and copies from a real path on disk -- it doesn't know
+    about UploadFile's async, request-scoped stream.
+    """
+    suffix = _pet_image_suffix(image.filename)
+    staging_path = UPLOADS_DIR / f".pet-upload-{pipeline_runner.new_job_id()}{suffix}"
+    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(staging_path, "wb") as out:
+            out.write(await image.read())
+        profile = register_pet_profile(name, staging_path)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    finally:
+        staging_path.unlink(missing_ok=True)
+
+    return _pet_profile_dict(profile)
+
+
+@app.delete("/api/pets/{identifier}")
+async def delete_pet(identifier: str):
+    try:
+        profile = remove_pet_profile(identifier)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return _pet_profile_dict(profile)
+
+
+def _pet_image_suffix(filename):
+    suffix = Path(filename or "").suffix.lower()
+    return suffix if suffix in {".jpg", ".jpeg", ".png"} else ".jpg"
+
+
+@app.get("/api/models")
+async def get_models():
+    return {"models": sorted(SUPPORTED_MODELS)}
 
 
 @app.post("/api/footage/analyze")

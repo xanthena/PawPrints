@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import PawIcon from './PawIcon.jsx'
+import CatFaceIcon from './CatFaceIcon.jsx'
 import FootageCard from './FootageCard.jsx'
 import LiveFootageCard from './LiveFootageCard.jsx'
 import AddFootageModal from './AddFootageModal.jsx'
 import ProcessingModal from './ProcessingModal.jsx'
 import FootageTimelineModal from './FootageTimelineModal.jsx'
+import SettingsModal, { loadModelPrefs } from './SettingsModal.jsx'
 import { MOCK_FOOTAGES } from '../mock/footages.js'
 import { streamFootageAnalysis, mediaUrl } from '../api/footageStream.js'
 import { formatDayHeading, todayDateString } from '../utils/date.js'
@@ -42,6 +44,8 @@ function groupByDay(footages) {
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [modelPrefs, setModelPrefs] = useState(loadModelPrefs)
   const [processingJobId, setProcessingJobId] = useState(null)
   const [openJobId, setOpenJobId] = useState(null)
   const [liveJobs, setLiveJobs] = useState([])
@@ -79,6 +83,8 @@ export default function Dashboard() {
 
     try {
       await streamFootageAnalysis(file, {
+        primaryModel: modelPrefs.primary,
+        fallbackModel: modelPrefs.fallback,
         onEvent: (event) => {
           switch (event.type) {
             case 'started':
@@ -142,9 +148,18 @@ export default function Dashboard() {
           <PawIcon size={30} color="var(--paw-orange)" />
           <h1 className="brand-title">paw prints</h1>
         </div>
-        <button className="btn btn--primary" onClick={() => setIsModalOpen(true)}>
-          + Add Footage
-        </button>
+        <div className="dashboard__header-actions">
+          <button className="btn btn--primary" onClick={() => setIsModalOpen(true)}>
+            + Add Footage
+          </button>
+          <button
+            className="dashboard__settings-btn"
+            onClick={() => setIsSettingsOpen(true)}
+            aria-label="Settings"
+          >
+            <CatFaceIcon size={22} color="var(--brown-deep)" />
+          </button>
+        </div>
       </header>
 
       <div className="dashboard__days">
@@ -182,6 +197,13 @@ export default function Dashboard() {
 
       {openJob && openJob.videoUrl && (
         <FootageTimelineModal footage={openJob} onClose={() => setOpenJobId(null)} />
+      )}
+
+      {isSettingsOpen && (
+        <SettingsModal
+          onClose={() => setIsSettingsOpen(false)}
+          onModelPrefsChange={setModelPrefs}
+        />
       )}
     </div>
   )

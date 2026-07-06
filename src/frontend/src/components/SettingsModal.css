@@ -1,0 +1,126 @@
+.settings-modal {
+  width: 480px;
+  max-width: 92vw;
+}
+
+.settings-modal__error {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fbe4dd;
+  color: #b8462f;
+  font-size: 0.85rem;
+}
+
+.settings-modal__section {
+  padding: 16px 0;
+  border-top: 1px solid var(--cream-soft);
+}
+
+.settings-modal__section:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.settings-modal__section-title {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: var(--brown-deep);
+}
+
+.settings-modal__hint {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: var(--brown-soft);
+  line-height: 1.4;
+}
+
+.settings-modal__pets {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-modal__pet {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--cream);
+}
+
+.settings-modal__pet img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.settings-modal__pet-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--brown-deep);
+}
+
+.settings-modal__pet-remove {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--brown-soft);
+  flex-shrink: 0;
+}
+
+.settings-modal__pet-remove:hover {
+  color: var(--paw-orange-dark);
+}
+
+.settings-modal__add-pet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.settings-modal__add-pet input[type='text'] {
+  flex: 1;
+  min-width: 120px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--cream-soft);
+  font-size: 0.85rem;
+}
+
+.settings-modal__add-pet input[type='file'] {
+  font-size: 0.78rem;
+  max-width: 160px;
+}
+
+.settings-modal__model-row {
+  display: flex;
+  gap: 16px;
+}
+
+.settings-modal__model-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--brown-soft);
+}
+
+.settings-modal__model-field select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--cream-soft);
+  background: var(--white);
+  font-size: 0.88rem;
+  color: var(--brown-deep);
+  text-transform: capitalize;
+}

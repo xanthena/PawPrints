@@ -23,6 +23,28 @@
   text-align: left;
 }
 
+.dashboard__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard__settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cream-soft);
+  flex-shrink: 0;
+}
+
+.dashboard__settings-btn:hover {
+  background: #ecdcc3;
+}
+
 .dashboard__days {
   display: flex;
   flex-direction: column;
