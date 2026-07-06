@@ -42,7 +42,9 @@ export default function FootageTimelineModal({ footage, onClose }) {
                   >
                     {formatDuration(event.start_time)}
                   </button>
-                  <span className="timeline-modal__activity">{event.activity}</span>
+                  <span className="timeline-modal__activity">
+                    {(event.activities || []).join(', ')}
+                  </span>
                 </li>
               ))}
             </ul>

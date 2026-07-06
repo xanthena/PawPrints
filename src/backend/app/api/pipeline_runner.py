@@ -20,34 +20,22 @@ app.api.server) and updates its UI after every yielded event instead
 of waiting for the whole thing to finish.
 """
 
-import sys
 import uuid
 from pathlib import Path
 
-BACKEND_ROOT = Path(__file__).resolve().parents[2]
-VISION_MODEL_DIR = BACKEND_ROOT / "app" / "vision_model"
+import cv2 as cv
 
-# vision_model's own modules (model_router.py, main_run_on_candidates.py)
-# use bare imports like `from models import local_qwen` and `import
-# model_router`, which only resolve if the vision_model directory itself
-# is on sys.path -- this mirrors how a developer running those scripts
-# directly from that directory would work.
-if str(VISION_MODEL_DIR) not in sys.path:
-    sys.path.insert(0, str(VISION_MODEL_DIR))
-
-import cv2 as cv  # noqa: E402
-
-from app.event_builder.event_pipeline import run_event_pipeline  # noqa: E402
-from app.highlight_reel.pipeline import generate_highlight_reel  # noqa: E402
-from app.highlight_reel.paths import OUTPUT_DIR as REEL_OUTPUT_DIR  # noqa: E402
-from app.motion_detector.main_stream_worker import (  # noqa: E402
+from app.event_builder.event_pipeline import run_event_pipeline
+from app.highlight_reel.pipeline import generate_highlight_reel
+from app.highlight_reel.paths import OUTPUT_DIR as REEL_OUTPUT_DIR
+from app.motion_detector.main_stream_worker import (
     FRAMES_DIR,
     persist_event,
     stream_events,
 )
+from app.vision_model import model_router
 
-import model_router  # noqa: E402  (see sys.path note above)
-
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
 REPO_ROOT = BACKEND_ROOT.parents[1]
 DATA_DIR = REPO_ROOT / "src" / "data"
 UPLOADS_DIR = DATA_DIR / "uploads"
@@ -93,7 +81,7 @@ def run_pipeline(job_id, video_path, primary_model=None, fallback_model=None, sh
 
       {"type": "started", "job_id", "duration_seconds", "video_url"}
       {"type": "progress", "processed_seconds", "duration_seconds"}
-      {"type": "candidate", "timestamp", "trigger", "frame_url", "activity"}
+      {"type": "candidate", "timestamp", "trigger", "frame_url", "activities": [...]}
       {"type": "timeline", "events": [...]}   -- full timeline, replace-in-place
       {"type": "reel_ready", "reel_url", "manifest"}
       {"type": "cancelled"}
@@ -187,19 +175,21 @@ def run_pipeline(job_id, video_path, primary_model=None, fallback_model=None, sh
             JSONS_DIR.mkdir(parents=True, exist_ok=True)
             _write_json(vision_json, vision_results)
 
-            # run_event_pipeline is what actually knows how to pull a clean
-            # "activity" label out of raw model output (stripping markdown
+            # run_event_pipeline is what actually knows how to pull clean
+            # activity labels out of raw model output (stripping markdown
             # fences, defaulting unknowns, etc, via clean_results) -- reuse
             # its output for the live preview instead of re-guessing here.
+            # A frame can report more than one simultaneous activity, hence
+            # a list rather than a single label.
             final_events = run_event_pipeline(vision_json, timeline_json)
-            latest_activity = final_events[-1]["activity"] if final_events else None
+            latest_activities = final_events[-1]["activities"] if final_events else []
 
             yield {
                 "type": "candidate",
                 "timestamp": persisted["timestamp"],
                 "trigger": persisted["trigger"],
                 "frame_url": f"/media/frames/{Path(persisted['frame_path']).name}",
-                "activity": latest_activity,
+                "activities": latest_activities,
             }
             yield {"type": "timeline", "events": final_events}
 

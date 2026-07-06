@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from config import MAX_IMAGE_BYTES
+if __package__:
+    from .config import MAX_IMAGE_BYTES
+else:
+    from config import MAX_IMAGE_BYTES
 
 
 _MIME_TYPES = {
