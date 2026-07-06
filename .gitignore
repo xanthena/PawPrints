@@ -17,6 +17,13 @@ src/frontend/build/
 # generated data (not source)
 src/data/frames/*
 !src/data/frames/.gitkeep
+src/data/pet_profiles/
+src/data/source_video/
+src/results/*
+!src/results/.gitkeep
+
+# generated timeline history may contain user-visible scene descriptions
+src/data/jsons/final_timeline/
 src/data/*.mp4
 src/data/events/
 

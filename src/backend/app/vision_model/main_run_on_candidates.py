@@ -2,8 +2,12 @@ import json
 import sys
 from pathlib import Path
 
-from paths import DATA_DIR, FRAMES_DIR, JSONS_DIR, REPO_ROOT
-import model_router
+if __package__:
+    from . import model_router
+    from .paths import DATA_DIR, FRAMES_DIR, JSONS_DIR, REPO_ROOT
+else:
+    import model_router
+    from paths import DATA_DIR, FRAMES_DIR, JSONS_DIR, REPO_ROOT
 
 EVENTS_DIR = DATA_DIR / "events"
 
@@ -33,6 +37,22 @@ def compute_end_time(all_events, index):
     if index + 1 < len(all_events):
         return all_events[index + 1]["timestamp"]
     return candidate["timestamp"]
+
+def _validated_pet_names(value, registered_names):
+    if isinstance(value, str):
+        values = [value]
+    elif isinstance(value, list):
+        values = value
+    else:
+        values = []
+    registered = {str(name).casefold(): str(name) for name in registered_names}
+    names = []
+    for value in values:
+        canonical = registered.get(str(value or "").strip().casefold())
+        if canonical and canonical not in names:
+            names.append(canonical)
+    return names
+
 
 
 def run(video_stem, primary_model=None, fallback_model=None):
@@ -65,6 +85,12 @@ def run(video_stem, primary_model=None, fallback_model=None):
                 result = {"raw_output": raw_output}
         else:
             result = raw_output
+
+        if isinstance(result, dict):
+            result["name_of_pet"] = _validated_pet_names(
+                result.get("name_of_pet", []),
+                outcome.get("registered_pet_names", []),
+            )
 
         results.append({
             "frame": Path(frame_path).name,

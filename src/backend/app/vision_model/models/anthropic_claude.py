@@ -9,10 +9,14 @@ import time
 import base64
 import anthropic
 
-from prompt import SYSTEM_PROMPT
-
-from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
-from image_validation import validate_image_path
+if __package__:
+    from ..config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
+    from ..image_validation import validate_image_path
+    from ..prompt import SYSTEM_PROMPT
+else:
+    from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL
+    from image_validation import validate_image_path
+    from prompt import SYSTEM_PROMPT
 
 _client = None
 
@@ -29,7 +33,19 @@ def _get_client():
     return _client
 
 
-def analyze(image_path: str, allowed_dir: str) -> str:
+def _image_block(path, mime_type):
+    encoded = base64.standard_b64encode(path.read_bytes()).decode("utf-8")
+    return {
+        "type": "image",
+        "source": {
+            "type": "base64",
+            "media_type": mime_type,
+            "data": encoded,
+        },
+    }
+
+
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
     client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
@@ -44,8 +60,18 @@ def analyze(image_path: str, allowed_dir: str) -> str:
 
     print("\nSending request to Claude...")
 
-    with open(image.path, "rb") as f:
-        image_b64 = base64.standard_b64encode(f.read()).decode("utf-8")
+    content = [
+        {"type": "text", "text": prompt},
+        {"type": "text", "text": "CCTV candidate image:"},
+        _image_block(image.path, image.mime_type),
+    ]
+    for reference in reference_images:
+        content.extend(
+            [
+                {"type": "text", "text": f"Reference for {reference['name']}:"},
+                _image_block(reference["path"], reference["mime_type"]),
+            ]
+        )
 
     message = client.messages.create(
         model=ANTHROPIC_MODEL,
@@ -53,20 +79,7 @@ def analyze(image_path: str, allowed_dir: str) -> str:
         messages=[
             {
                 "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {
-                            "type": "base64",
-                            "media_type": image.mime_type,
-                            "data": image_b64,
-                        },
-                    },
-                    {
-                        "type": "text",
-                        "text": SYSTEM_PROMPT,
-                    },
-                ],
+                "content": content,
             }
         ],
     )

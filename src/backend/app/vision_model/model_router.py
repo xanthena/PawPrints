@@ -21,8 +21,21 @@ real key.
 """
 
 import os
+import sys
+from pathlib import Path
 
-from models import local_qwen
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
+from app.pet_profiles import list_pet_profiles
+
+if __package__:
+    from .models import local_qwen
+    from .prompt import build_system_prompt
+else:
+    from models import local_qwen
+    from prompt import build_system_prompt
 
 GEMINI = "gemini"
 QWEN = "qwen"
@@ -45,42 +58,91 @@ def _resolve(value, env_var, default):
     return resolved
 
 
-def _call(model_name, image_path, allowed_dir):
+def _call(model_name, image_path, allowed_dir, prompt, reference_images):
     if model_name == QWEN:
-        return local_qwen.analyze(image_path, allowed_dir)
+        return local_qwen.analyze(image_path, allowed_dir, prompt, reference_images)
 
     if model_name == CLAUDE:
-        from models import anthropic_claude  # imported lazily: a missing
-        return anthropic_claude.analyze(image_path, allowed_dir)  # package/key shouldn't break other models
+        if __package__:
+            from .models import anthropic_claude
+        else:
+            from models import anthropic_claude
+        return anthropic_claude.analyze(
+            image_path, allowed_dir, prompt, reference_images
+        )
 
     if model_name == OPENAI:
-        from models import openai_gpt
-        return openai_gpt.analyze(image_path, allowed_dir)
+        if __package__:
+            from .models import openai_gpt
+        else:
+            from models import openai_gpt
+        return openai_gpt.analyze(image_path, allowed_dir, prompt, reference_images)
 
-    from models import google_gemini
-    return google_gemini.analyze(image_path, allowed_dir)
+    if __package__:
+        from .models import google_gemini
+    else:
+        from models import google_gemini
+    return google_gemini.analyze(image_path, allowed_dir, prompt, reference_images)
 
 
-def analyze(image_path: str, allowed_dir: str, primary: str = None, fallback: str = None) -> dict:
+def _reference(profile):
+    name = profile["name"] if isinstance(profile, dict) else profile.name
+    if isinstance(profile, dict):
+        image_path = profile.get("image_path", profile.get("reference_image"))
+    else:
+        image_path = profile.image_path
+    path = Path(image_path).expanduser().resolve(strict=True)
+    if not path.is_file() or path.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
+        raise ValueError(
+            f"Pet reference must be an existing JPEG or PNG file: {path}"
+        )
+    mime_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
+    return {"name": str(name), "path": path, "mime_type": mime_type}
+
+
+def _outcome(output, model_used, fell_back, reference_images):
+    return {
+        "output": output,
+        "model_used": model_used,
+        "fell_back": fell_back,
+        "registered_pet_names": [item["name"] for item in reference_images],
+    }
+
+
+def analyze(
+    image_path: str,
+    allowed_dir: str,
+    primary: str = None,
+    fallback: str = None,
+    pet_profiles=None,
+) -> dict:
     """
     Returns {"output": <raw model text>, "model_used": "gemini"|"qwen"|
-    "claude"|"openai", "fell_back": bool}. Tries `primary` (or
+    "claude"|"openai", "fell_back": bool, "registered_pet_names": [...]}.
+    Tries `primary` (or
     VISION_MODEL_PRIMARY) first; if that call raises anything and a
     different `fallback` (or VISION_MODEL_FALLBACK) is configured,
     retries once with it.
     """
     primary_model = _resolve(primary, "VISION_MODEL_PRIMARY", DEFAULT_PRIMARY)
     fallback_model = _resolve(fallback, "VISION_MODEL_FALLBACK", DEFAULT_FALLBACK)
+    profiles = list_pet_profiles() if pet_profiles is None else list(pet_profiles)
+    prompt = build_system_prompt(profiles)
+    reference_images = tuple(_reference(profile) for profile in profiles)
 
     if primary_model is None:
         raise ValueError("No primary model configured (VISION_MODEL_PRIMARY or primary=).")
 
     try:
-        output = _call(primary_model, image_path, allowed_dir)
-        return {"output": output, "model_used": primary_model, "fell_back": False}
+        output = _call(
+            primary_model, image_path, allowed_dir, prompt, reference_images
+        )
+        return _outcome(output, primary_model, False, reference_images)
     except Exception as exc:
         if fallback_model and fallback_model != primary_model:
             print(f"{primary_model} call failed ({exc}); falling back to {fallback_model}.")
-            output = _call(fallback_model, image_path, allowed_dir)
-            return {"output": output, "model_used": fallback_model, "fell_back": True}
+            output = _call(
+                fallback_model, image_path, allowed_dir, prompt, reference_images
+            )
+            return _outcome(output, fallback_model, True, reference_images)
         raise

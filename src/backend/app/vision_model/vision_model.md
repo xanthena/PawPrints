@@ -31,9 +31,10 @@ Defines shared data paths for frame input and JSON output.
 
 ## `prompt.py`
 
-Contains the shared vision prompt. The prompt asks the model to return only
-JSON with pet detection, activity, confidence, objects, interaction, and
-summary.
+Builds the shared vision prompt. It asks for grouped activities, `name_of_pet`,
+confidence, objects, interaction, and summary. When one or two profiles exist,
+all providers receive the CCTV candidate plus labeled reference photos and are
+instructed to identify conservatively.
 
 ## `config.py`
 
@@ -67,3 +68,16 @@ Calls OpenAI through the Chat Completions API.
 Selects the primary vision model and retries once with the configured fallback
 when needed. Both values can be supplied explicitly or through environment
 configuration.
+
+## Pet identity profiles
+
+Profiles are framework-independent and limited to two:
+
+```powershell
+python -m app.pet_profiles register Milo C:\path\to\milo.jpg
+python -m app.pet_profiles register Luna C:\path\to\luna.png
+python -m app.pet_profiles list
+python -m app.pet_profiles remove Milo
+```
+
+Registered names propagate through raw JSON, timelines, queries, and captions.

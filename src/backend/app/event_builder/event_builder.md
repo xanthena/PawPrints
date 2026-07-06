@@ -53,11 +53,11 @@ like toy and bowl.
 ## `detect_state_changes.py`
 
 Turns cleaned frames into event candidates. Each valid pet frame becomes a
-candidate with activity, time, summary, objects, and state-change information.
+candidate with activity and pet-name lists, time, summary, objects, and state-change information.
 
 ## `merge_consecutive_events.py`
 
-Combines neighboring frames with the same activity into one longer event.
+Combines neighboring frames with the same activity set into one longer event.
 
 ## `score_events.py`
 
@@ -71,5 +71,6 @@ Combines similar events that happen close together.
 ## `generate_event_json.py`
 
 Builds the final output format, including event IDs, duration, thumbnail frame,
-object names, summary, and clip start/end times.
+object names, summary, and clip start/end times. New timelines write `activities`
+and `name_of_pet` as lists, with one second before and two seconds after events.
 
