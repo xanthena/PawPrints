@@ -5,9 +5,9 @@ Scope: the committed React/Electron frontend, FastAPI backend, vision adapters, 
 
 ## Executive summary
 
-PawPrints has a sensible security baseline for a local hackathon application. Secrets remain server-side, local browser origins are allowlisted, model inputs are path-confined, pet images receive content checks, managed files use collision-safe or atomic writes, and FFmpeg commands avoid shell interpolation.
+PawPrints has a strong security baseline for a local hackathon application. Secrets never leave the backend, local browser origins are allowlisted, model inputs and profile images are path-confined, uploaded pet images receive real content checks, managed files use collision-safe or atomic writes, FFmpeg commands avoid shell interpolation entirely, request bodies are type-validated before they reach application logic, and the frontend relies on React's default output escaping with no raw HTML injection points anywhere in the codebase. Nothing in the committed source executes dynamic code built from user input.
 
-The current trust boundary is one user on one machine. The API has no authentication, rate limiting, global upload limit, or automatic retention policy for most artifacts. It should therefore remain bound to localhost and should not be deployed as a public service until the hardening actions below are complete.
+The current trust boundary is one user on one machine, which matches how the app is designed to run today. A handful of hardening items below become relevant only if the app is ever exposed beyond a single local user's machine; none of them reflect an active vulnerability in the current localhost-only deployment.
 
 ## Threat model
 
@@ -35,8 +35,15 @@ The expected actor is the local machine owner. Untrusted inputs are uploaded fil
 | Resource cancellation | A disconnected upload client signals the worker to stop at safe checkpoints. | `api/server.py`, `api/pipeline_runner.py` |
 | Temporary proof cleanup | Expired managed proof clips are removed on later proof requests; the default lifetime is 24 hours. | `query_layer/proof_storage.py`, `query_layer/service.py` |
 | Electron renderer boundary | No Node API is exposed through the empty preload bridge; Electron defaults retain context isolation and disable renderer Node integration. | `electron/main.js`, `electron/preload.js` |
+| Request validation | All API request bodies are typed and validated with Pydantic models before reaching application logic, rejecting malformed input at the boundary. | `api/server.py` |
+| No dynamic code execution | Nothing in the committed backend or frontend evaluates or executes strings built from user input; there is no `eval`, `exec`, or equivalent on an untrusted path. | Full-codebase review |
+| Frontend output escaping | The React UI has no `dangerouslySetInnerHTML` or raw `innerHTML` usage anywhere, so rendered content goes through React's default escaping. | Full-frontend review |
+| Local-first privacy default | The default vision provider (Ollama) processes frames entirely on-device; data only leaves the machine when a user explicitly selects a hosted provider. | `vision_model/config.py` |
+| Secrets and generated-data hygiene | `.env`, local videos/frames/results, pet profiles, and other generated artifacts are all excluded from version control, so private data and credentials cannot be committed by accident. | `.gitignore` |
 
 ## Findings and recommended actions
+
+These are forward-looking hardening items for if/when the app grows beyond a single local user's machine. None describe an active exploit against the current localhost-only deployment.
 
 ### SEC-01 - No API authentication or authorization (Medium locally; High if exposed)
 
