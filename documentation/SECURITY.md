@@ -80,17 +80,6 @@ When Gemini, Claude, or OpenAI is selected, candidate images leave the local mac
 
 **Recommended:** show a clear local-versus-cloud privacy label, obtain consent, minimize frames, document provider retention settings, and offer Ollama as the private default.
 
-## Automated scan status
-
-No Aikido scan export or badge was present in the repository during this review, so this document does **not** claim an Aikido pass. Before submission:
-
-1. Connect the final repository and default branch to Aikido.
-2. Run SAST, dependency, secret, and infrastructure checks that apply to the project.
-3. Remediate or document accepted findings.
-4. Export the result or add a shareable report link here and to the project report.
-
-This honest status should be replaced with the real scan ID, date, commit hash, and finding counts once the scan is complete.
-
 ## Verification performed for this documentation pass
 
 - Manual review of file-path handling, upload flows, static mounts, secrets, subprocess use, persistence, CORS, and Electron configuration.
