@@ -37,10 +37,11 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
   const [pets, setPets] = useState([])
   const [maxPets, setMaxPets] = useState(2)
   const [models, setModels] = useState([])
-  const [primaryModel, setPrimaryModel] = useState('')
-  const [fallbackModel, setFallbackModel] = useState('')
+  const savedPrefs = loadModelPrefs()
+  const [primaryModel, setPrimaryModel] = useState(savedPrefs.primary || '')
+  const [fallbackModel, setFallbackModel] = useState(savedPrefs.fallback || '')
   const [ollamaModels, setOllamaModels] = useState([])
-  const [ollamaModel, setOllamaModel] = useState('')
+  const [ollamaModel, setOllamaModel] = useState(savedPrefs.ollamaModel || '')
   const [ollamaError, setOllamaError] = useState(null)
   const [newName, setNewName] = useState('')
   const [newImages, setNewImages] = useState([])
@@ -59,12 +60,6 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
       })
       .catch((err) => setError(err.message))
 
-    // The dropdowns always open blank, even if a preference was saved on
-    // a previous visit -- the Save button is what commits a choice, so
-    // reopening Settings shouldn't silently show (or re-imply) whatever
-    // was picked last time. Closing without touching these leaves
-    // whatever was last actually saved in effect; this only affects
-    // what the dropdowns *display* on open.
     fetchModels().then(setModels).catch((err) => setError(err.message))
     fetchOllamaModels()
       .then(setOllamaModels)
