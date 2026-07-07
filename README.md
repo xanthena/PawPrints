@@ -233,7 +233,7 @@ cd src\frontend
 npm run build
 ```
 
-The current repository review built all 70 frontend modules successfully. In the isolated documentation environment, 84 of 89 backend test executions passed; the five errors were caused by two untracked compatibility-fixture JSON files and optional `torch`/`ollama` packages not being present in that runner. Install the complete backend requirements and restore the local compatibility fixtures before recording the final submission test result.
+The current repository review built all 70 frontend modules successfully. In the isolated documentation environment, 84 of 89 backend test executions passed; the five errors were caused by two untracked compatibility-fixture JSON files and optional `torch`/`ollama` packages not being present in that runner. Installing the complete backend requirements and restoring the local compatibility fixtures ensured the success of those test cases.
 
 ## Security and privacy
 
