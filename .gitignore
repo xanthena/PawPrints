@@ -14,19 +14,24 @@ node_modules/
 src/frontend/dist/
 src/frontend/build/
 
-# generated data (not source)
+# local-only test data -- videos, frames, jsons, pet profiles, uploads,
+# and anything else generated locally must never be pushed. Keep the
+# folder (and link.txt) but ignore everything inside it.
+src/data/*
+!src/data/link.txt
+!src/data/frames/
 src/data/frames/*
 !src/data/frames/.gitkeep
-src/data/pet_profiles/
-# src/data/source_video/
+
+# local-only run output -- never pushed, only used for local testing
 src/results/*
 !src/results/.gitkeep
-
-# generated timeline history may contain user-visible scene descriptions
-src/data/jsons/final_timeline/
-src/data/*.mp4
-src/data/events/
 
 # md files
 AGENTS.md
 changes.md
+integration_issues.md
+security_risks.md
+
+# claude code local tooling, not part of the shared project
+.claude/
