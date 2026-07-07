@@ -13,7 +13,7 @@ class CandidateFrameQueue:
     "still sleeping" events instead of an unlabeled gap.
     """
 
-    def __init__(self, detector, cooldown_sec=4.0, still_ping_interval_sec=300.0):
+    def __init__(self, detector, cooldown_sec=4.0, still_ping_interval_sec=10.0):
         self.detector = detector
         self.cooldown_sec = cooldown_sec
         self.still_ping_interval_sec = still_ping_interval_sec

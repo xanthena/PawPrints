@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 480px;
+  height: 480px;
 }
 
 .timeline-modal__panel-title {
@@ -37,10 +37,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  max-height: 150px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .timeline-modal__empty {
@@ -83,6 +85,12 @@
   white-space: nowrap;
 }
 
+.timeline-modal__pet-name {
+  font-weight: 700;
+  color: var(--paw-orange-dark);
+  margin-right: 6px;
+}
+
 .timeline-modal__analyzing {
   display: flex;
   align-items: center;
@@ -112,6 +120,24 @@
   background: var(--cream);
   font-size: 0.82rem;
   color: var(--brown-soft);
+}
+
+.timeline-modal__chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  border-top: 1px solid var(--cream-soft);
+  padding-top: 10px;
+}
+
+.timeline-modal__chat .query-chat__messages {
+  padding: 8px 0;
+}
+
+.timeline-modal__chat .query-chat__form {
+  padding: 8px 0 0;
+  border-top: none;
 }
 
 @media (max-width: 640px) {

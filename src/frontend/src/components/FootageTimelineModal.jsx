@@ -1,11 +1,22 @@
 import { useRef } from 'react'
 import YarnBallSpinner from './YarnBallSpinner.jsx'
+import QueryChat from './QueryChat.jsx'
 import { formatDuration } from '../utils/time.js'
 import './FootageTimelineModal.css'
 
 export default function FootageTimelineModal({ footage, onClose }) {
   const videoRef = useRef(null)
-  const { filename, videoUrl, timeline, status, processedSeconds, durationSeconds, reelUrl, reelNote } = footage
+  const {
+    filename,
+    videoUrl,
+    timeline,
+    status,
+    processedSeconds,
+    durationSeconds,
+    reelUrl,
+    reelNote,
+    date,
+  } = footage
   const isAnalyzing = status === 'starting' || status === 'analyzing'
 
   function seekTo(seconds) {
@@ -43,6 +54,11 @@ export default function FootageTimelineModal({ footage, onClose }) {
                     {formatDuration(event.start_time)}
                   </button>
                   <span className="timeline-modal__activity">
+                    {event.name_of_pet?.length > 0 && (
+                      <span className="timeline-modal__pet-name">
+                        {event.name_of_pet.join(' & ')}
+                      </span>
+                    )}
                     {(event.activities || []).join(', ')}
                   </span>
                 </li>
@@ -68,6 +84,14 @@ export default function FootageTimelineModal({ footage, onClose }) {
                 {reelNote || 'No highlight-worthy moments found.'}
               </span>
             )}
+
+            <div className="timeline-modal__chat">
+              <h3 className="timeline-modal__panel-title">Ask about this footage</h3>
+              <QueryChat
+                dateHint={date}
+                placeholder="e.g. Did the cat play today?"
+              />
+            </div>
           </div>
         </div>
       </div>

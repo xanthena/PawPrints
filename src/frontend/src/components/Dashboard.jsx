@@ -7,6 +7,7 @@ import AddFootageModal from './AddFootageModal.jsx'
 import ProcessingModal from './ProcessingModal.jsx'
 import FootageTimelineModal from './FootageTimelineModal.jsx'
 import SettingsModal, { loadModelPrefs } from './SettingsModal.jsx'
+import QueryWidget from './QueryWidget.jsx'
 import { MOCK_FOOTAGES } from '../mock/footages.js'
 import { streamFootageAnalysis, mediaUrl } from '../api/footageStream.js'
 import { formatDayHeading, todayDateString } from '../utils/date.js'
@@ -85,6 +86,7 @@ export default function Dashboard() {
       await streamFootageAnalysis(file, {
         primaryModel: modelPrefs.primary,
         fallbackModel: modelPrefs.fallback,
+        ollamaModel: modelPrefs.ollamaModel,
         onEvent: (event) => {
           switch (event.type) {
             case 'started':
@@ -187,13 +189,7 @@ export default function Dashboard() {
         <AddFootageModal onClose={() => setIsModalOpen(false)} onUpload={handleUpload} />
       )}
 
-      {processingJob && (
-        <ProcessingModal
-          filename={processingJob.filename}
-          processedSeconds={processingJob.processedSeconds}
-          durationSeconds={processingJob.durationSeconds}
-        />
-      )}
+      {processingJob && <ProcessingModal filename={processingJob.filename} />}
 
       {openJob && openJob.videoUrl && (
         <FootageTimelineModal footage={openJob} onClose={() => setOpenJobId(null)} />
@@ -205,6 +201,8 @@ export default function Dashboard() {
           onModelPrefsChange={setModelPrefs}
         />
       )}
+
+      <QueryWidget />
     </div>
   )
 }

@@ -8,19 +8,18 @@ def build_system_prompt(pet_profiles=()):
     """Build the JSON contract and optional reference-image identity context."""
     names = [name for profile in pet_profiles if (name := _profile_name(profile))]
     if names:
-        reference_lines = "\n".join(
-            f"- Reference image {index}: {name}"
-            for index, name in enumerate(names, start=1)
-        )
-        identity_rules = f"""
-The first supplied image is the CCTV candidate to analyze.
-The later supplied reference images are labeled in this order:
-{reference_lines}
+        identity_rules = """
+The first supplied image is the CCTV candidate to analyze. Any images
+that follow are reference photos of registered pets -- each one is
+directly preceded by a caption naming that pet.
 
 Compare coat pattern, face, body markings, and other stable visual features.
 Only include a registered name when the visible cat is a confident visual match.
 Never guess identity from the scene or from the fact that a profile exists.
 Use matched names instead of generic cat/kitten wording in the summary.
+The reference photos are for comparison only -- they are not part of the
+scene being analyzed, so never mention them (or the pets/objects visible
+in them) in the summary, objects, or activities for the candidate image.
 """
     else:
         identity_rules = """

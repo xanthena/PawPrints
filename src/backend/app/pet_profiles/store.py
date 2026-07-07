@@ -21,14 +21,19 @@ SUPPORTED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png"}
 class PetProfile:
     profile_id: str
     name: str
-    image_path: Path
+    image_paths: tuple
     created_at: str
+
+    @property
+    def image_path(self):
+        """The first registered photo -- for callers that only need one."""
+        return self.image_paths[0]
 
     def to_dict(self):
         return {
             "id": self.profile_id,
             "name": self.name,
-            "reference_image": str(self.image_path),
+            "reference_images": [str(path) for path in self.image_paths],
             "created_at": self.created_at,
         }
 
@@ -68,6 +73,17 @@ def _validate_image(path, max_image_bytes=MAX_IMAGE_BYTES):
     return image
 
 
+def _image_files(record):
+    """Read a manifest record's photo list, understanding both the current
+    "image_files" (list) shape and the original single-photo "image_file"
+    shape, so pets registered before multi-photo support still load."""
+    image_files = record.get("image_files")
+    if image_files is not None:
+        return list(image_files)
+    legacy = record.get("image_file")
+    return [legacy] if legacy else []
+
+
 class PetProfileStore:
     def __init__(self, root=DEFAULT_PROFILE_DIR, max_pets=MAX_PETS):
         self.root = Path(root)
@@ -98,20 +114,27 @@ class PetProfileStore:
             raise ValueError("Pet profile id is invalid.")
         name = _clean_name(record.get("name"))
 
-        image_file = Path(str(record.get("image_file", "")))
-        if image_file.is_absolute() or not image_file.parts:
-            raise ValueError("Pet profile image path must be managed and relative.")
-        image_path = (self.root / image_file).resolve()
-        try:
-            image_path.relative_to(self.images_dir.resolve())
-        except ValueError as error:
-            raise ValueError("Pet profile image escapes managed storage.") from error
-        _validate_image(image_path)
+        image_files = _image_files(record)
+        if not image_files:
+            raise ValueError("Pet profile must have at least one reference image.")
+
+        image_paths = []
+        for image_file in image_files:
+            image_file_path = Path(str(image_file))
+            if image_file_path.is_absolute() or not image_file_path.parts:
+                raise ValueError("Pet profile image path must be managed and relative.")
+            image_path = (self.root / image_file_path).resolve()
+            try:
+                image_path.relative_to(self.images_dir.resolve())
+            except ValueError as error:
+                raise ValueError("Pet profile image escapes managed storage.") from error
+            _validate_image(image_path)
+            image_paths.append(image_path)
 
         return PetProfile(
             profile_id=profile_id,
             name=name,
-            image_path=image_path,
+            image_paths=tuple(image_paths),
             created_at=str(record.get("created_at", "")),
         )
 
@@ -127,9 +150,28 @@ class PetProfileStore:
         )
         temporary.replace(self.manifest_path)
 
-    def register(self, name, image_path):
+    def _store_image(self, profile_id, source, suffix_hint=""):
+        """Copy a validated source image into managed storage and return
+        its path relative to self.root, ready to go in a manifest record."""
+        suffix = ".jpg" if source.suffix.lower() in {".jpg", ".jpeg"} else ".png"
+        image_file = Path("images") / f"{profile_id}{suffix_hint}{suffix}"
+        destination = self.root / image_file
+        self.images_dir.mkdir(parents=True, exist_ok=True)
+        temporary_image = destination.with_name(f".{destination.name}.tmp")
+        shutil.copyfile(source, temporary_image)
+        temporary_image.replace(destination)
+        return image_file, destination
+
+    def register(self, name, image_paths):
+        """Register a new pet with one or more reference photos."""
+        if isinstance(image_paths, (str, Path)):
+            image_paths = [image_paths]
+        image_paths = list(image_paths)
+        if not image_paths:
+            raise ValueError("At least one reference image is required.")
+
         clean_name = _clean_name(name)
-        source = _validate_image(image_path)
+        sources = [_validate_image(path) for path in image_paths]
         records = self._records()
         profiles = [self._profile(record) for record in records]
         if len(profiles) >= self.max_pets:
@@ -138,53 +180,86 @@ class PetProfileStore:
             raise ValueError(f"A pet named '{clean_name}' is already registered.")
 
         profile_id = uuid4().hex
-        suffix = ".jpg" if source.suffix.lower() in {".jpg", ".jpeg"} else ".png"
-        image_file = Path("images") / f"{profile_id}{suffix}"
-        destination = self.root / image_file
-        self.images_dir.mkdir(parents=True, exist_ok=True)
-        temporary_image = destination.with_name(f".{destination.name}.tmp")
-        shutil.copyfile(source, temporary_image)
-        temporary_image.replace(destination)
-
-        record = {
-            "id": profile_id,
-            "name": clean_name,
-            "image_file": image_file.as_posix(),
-            "created_at": datetime.now(timezone.utc).isoformat(),
-        }
+        image_files = []
+        copied_destinations = []
         try:
+            for index, source in enumerate(sources):
+                image_file, destination = self._store_image(profile_id, source, f"-{index}")
+                copied_destinations.append(destination)
+                image_files.append(image_file.as_posix())
+
+            record = {
+                "id": profile_id,
+                "name": clean_name,
+                "image_files": image_files,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
             self._write_records(records + [record])
         except Exception:
-            destination.unlink(missing_ok=True)
+            for destination in copied_destinations:
+                destination.unlink(missing_ok=True)
             raise
         return self._profile(record)
 
-    def remove(self, identifier):
+    def _find_record_index(self, records, identifier):
         target = str(identifier or "").strip().casefold()
-        records = self._records()
-        profiles = [self._profile(record) for record in records]
-        match_index = next(
+        return next(
             (
                 index
-                for index, profile in enumerate(profiles)
-                if profile.profile_id.casefold() == target
-                or profile.name.casefold() == target
+                for index, record in enumerate(records)
+                if str(record.get("id", "")).casefold() == target
+                or str(record.get("name", "")).strip().casefold() == target
             ),
             None,
         )
+
+    def add_image(self, identifier, image_path):
+        """Append another reference photo to an already-registered pet."""
+        records = self._records()
+        match_index = self._find_record_index(records, identifier)
         if match_index is None:
             raise KeyError(f"No pet profile matches '{identifier}'.")
 
-        removed = profiles[match_index]
+        record = records[match_index]
+        source = _validate_image(image_path)
+        existing_files = _image_files(record)
+
+        image_file, destination = self._store_image(record["id"], source, f"-{uuid4().hex[:8]}")
+        updated_record = {
+            "id": record["id"],
+            "name": record["name"],
+            "image_files": existing_files + [image_file.as_posix()],
+            "created_at": record.get("created_at", ""),
+        }
+        try:
+            records[match_index] = updated_record
+            self._write_records(records)
+        except Exception:
+            destination.unlink(missing_ok=True)
+            raise
+        return self._profile(updated_record)
+
+    def remove(self, identifier):
+        records = self._records()
+        match_index = self._find_record_index(records, identifier)
+        if match_index is None:
+            raise KeyError(f"No pet profile matches '{identifier}'.")
+
+        removed = self._profile(records[match_index])
         self._write_records(
             [record for index, record in enumerate(records) if index != match_index]
         )
-        removed.image_path.unlink(missing_ok=True)
+        for image_path in removed.image_paths:
+            image_path.unlink(missing_ok=True)
         return removed
 
 
-def register_pet_profile(name, image_path, profile_dir=DEFAULT_PROFILE_DIR):
-    return PetProfileStore(profile_dir).register(name, image_path)
+def register_pet_profile(name, image_paths, profile_dir=DEFAULT_PROFILE_DIR):
+    return PetProfileStore(profile_dir).register(name, image_paths)
+
+
+def add_pet_image(identifier, image_path, profile_dir=DEFAULT_PROFILE_DIR):
+    return PetProfileStore(profile_dir).add_image(identifier, image_path)
 
 
 def list_pet_profiles(profile_dir=DEFAULT_PROFILE_DIR):

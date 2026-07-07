@@ -7,6 +7,7 @@ from .paths import DATA_DIR
 
 
 SOURCE_VIDEO_DIR = DATA_DIR / "source_video"
+UPLOADS_DIR = DATA_DIR / "uploads"
 VIDEO_EXTENSIONS = {".avi", ".m4v", ".mkv", ".mov", ".mp4", ".webm"}
 
 
@@ -22,10 +23,33 @@ def video_stem_from_timeline(timeline_path):
     return match.group(1)
 
 
+def _uploaded_video(video_stem, uploads_dir):
+    """Find a video saved by the API under uploads/{job_id}/source.<ext>.
+
+    The API names the timeline after the job id (so `video_stem` here is a
+    job id, not the original filename) and always writes the upload as
+    "source.<ext>" inside a per-job folder -- this looks nothing like the
+    filename-match convention `source_video_dir` uses, so it needs its own
+    lookup instead of just adding another search directory to that one.
+    """
+    job_dir = Path(uploads_dir) / video_stem
+    if not job_dir.is_dir():
+        return None
+    matches = sorted(
+        path
+        for path in job_dir.iterdir()
+        if path.is_file()
+        and path.suffix.lower() in VIDEO_EXTENSIONS
+        and path.stem == "source"
+    )
+    return matches[0].resolve() if len(matches) == 1 else None
+
+
 def resolve_source_video(
     timeline_path,
     video_path=None,
     source_video_dir=SOURCE_VIDEO_DIR,
+    uploads_dir=UPLOADS_DIR,
 ):
     """Resolve an explicit video or find the file matching the timeline stem."""
     if video_path is not None:
@@ -51,7 +75,13 @@ def resolve_source_video(
             f"Multiple source videos match '{video_stem}' in {video_dir}. "
             "Pass --video explicitly."
         )
+
+    uploaded = _uploaded_video(video_stem, uploads_dir)
+    if uploaded is not None:
+        return uploaded
+
     raise FileNotFoundError(
-        f"No source video matching '{video_stem}' was found in {video_dir}. "
-        "Place the video there with its original filename or pass --video."
+        f"No source video matching '{video_stem}' was found in {video_dir} "
+        f"or {uploads_dir}. Place the video there with its original filename "
+        "or pass --video."
     )

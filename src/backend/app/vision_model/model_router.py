@@ -31,10 +31,10 @@ if str(BACKEND_ROOT) not in sys.path:
 from app.pet_profiles import list_pet_profiles
 
 if __package__:
-    from .models import local_qwen
+    from .models import local_ollama
     from .prompt import build_system_prompt
 else:
-    from models import local_qwen
+    from models import local_ollama
     from prompt import build_system_prompt
 
 GEMINI = "gemini"
@@ -58,9 +58,11 @@ def _resolve(value, env_var, default):
     return resolved
 
 
-def _call(model_name, image_path, allowed_dir, prompt, reference_images):
+def _call(model_name, image_path, allowed_dir, prompt, reference_images, ollama_model=None):
     if model_name == QWEN:
-        return local_qwen.analyze(image_path, allowed_dir, prompt, reference_images)
+        return local_ollama.analyze(
+            image_path, allowed_dir, prompt, reference_images, ollama_model=ollama_model
+        )
 
     if model_name == CLAUDE:
         if __package__:
@@ -85,27 +87,42 @@ def _call(model_name, image_path, allowed_dir, prompt, reference_images):
     return google_gemini.analyze(image_path, allowed_dir, prompt, reference_images)
 
 
-def _reference(profile):
-    name = profile["name"] if isinstance(profile, dict) else profile.name
+def _profile_image_paths(profile):
     if isinstance(profile, dict):
-        image_path = profile.get("image_path", profile.get("reference_image"))
-    else:
-        image_path = profile.image_path
-    path = Path(image_path).expanduser().resolve(strict=True)
-    if not path.is_file() or path.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
-        raise ValueError(
-            f"Pet reference must be an existing JPEG or PNG file: {path}"
-        )
-    mime_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
-    return {"name": str(name), "path": path, "mime_type": mime_type}
+        paths = profile.get("image_paths") or profile.get("reference_images")
+        if paths:
+            return list(paths)
+        single = profile.get("image_path") or profile.get("reference_image")
+        return [single] if single else []
+    return list(profile.image_paths)
+
+
+def _references_for(profile):
+    """One reference dict per registered photo -- a pet with several
+    photos on file contributes several entries, all sharing its name."""
+    name = profile["name"] if isinstance(profile, dict) else profile.name
+    references = []
+    for image_path in _profile_image_paths(profile):
+        path = Path(image_path).expanduser().resolve(strict=True)
+        if not path.is_file() or path.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
+            raise ValueError(
+                f"Pet reference must be an existing JPEG or PNG file: {path}"
+            )
+        mime_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
+        references.append({"name": str(name), "path": path, "mime_type": mime_type})
+    return references
 
 
 def _outcome(output, model_used, fell_back, reference_images):
+    names = []
+    for item in reference_images:
+        if item["name"] not in names:
+            names.append(item["name"])
     return {
         "output": output,
         "model_used": model_used,
         "fell_back": fell_back,
-        "registered_pet_names": [item["name"] for item in reference_images],
+        "registered_pet_names": names,
     }
 
 
@@ -115,6 +132,7 @@ def analyze(
     primary: str = None,
     fallback: str = None,
     pet_profiles=None,
+    ollama_model=None,
 ) -> dict:
     """
     Returns {"output": <raw model text>, "model_used": "gemini"|"qwen"|
@@ -123,26 +141,33 @@ def analyze(
     VISION_MODEL_PRIMARY) first; if that call raises anything and a
     different `fallback` (or VISION_MODEL_FALLBACK) is configured,
     retries once with it.
+
+    `ollama_model` picks which locally-served model the "qwen" path
+    actually calls (default: OLLAMA_MODEL) -- named "qwen" for the
+    provider family, but Ollama can serve any vision-capable model the
+    user has pulled, not just Qwen.
     """
     primary_model = _resolve(primary, "VISION_MODEL_PRIMARY", DEFAULT_PRIMARY)
     fallback_model = _resolve(fallback, "VISION_MODEL_FALLBACK", DEFAULT_FALLBACK)
     profiles = list_pet_profiles() if pet_profiles is None else list(pet_profiles)
     prompt = build_system_prompt(profiles)
-    reference_images = tuple(_reference(profile) for profile in profiles)
+    reference_images = tuple(
+        reference for profile in profiles for reference in _references_for(profile)
+    )
 
     if primary_model is None:
         raise ValueError("No primary model configured (VISION_MODEL_PRIMARY or primary=).")
 
     try:
         output = _call(
-            primary_model, image_path, allowed_dir, prompt, reference_images
+            primary_model, image_path, allowed_dir, prompt, reference_images, ollama_model
         )
         return _outcome(output, primary_model, False, reference_images)
     except Exception as exc:
         if fallback_model and fallback_model != primary_model:
             print(f"{primary_model} call failed ({exc}); falling back to {fallback_model}.")
             output = _call(
-                fallback_model, image_path, allowed_dir, prompt, reference_images
+                fallback_model, image_path, allowed_dir, prompt, reference_images, ollama_model
             )
             return _outcome(output, fallback_model, True, reference_images)
         raise

@@ -53,12 +53,45 @@
   background: var(--cream);
 }
 
-.settings-modal__pet img {
+.settings-modal__pet-photos {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.settings-modal__pet-photos img {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  border: 2px solid var(--white);
+  margin-left: -14px;
+}
+
+.settings-modal__pet-photos img:first-child {
+  margin-left: 0;
+}
+
+.settings-modal__add-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: var(--cream-soft);
+  color: var(--brown-soft);
+  font-size: 0.9rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.settings-modal__add-photo:hover {
+  background: #ecdcc3;
+  color: var(--paw-orange-dark);
 }
 
 .settings-modal__pet-name {
@@ -104,6 +137,10 @@
 .settings-modal__model-row {
   display: flex;
   gap: 16px;
+}
+
+.settings-modal__ollama-model {
+  margin-top: 12px;
 }
 
 .settings-modal__model-field {

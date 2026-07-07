@@ -17,6 +17,13 @@
   white-space: nowrap;
 }
 
+.processing-modal__status {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--paw-orange-dark);
+}
+
 .processing-modal__subtext {
   margin: 0;
   font-size: 0.85rem;
@@ -25,23 +32,31 @@
 }
 
 .processing-modal__bar {
+  position: relative;
   width: 100%;
   height: 8px;
   border-radius: 999px;
   background: var(--cream-soft);
   overflow: hidden;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .processing-modal__bar-fill {
+  position: absolute;
+  top: 0;
+  left: -40%;
   height: 100%;
-  background: var(--paw-orange);
+  width: 40%;
   border-radius: 999px;
-  transition: width 0.3s ease;
+  background: var(--paw-orange);
+  animation: processing-bar-slide 1.4s ease-in-out infinite;
 }
 
-.processing-modal__time {
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--brown-soft);
+@keyframes processing-bar-slide {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
 }

@@ -16,7 +16,7 @@ DEFAULT_VIDEO = SRC_ROOT / "data" / "cat_inbag.mp4"
 SMALL_WIDTH = 320
 SAMPLE_INTERVAL_SEC = 0.5
 COOLDOWN_SEC = 4.0
-STILL_PING_INTERVAL_SEC = 300.0
+STILL_PING_INTERVAL_SEC = 10.0
 
 # Riz's vision-model testing settled on 768x432 (landscape) as a size that
 # works well across models. Our source video is portrait, so forcing exact

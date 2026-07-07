@@ -26,6 +26,7 @@ from pathlib import Path
 import cv2 as cv
 
 from app.event_builder.event_pipeline import run_event_pipeline
+from app.event_builder.timeline_storage import next_final_timeline_path
 from app.highlight_reel.pipeline import generate_highlight_reel
 from app.highlight_reel.paths import OUTPUT_DIR as REEL_OUTPUT_DIR
 from app.motion_detector.main_stream_worker import (
@@ -43,7 +44,7 @@ JSONS_DIR = DATA_DIR / "jsons"
 EVENTS_DIR = DATA_DIR / "events"
 
 COOLDOWN_SEC = 4.0
-STILL_PING_INTERVAL_SEC = 300.0
+STILL_PING_INTERVAL_SEC = 10.0
 
 
 def new_job_id():
@@ -75,7 +76,14 @@ def probe_duration_seconds(video_path):
     return frame_count / fps if fps else 0.0
 
 
-def run_pipeline(job_id, video_path, primary_model=None, fallback_model=None, should_continue=None):
+def run_pipeline(
+    job_id,
+    video_path,
+    primary_model=None,
+    fallback_model=None,
+    ollama_model=None,
+    should_continue=None,
+):
     """
     Yields dicts describing pipeline progress, in this rough shape:
 
@@ -107,7 +115,13 @@ def run_pipeline(job_id, video_path, primary_model=None, fallback_model=None, sh
 
     video_stem = job_id
     vision_json = JSONS_DIR / f"{video_stem}_vision.json"
-    timeline_json = JSONS_DIR / f"{video_stem}_final_timeline.json"
+    # The query layer (see app.query_layer) only reads timelines from this
+    # dated folder structure -- a flat src/data/jsons/*.json file would be
+    # invisible to it, so freshly-analyzed footage wouldn't be queryable.
+    # Reserved once and then repeatedly overwritten as the timeline is
+    # rebuilt after each new candidate (same file every time, not a fresh
+    # collision-avoided path per call).
+    timeline_json = next_final_timeline_path(vision_json)
 
     try:
         duration_seconds = probe_duration_seconds(video_path)
@@ -160,6 +174,7 @@ def run_pipeline(job_id, video_path, primary_model=None, fallback_model=None, sh
                 allowed_dir=str(FRAMES_DIR),
                 primary=primary_model,
                 fallback=fallback_model,
+                ollama_model=ollama_model,
             )
             result = _parse_vision_output(outcome["output"])
 

@@ -31,13 +31,38 @@ class PetProfileStoreTests(unittest.TestCase):
             self.assertNotEqual(registered.image_path, upload)
             manifest = json.loads(store.manifest_path.read_text(encoding="utf-8"))
             self.assertEqual(manifest["pets"][0]["name"], "Milo")
-            self.assertFalse(Path(manifest["pets"][0]["image_file"]).is_absolute())
+            self.assertFalse(Path(manifest["pets"][0]["image_files"][0]).is_absolute())
 
             removed = store.remove("milo")
 
             self.assertEqual(removed.profile_id, registered.profile_id)
             self.assertEqual(store.list(), [])
             self.assertFalse(removed.image_path.exists())
+
+    def test_registers_with_multiple_images_and_can_add_more_later(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            store = PetProfileStore(root / "profiles")
+            first = root / "one.png"
+            first.write_bytes(PNG_BYTES)
+            second = root / "two.png"
+            second.write_bytes(PNG_BYTES)
+
+            registered = store.register("Milo", [first, second])
+            self.assertEqual(len(registered.image_paths), 2)
+            self.assertTrue(all(path.is_file() for path in registered.image_paths))
+
+            third = root / "three.png"
+            third.write_bytes(PNG_BYTES)
+            updated = store.add_image("Milo", third)
+            self.assertEqual(len(updated.image_paths), 3)
+
+            listed = store.list()
+            self.assertEqual(len(listed[0].image_paths), 3)
+
+            removed = store.remove("Milo")
+            self.assertEqual(len(removed.image_paths), 3)
+            self.assertFalse(any(path.exists() for path in removed.image_paths))
 
     def test_enforces_two_pet_limit_and_unique_names(self):
         with tempfile.TemporaryDirectory() as directory:

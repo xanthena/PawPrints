@@ -3,12 +3,18 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
 from app.event_builder.event_pipeline import run_event_pipeline
+
+
+class _FakeProfile:
+    def __init__(self, name):
+        self.name = name
 
 
 class EventBuilderContractTests(unittest.TestCase):
@@ -34,7 +40,16 @@ class EventBuilderContractTests(unittest.TestCase):
             input_path = Path(directory) / "input.json"
             output_path = Path(directory) / "output.json"
             input_path.write_text(json.dumps(raw), encoding="utf-8")
-            events = run_event_pipeline(input_path, output_path)
+            # clean_results() checks name_of_pet against the actually
+            # registered roster (see its _registered_pet_names) rather
+            # than trusting the model's own claim -- fake that roster
+            # here instead of depending on whatever's really registered
+            # on disk, which would make this test order/state dependent.
+            with patch(
+                "app.event_builder.clean_results.list_pet_profiles",
+                return_value=[_FakeProfile("Milo")],
+            ):
+                events = run_event_pipeline(input_path, output_path)
 
         self.assertEqual(len(events), 1)
         self.assertEqual(events[0]["activities"], ["grooming", "sleeping"])

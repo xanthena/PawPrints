@@ -1,9 +1,24 @@
 import { useEffect, useState } from 'react'
-import { fetchModels, fetchPets, addPet, deletePet } from '../api/settingsApi.js'
+import {
+  fetchModels,
+  fetchOllamaModels,
+  fetchPets,
+  addPet,
+  addPetImage,
+  deletePet,
+} from '../api/settingsApi.js'
 import { mediaUrl } from '../api/footageStream.js'
 import './SettingsModal.css'
 
 const MODEL_PREFS_KEY = 'pawprints:model-prefs'
+
+// "qwen" is the provider-family key used throughout the backend (env
+// vars, timeline file naming) -- Ollama can serve any vision-capable
+// model the user has pulled, not just Qwen, so the dropdown shows a
+// truthful label without renaming that key everywhere it's used.
+function modelLabel(model) {
+  return model === 'qwen' ? 'Ollama (local)' : model
+}
 
 export function loadModelPrefs() {
   try {
@@ -23,8 +38,11 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
   const [models, setModels] = useState([])
   const [primaryModel, setPrimaryModel] = useState('')
   const [fallbackModel, setFallbackModel] = useState('')
+  const [ollamaModels, setOllamaModels] = useState([])
+  const [ollamaModel, setOllamaModel] = useState('')
+  const [ollamaError, setOllamaError] = useState(null)
   const [newName, setNewName] = useState('')
-  const [newImage, setNewImage] = useState(null)
+  const [newImages, setNewImages] = useState([])
   const [error, setError] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -44,36 +62,62 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
         setFallbackModel(prefs.fallback || loadedModels[0] || '')
       })
       .catch((err) => setError(err.message))
+
+    fetchOllamaModels()
+      .then((loadedOllamaModels) => {
+        setOllamaModels(loadedOllamaModels)
+        const prefs = loadModelPrefs()
+        setOllamaModel(prefs.ollamaModel || loadedOllamaModels[0] || '')
+      })
+      .catch((err) => setOllamaError(err.message))
   }, [])
 
   function updatePrimary(value) {
     setPrimaryModel(value)
-    const prefs = { primary: value, fallback: fallbackModel }
+    const prefs = { primary: value, fallback: fallbackModel, ollamaModel }
     saveModelPrefs(prefs)
     onModelPrefsChange?.(prefs)
   }
 
   function updateFallback(value) {
     setFallbackModel(value)
-    const prefs = { primary: primaryModel, fallback: value }
+    const prefs = { primary: primaryModel, fallback: value, ollamaModel }
+    saveModelPrefs(prefs)
+    onModelPrefsChange?.(prefs)
+  }
+
+  function updateOllamaModel(value) {
+    setOllamaModel(value)
+    const prefs = { primary: primaryModel, fallback: fallbackModel, ollamaModel: value }
     saveModelPrefs(prefs)
     onModelPrefsChange?.(prefs)
   }
 
   async function handleAddPet(e) {
     e.preventDefault()
-    if (!newName.trim() || !newImage) return
+    if (!newName.trim() || newImages.length === 0) return
     setIsSaving(true)
     setError(null)
     try {
-      const pet = await addPet(newName.trim(), newImage)
+      const pet = await addPet(newName.trim(), newImages)
       setPets((current) => [...current, pet])
       setNewName('')
-      setNewImage(null)
+      setNewImages([])
     } catch (err) {
       setError(err.message)
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  async function handleAddPhoto(petId, file) {
+    if (!file) return
+    setError(null)
+    try {
+      const updated = await addPetImage(petId, file)
+      setPets((current) => current.map((pet) => (pet.id === petId ? updated : pet)))
+    } catch (err) {
+      setError(err.message)
     }
   }
 
@@ -104,14 +148,35 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
         <section className="settings-modal__section">
           <h3 className="settings-modal__section-title">Pet profiles</h3>
           <p className="settings-modal__hint">
-            Register up to {maxPets} pets with a reference photo so the model can name who it sees, instead of just "a cat".
+            Register up to {maxPets} pets with one or more reference photos so the model can
+            name who it sees, instead of just "a cat". More photos of a pet (different angles,
+            lighting) can be added anytime with the + button below.
           </p>
 
           {pets.length > 0 && (
             <ul className="settings-modal__pets">
               {pets.map((pet) => (
                 <li key={pet.id} className="settings-modal__pet">
-                  <img src={mediaUrl(pet.image_url)} alt={pet.name} />
+                  <div className="settings-modal__pet-photos">
+                    {pet.image_urls.map((url) => (
+                      <img key={url} src={mediaUrl(url)} alt={pet.name} />
+                    ))}
+                    <label
+                      className="settings-modal__add-photo"
+                      title={`Add another photo of ${pet.name}`}
+                    >
+                      +
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png"
+                        hidden
+                        onChange={(e) => {
+                          handleAddPhoto(pet.id, e.target.files?.[0])
+                          e.target.value = ''
+                        }}
+                      />
+                    </label>
+                  </div>
                   <span className="settings-modal__pet-name">{pet.name}</span>
                   <button
                     className="settings-modal__pet-remove"
@@ -136,12 +201,13 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
               <input
                 type="file"
                 accept="image/jpeg,image/png"
-                onChange={(e) => setNewImage(e.target.files?.[0] || null)}
+                multiple
+                onChange={(e) => setNewImages(Array.from(e.target.files || []))}
               />
               <button
                 className="btn btn--secondary"
                 type="submit"
-                disabled={isSaving || !newName.trim() || !newImage}
+                disabled={isSaving || !newName.trim() || newImages.length === 0}
               >
                 {isSaving ? 'Adding…' : 'Add pet'}
               </button>
@@ -159,7 +225,7 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
               <select value={primaryModel} onChange={(e) => updatePrimary(e.target.value)}>
                 {models.map((model) => (
                   <option key={model} value={model}>
-                    {model}
+                    {modelLabel(model)}
                   </option>
                 ))}
               </select>
@@ -169,12 +235,33 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
               <select value={fallbackModel} onChange={(e) => updateFallback(e.target.value)}>
                 {models.map((model) => (
                   <option key={model} value={model}>
-                    {model}
+                    {modelLabel(model)}
                   </option>
                 ))}
               </select>
             </label>
           </div>
+
+          {(primaryModel === 'qwen' || fallbackModel === 'qwen') && (
+            <div className="settings-modal__ollama-model">
+              <label className="settings-modal__model-field">
+                Ollama model
+                {ollamaModels.length > 0 ? (
+                  <select value={ollamaModel} onChange={(e) => updateOllamaModel(e.target.value)}>
+                    {ollamaModels.map((model) => (
+                      <option key={model} value={model}>
+                        {model}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span className="settings-modal__hint">
+                    {ollamaError || 'No local Ollama models found -- pull one and reopen Settings.'}
+                  </span>
+                )}
+              </label>
+            </div>
+          )}
         </section>
       </div>
     </div>

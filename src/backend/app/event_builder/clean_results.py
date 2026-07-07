@@ -2,6 +2,8 @@ import json
 import re
 from copy import deepcopy
 
+from app.pet_profiles import list_pet_profiles
+
 
 DEFAULT_RESULT = {
     "pet_detected": False,
@@ -33,8 +35,27 @@ def _clean_activities(value):
     return activities or ["unknown"]
 
 
-def _clean_pet_names(value):
+def _registered_pet_names():
+    """Casefolded-name -> canonical-name for every currently registered pet.
+
+    The vision model is prompted to only name a registered pet on a
+    confident match, but nothing stops it from hallucinating a generic
+    descriptive label ("Orange Tabby Cat") instead of leaving
+    name_of_pet empty when it isn't sure. Filtering against the actual
+    roster here -- the one place raw model output from every provider
+    converges -- is what keeps that from reaching the timeline.
+    """
+    try:
+        return {profile.name.casefold(): profile.name for profile in list_pet_profiles()}
+    except Exception:
+        return {}
+
+
+def _clean_pet_names(value, registered=None):
     """Keep identity list-shaped because a frame can contain both pets."""
+    if registered is None:
+        registered = _registered_pet_names()
+
     if isinstance(value, list):
         candidates = value
     elif isinstance(value, str):
@@ -46,10 +67,10 @@ def _clean_pet_names(value):
     seen = set()
     for item in candidates:
         name = " ".join(str(item or "").strip().split())
-        key = name.casefold()
-        if name and key not in seen:
-            names.append(name)
-            seen.add(key)
+        canonical = registered.get(name.casefold())
+        if canonical and canonical.casefold() not in seen:
+            names.append(canonical)
+            seen.add(canonical.casefold())
     return names
 
 
@@ -114,6 +135,7 @@ def _clean_objects(objects):
 def clean_results(results):
     """Parse malformed model output and return frames with a consistent result."""
     cleaned_results = []
+    registered = _registered_pet_names()
 
     for frame in results:
         cleaned_frame = deepcopy(frame)
@@ -132,7 +154,7 @@ def clean_results(results):
             )
             result["activities"] = _clean_activities(activity_value)
             result["name_of_pet"] = _clean_pet_names(
-                parsed_result.get("name_of_pet", [])
+                parsed_result.get("name_of_pet", []), registered
             )
             result["interaction"] = str(parsed_result.get("interaction", "")).strip()
             result["summary"] = str(parsed_result.get("summary", "")).strip()
