@@ -127,7 +127,7 @@ VITE_API_BASE_URL=http://localhost:8000
 
 ## Electron shell
 
-The Electron entry point can launch the backend and open the React UI in a native desktop window instead of a browser tab. `src/frontend/electron/main.js` starts the backend itself via the `py -3.12` launcher (the same invocation `.claude/launch.json` uses), waits for `/api/health` to report healthy, and only then opens the window - so there is no separate "start the backend" step for this path. It also shuts the backend down cleanly when the window closes.
+The Electron entry point can launch the backend and open the React UI in a native desktop window instead of a browser tab. `src/frontend/electron/main.js` starts the backend itself via the `py -3.12` launcher, waits for `/api/health` to report healthy, and only then opens the window - so there is no separate "start the backend" step for this path. It also shuts the backend down cleanly when the window closes.
 
 Keep the Vite dev server running and launch Electron in another terminal:
 
