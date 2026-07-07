@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog } from 'electron'
 import { spawn, exec } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -7,26 +8,45 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = !app.isPackaged
 
 const BACKEND_DIR = path.join(__dirname, '../../backend')
-// Same invocation the rest of this project's tooling already uses (see
-// .claude/launch.json) -- the "py" launcher resolves whichever machine's
-// Python 3.12 install without hardcoding a user-specific path. Whether
-// "py" execs directly into python.exe or spawns it as a child, taskkill
-// /t below kills the whole process tree either way, so backend cleanup
-// on quit doesn't depend on which one happens.
-const PYTHON_LAUNCHER = 'py'
-const PYTHON_VERSION_FLAG = '-3.12'
 const BACKEND_HEALTH_URL = 'http://localhost:8000/api/health'
 
+// "py -3.12" resolves whatever Python 3.12 is registered system-wide --
+// not necessarily the one the project's dependencies were installed
+// into. The README has users create src/backend/.venv and pip install
+// there, so that venv's own interpreter (guaranteed to have uvicorn,
+// torch, etc.) is tried first; the bare launcher is only a fallback for
+// a global, no-venv install.
+function resolvePythonCommand() {
+  const venvPython =
+    process.platform === 'win32'
+      ? path.join(BACKEND_DIR, '.venv', 'Scripts', 'python.exe')
+      : path.join(BACKEND_DIR, '.venv', 'bin', 'python')
+  if (existsSync(venvPython)) {
+    return { command: venvPython, versionArgs: [] }
+  }
+  if (process.platform === 'win32') {
+    return { command: 'py', versionArgs: ['-3.12'] }
+  }
+  return { command: 'python3', versionArgs: [] }
+}
+
 let backendProcess = null
+// Keeps the tail of stderr so a failed startup can show *why* -- e.g.
+// "No module named uvicorn" -- instead of just "it never came up".
+let backendStderrTail = ''
 
 function startBackend() {
+  const { command, versionArgs } = resolvePythonCommand()
   backendProcess = spawn(
-    PYTHON_LAUNCHER,
-    [PYTHON_VERSION_FLAG, '-m', 'uvicorn', 'app.api.server:app', '--port', '8000'],
+    command,
+    [...versionArgs, '-m', 'uvicorn', 'app.api.server:app', '--port', '8000'],
     { cwd: BACKEND_DIR }
   )
   backendProcess.stdout.on('data', (data) => process.stdout.write(`[backend] ${data}`))
-  backendProcess.stderr.on('data', (data) => process.stderr.write(`[backend] ${data}`))
+  backendProcess.stderr.on('data', (data) => {
+    process.stderr.write(`[backend] ${data}`)
+    backendStderrTail = (backendStderrTail + data.toString()).slice(-2000)
+  })
 }
 
 function stopBackend() {
@@ -72,8 +92,23 @@ app.whenReady().then(() => {
   waitForBackend()
     .then(createWindow)
     .catch((error) => {
+      // Opening the window anyway just reproduces this same failure
+      // one layer up, as a confusing "Failed to fetch" deep inside
+      // Settings -- show what actually went wrong up front instead.
       console.error('Backend did not become healthy in time:', error)
-      createWindow()
+      stopBackend()
+      dialog.showErrorBox(
+        'PawPrints backend failed to start',
+        'The app could not reach the backend at ' +
+          BACKEND_HEALTH_URL +
+          '.\n\n' +
+          'Make sure the backend dependencies are installed (see README.md: ' +
+          '"Install and configure the backend") for whichever Python this ' +
+          'launched -- either src/backend/.venv or a global Python 3.12.\n\n' +
+          'Recent backend output:\n' +
+          (backendStderrTail.trim() || '(no output captured)')
+      )
+      app.quit()
     })
 })
 
