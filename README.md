@@ -125,6 +125,21 @@ The frontend uses `http://localhost:8000` by default. To use a different API add
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
+## Electron shell
+
+The Electron entry point can launch the backend and open the React UI in a native desktop window instead of a browser tab. `src/frontend/electron/main.js` starts the backend itself via the `py -3.12` launcher (the same invocation `.claude/launch.json` uses), waits for `/api/health` to report healthy, and only then opens the window - so there is no separate "start the backend" step for this path. It also shuts the backend down cleanly when the window closes.
+
+Keep the Vite dev server running and launch Electron in another terminal:
+
+```powershell
+cd src\frontend
+npm run dev
+# In another terminal, from the same directory:
+npm run electron
+```
+
+The browser workflow above remains the portable judging path. Packaging the Python runtime for a fully standalone desktop build is listed as a future improvement.
+
 ## First-use walkthrough
 
 1. Open the cat-face **Settings** button.
@@ -230,19 +245,6 @@ The current repository review built all 70 frontend modules successfully. In the
 - Query proof files use unique IDs and are eligible for cleanup after 24 hours.
 
 This is a local-first hackathon build, not a public multi-user service. It currently has no authentication, request quotas, or global upload-size limit, and uploaded videos and derived artifacts remain on disk. Do not expose port 8000 to an untrusted network without adding those controls. See [`documentation/SECURITY.md`](documentation/SECURITY.md) for the full review.
-
-## Optional Electron shell
-
-The Electron entry point can launch the backend and open the React UI, but `src/frontend/electron/main.js` currently contains the original developer's absolute Python path. For a different machine, replace `PYTHON_EXE` with the absolute path to that machine's virtual-environment interpreter. Then keep the Vite server running and launch Electron in another terminal:
-
-```powershell
-cd src\frontend
-npm run dev
-# In another terminal, from the same directory:
-npm run electron
-```
-
-The browser workflow above is the portable judging path. Packaging the Python runtime and removing the hard-coded interpreter path are listed as future improvements.
 
 ## Troubleshooting
 
