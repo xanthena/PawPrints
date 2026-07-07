@@ -45,6 +45,15 @@
   color: var(--brown-deep);
 }
 
+.modal__error {
+  margin: 16px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fbe4dd;
+  color: #b8462f;
+  font-size: 0.85rem;
+}
+
 .dropzone {
   border: 2px dashed var(--cream-soft);
   border-radius: var(--radius);

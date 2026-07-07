@@ -46,7 +46,7 @@ def _get_client():
     return _client
 
 
-def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT) -> str:
     client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
@@ -69,16 +69,6 @@ def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) 
         "CCTV candidate image:",
         types.Part.from_bytes(data=image_bytes, mime_type=image.mime_type),
     ]
-    for reference in reference_images:
-        contents.extend(
-            [
-                f"Registered reference image for {reference['name']}:",
-                types.Part.from_bytes(
-                    data=reference["path"].read_bytes(),
-                    mime_type=reference["mime_type"],
-                ),
-            ]
-        )
 
     response = client.models.generate_content(
         model="gemini-2.5-flash",

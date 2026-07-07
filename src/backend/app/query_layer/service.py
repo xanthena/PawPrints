@@ -12,7 +12,7 @@ from .date_parser import parse_date_scope
 from .intent_parser import parse_query_intent
 from .matcher import find_matches, rank_matches
 from .path_utils import relative_repo_path
-from .proof_renderer import merge_evidence_ranges, render_proof_video
+from .proof_renderer import merge_evidence_ranges, render_proof_clips
 from .proof_storage import (
     DEFAULT_PROOF_ROOT,
     cleanup_expired_proofs,
@@ -108,14 +108,13 @@ def _build_proof(
         now=now,
     )
     try:
-        proof_path = render_proof_video(
+        clip_paths = render_proof_clips(
             segments,
-            artifact.video_path,
+            artifact.output_dir,
+            artifact.query_id,
             ffmpeg_path=ffmpeg_path,
         )
     except Exception as error:
-        if artifact.video_path.exists():
-            artifact.video_path.unlink()
         for item in evidence:
             item["proof_segment"] = None
         return {
@@ -126,12 +125,13 @@ def _build_proof(
 
     unavailable_count = sum(not item.get("source_video_path") for item in evidence)
     proof_segments = []
-    for segment_number, segment in enumerate(segments, start=1):
+    for segment_number, (segment, clip_path) in enumerate(zip(segments, clip_paths), start=1):
         proof_segments.append(
             {
                 "segment": segment_number,
                 "date": segment.event_date.isoformat(),
                 "source_video_name": segment.source_video.name,
+                "video_path": str(clip_path),
                 "clip_start_seconds": _round_seconds(segment.clip_start),
                 "clip_end_seconds": _round_seconds(segment.clip_end),
                 "clip_start_timestamp": format_video_timestamp(segment.clip_start),
@@ -151,9 +151,7 @@ def _build_proof(
         "status": "partial" if unavailable_count else "created",
         "error": proof_error,
         "query_id": artifact.query_id,
-        "video_path": str(proof_path),
         "segment_count": len(segments),
-        "stitched": len(segments) > 1,
         "total_duration": _round_seconds(sum(segment.duration for segment in segments)),
         "expires_at": artifact.expires_at.isoformat(),
         "unavailable_evidence_count": unavailable_count,
@@ -168,9 +166,9 @@ def _make_response_paths_relative(response):
     for item in response["evidence"]:
         item["source_json_path"] = relative_repo_path(item["source_json_path"])
         item["source_video_path"] = relative_repo_path(item["source_video_path"])
-    proof_path = response["proof"].get("video_path")
-    if proof_path:
-        response["proof"]["video_path"] = relative_repo_path(proof_path)
+    for segment in response["proof"].get("segments", []):
+        if segment.get("video_path"):
+            segment["video_path"] = relative_repo_path(segment["video_path"])
     return response
 
 

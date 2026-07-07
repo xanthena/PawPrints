@@ -5,6 +5,7 @@ import {
   fetchPets,
   addPet,
   addPetImage,
+  renamePet,
   deletePet,
 } from '../api/settingsApi.js'
 import { mediaUrl } from '../api/footageStream.js'
@@ -45,6 +46,10 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
   const [newImages, setNewImages] = useState([])
   const [error, setError] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [editingPetId, setEditingPetId] = useState(null)
+  const [editingName, setEditingName] = useState('')
+  const [isRenaming, setIsRenaming] = useState(false)
+  const [modelConfigSaved, setModelConfigSaved] = useState(false)
 
   useEffect(() => {
     fetchPets()
@@ -54,43 +59,24 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
       })
       .catch((err) => setError(err.message))
 
-    fetchModels()
-      .then((loadedModels) => {
-        setModels(loadedModels)
-        const prefs = loadModelPrefs()
-        setPrimaryModel(prefs.primary || loadedModels[0] || '')
-        setFallbackModel(prefs.fallback || loadedModels[0] || '')
-      })
-      .catch((err) => setError(err.message))
-
+    // The dropdowns always open blank, even if a preference was saved on
+    // a previous visit -- the Save button is what commits a choice, so
+    // reopening Settings shouldn't silently show (or re-imply) whatever
+    // was picked last time. Closing without touching these leaves
+    // whatever was last actually saved in effect; this only affects
+    // what the dropdowns *display* on open.
+    fetchModels().then(setModels).catch((err) => setError(err.message))
     fetchOllamaModels()
-      .then((loadedOllamaModels) => {
-        setOllamaModels(loadedOllamaModels)
-        const prefs = loadModelPrefs()
-        setOllamaModel(prefs.ollamaModel || loadedOllamaModels[0] || '')
-      })
+      .then(setOllamaModels)
       .catch((err) => setOllamaError(err.message))
   }, [])
 
-  function updatePrimary(value) {
-    setPrimaryModel(value)
-    const prefs = { primary: value, fallback: fallbackModel, ollamaModel }
+  function handleSaveModelConfig() {
+    const prefs = { primary: primaryModel, fallback: fallbackModel, ollamaModel }
     saveModelPrefs(prefs)
     onModelPrefsChange?.(prefs)
-  }
-
-  function updateFallback(value) {
-    setFallbackModel(value)
-    const prefs = { primary: primaryModel, fallback: value, ollamaModel }
-    saveModelPrefs(prefs)
-    onModelPrefsChange?.(prefs)
-  }
-
-  function updateOllamaModel(value) {
-    setOllamaModel(value)
-    const prefs = { primary: primaryModel, fallback: fallbackModel, ollamaModel: value }
-    saveModelPrefs(prefs)
-    onModelPrefsChange?.(prefs)
+    setModelConfigSaved(true)
+    setTimeout(() => setModelConfigSaved(false), 2000)
   }
 
   async function handleAddPet(e) {
@@ -118,6 +104,34 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
       setPets((current) => current.map((pet) => (pet.id === petId ? updated : pet)))
     } catch (err) {
       setError(err.message)
+    }
+  }
+
+  function startRename(pet) {
+    setError(null)
+    setEditingPetId(pet.id)
+    setEditingName(pet.name)
+  }
+
+  function cancelRename() {
+    setEditingPetId(null)
+    setEditingName('')
+  }
+
+  async function handleRenamePet(e, id) {
+    e.preventDefault()
+    const trimmed = editingName.trim()
+    if (!trimmed || isRenaming) return
+    setIsRenaming(true)
+    setError(null)
+    try {
+      const updated = await renamePet(id, trimmed)
+      setPets((current) => current.map((pet) => (pet.id === id ? updated : pet)))
+      cancelRename()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setIsRenaming(false)
     }
   }
 
@@ -177,7 +191,46 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
                       />
                     </label>
                   </div>
-                  <span className="settings-modal__pet-name">{pet.name}</span>
+                  {editingPetId === pet.id ? (
+                    <form
+                      className="settings-modal__rename-form"
+                      onSubmit={(e) => handleRenamePet(e, pet.id)}
+                    >
+                      <input
+                        type="text"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === 'Escape') cancelRename()
+                        }}
+                      />
+                      <button
+                        className="settings-modal__pet-rename-save"
+                        type="submit"
+                        disabled={isRenaming || !editingName.trim()}
+                        aria-label={`Save name for ${pet.name}`}
+                      >
+                        ✓
+                      </button>
+                      <button
+                        className="settings-modal__pet-rename-cancel"
+                        type="button"
+                        onClick={cancelRename}
+                        aria-label="Cancel rename"
+                      >
+                        &times;
+                      </button>
+                    </form>
+                  ) : (
+                    <button
+                      className="settings-modal__pet-name"
+                      onClick={() => startRename(pet)}
+                      title={`Rename ${pet.name}`}
+                    >
+                      {pet.name}
+                    </button>
+                  )}
                   <button
                     className="settings-modal__pet-remove"
                     onClick={() => handleRemovePet(pet.id)}
@@ -222,7 +275,8 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
           <div className="settings-modal__model-row">
             <label className="settings-modal__model-field">
               Primary model
-              <select value={primaryModel} onChange={(e) => updatePrimary(e.target.value)}>
+              <select value={primaryModel} onChange={(e) => setPrimaryModel(e.target.value)}>
+                <option value="">Select a model…</option>
                 {models.map((model) => (
                   <option key={model} value={model}>
                     {modelLabel(model)}
@@ -232,7 +286,8 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
             </label>
             <label className="settings-modal__model-field">
               Failover model
-              <select value={fallbackModel} onChange={(e) => updateFallback(e.target.value)}>
+              <select value={fallbackModel} onChange={(e) => setFallbackModel(e.target.value)}>
+                <option value="">Select a model…</option>
                 {models.map((model) => (
                   <option key={model} value={model}>
                     {modelLabel(model)}
@@ -247,7 +302,8 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
               <label className="settings-modal__model-field">
                 Ollama model
                 {ollamaModels.length > 0 ? (
-                  <select value={ollamaModel} onChange={(e) => updateOllamaModel(e.target.value)}>
+                  <select value={ollamaModel} onChange={(e) => setOllamaModel(e.target.value)}>
+                    <option value="">Select a model…</option>
                     {ollamaModels.map((model) => (
                       <option key={model} value={model}>
                         {model}
@@ -262,6 +318,17 @@ export default function SettingsModal({ onClose, onModelPrefsChange }) {
               </label>
             </div>
           )}
+
+          <div className="settings-modal__model-actions">
+            <button
+              className="btn btn--primary"
+              type="button"
+              onClick={handleSaveModelConfig}
+              disabled={!primaryModel}
+            >
+              {modelConfigSaved ? 'Saved ✓' : 'Save'}
+            </button>
+          </div>
         </section>
       </div>
     </div>

@@ -41,7 +41,7 @@ def _image_item(path, mime_type):
     }
 
 
-def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT) -> str:
     client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
@@ -61,16 +61,6 @@ def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) 
         {"type": "text", "text": "CCTV candidate image:"},
         _image_item(image.path, image.mime_type),
     ]
-    for reference in reference_images:
-        content.extend(
-            [
-                {
-                    "type": "text",
-                    "text": f"Registered reference for {reference['name']}:",
-                },
-                _image_item(reference["path"], reference["mime_type"]),
-            ]
-        )
 
     response = client.chat.completions.create(
         model=OPENAI_MODEL,

@@ -177,6 +177,12 @@ def run_pipeline(
                 ollama_model=ollama_model,
             )
             result = _parse_vision_output(outcome["output"])
+            if isinstance(result, dict):
+                # Identity is CLIP-derived (see model_router.analyze()),
+                # not guessed by the vision-LLM -- it always reports
+                # name_of_pet as empty itself, so the real answer is
+                # registered_pet_names.
+                result["name_of_pet"] = outcome.get("registered_pet_names", [])
 
             vision_results.append({
                 "frame": Path(persisted["frame_path"]).name,

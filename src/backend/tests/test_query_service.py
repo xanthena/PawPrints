@@ -171,13 +171,16 @@ class QueryServiceTests(unittest.TestCase):
                 ],
             )
 
-            def fake_render(segments, output_path, ffmpeg_path=None):
-                output = Path(output_path)
-                output.write_bytes(b"proof")
-                return output
+            def fake_render(segments, output_dir, query_id, ffmpeg_path=None):
+                paths_out = []
+                for index in range(1, len(segments) + 1):
+                    clip = Path(output_dir) / f"{query_id}_query_proof_{index}.mp4"
+                    clip.write_bytes(b"proof")
+                    paths_out.append(clip)
+                return paths_out
 
             with patch(
-                "app.query_layer.service.render_proof_video",
+                "app.query_layer.service.render_proof_clips",
                 side_effect=fake_render,
             ):
                 response = answer_query(
@@ -191,10 +194,9 @@ class QueryServiceTests(unittest.TestCase):
             proof = response["proof"]
             self.assertEqual(proof["status"], "created")
             self.assertEqual(proof["error"], "")
-            self.assertTrue(proof["stitched"])
             self.assertEqual(proof["segment_count"], 2)
-            self.assertNotIn("video_name", proof)
-            self.assertFalse(Path(proof["video_path"]).is_absolute())
+            self.assertNotIn("video_path", proof)
+            self.assertNotIn("stitched", proof)
             self.assertEqual(
                 [item["proof_segment"] for item in response["evidence"]],
                 [1, 2],
@@ -202,9 +204,10 @@ class QueryServiceTests(unittest.TestCase):
             for segment in proof["segments"]:
                 self.assertNotIn("source_video_path", segment)
                 self.assertNotIn("evidence_indices", segment)
+                self.assertFalse(Path(segment["video_path"]).is_absolute())
+                proof_file = (REPO_ROOT / segment["video_path"]).resolve()
+                self.assertTrue(proof_file.is_file())
 
-            proof_file = (REPO_ROOT / proof["video_path"]).resolve()
-            self.assertTrue(proof_file.is_file())
             saved = list(
                 (paths["response_root"] / "2026-07-06" / "proof_requested").glob("*.json")
             )

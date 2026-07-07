@@ -7,7 +7,7 @@ function formatSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-export default function AddFootageModal({ onClose, onUpload }) {
+export default function AddFootageModal({ onClose, onUpload, error }) {
   const [isDragging, setIsDragging] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const fileInputRef = useRef(null)
@@ -73,6 +73,8 @@ export default function AddFootageModal({ onClose, onUpload }) {
             </button>
           </div>
         )}
+
+        {error && <p className="modal__error">{error}</p>}
 
         <div className="modal__actions">
           <button className="btn btn--secondary" onClick={onClose}>

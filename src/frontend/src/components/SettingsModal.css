@@ -96,8 +96,64 @@
 
 .settings-modal__pet-name {
   flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: inherit;
   font-weight: 500;
   color: var(--brown-deep);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-modal__pet-name:hover {
+  background: var(--cream-soft);
+  color: var(--paw-orange-dark);
+}
+
+.settings-modal__rename-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-modal__rename-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--cream-soft);
+  font-size: 0.9rem;
+}
+
+.settings-modal__pet-rename-save,
+.settings-modal__pet-rename-cancel {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--brown-soft);
+  flex-shrink: 0;
+}
+
+.settings-modal__pet-rename-save:hover:not(:disabled) {
+  color: #3f8f5f;
+}
+
+.settings-modal__pet-rename-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.settings-modal__pet-rename-cancel:hover {
+  color: var(--paw-orange-dark);
 }
 
 .settings-modal__pet-remove {
@@ -141,6 +197,12 @@
 
 .settings-modal__ollama-model {
   margin-top: 12px;
+}
+
+.settings-modal__model-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .settings-modal__model-field {

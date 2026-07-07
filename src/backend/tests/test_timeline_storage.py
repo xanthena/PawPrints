@@ -15,6 +15,7 @@ from app.event_builder.timeline_storage import (
     final_timeline_filename,
     latest_final_timeline,
     next_final_timeline_path,
+    rename_pet_in_timelines,
 )
 
 
@@ -90,6 +91,60 @@ class TimelineStorageTests(unittest.TestCase):
             latest = latest_final_timeline(directory, "2026-07-06")
 
         self.assertEqual(latest.name, second.name)
+
+    def test_rename_pet_in_timelines_updates_matching_events_only(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            day_dir = root / "2026-07-06"
+            day_dir.mkdir(parents=True)
+            timeline_path = day_dir / "demo_final_timeline.json"
+            timeline_path.write_text(
+                json.dumps(
+                    [
+                        {"event_id": 1, "name_of_pet": ["Milo"], "activities": ["playing"]},
+                        {"event_id": 2, "name_of_pet": ["Milo", "Luna"], "activities": ["sleeping"]},
+                        {"event_id": 3, "name_of_pet": [], "activities": ["eating"]},
+                        {"event_id": 4, "name_of_pet": ["Luna"], "activities": ["running"]},
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            updated_count = rename_pet_in_timelines("Milo", "Oscar", root)
+
+            events = json.loads(timeline_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(updated_count, 2)
+        self.assertEqual(events[0]["name_of_pet"], ["Oscar"])
+        self.assertEqual(events[1]["name_of_pet"], ["Oscar", "Luna"])
+        self.assertEqual(events[2]["name_of_pet"], [])
+        self.assertEqual(events[3]["name_of_pet"], ["Luna"])
+
+    def test_rename_pet_in_timelines_is_case_insensitive_and_no_op_when_absent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            day_dir = root / "2026-07-06"
+            day_dir.mkdir(parents=True)
+            timeline_path = day_dir / "demo_final_timeline.json"
+            timeline_path.write_text(
+                json.dumps([{"event_id": 1, "name_of_pet": ["milo"]}]),
+                encoding="utf-8",
+            )
+            updated_count = rename_pet_in_timelines("MILO", "Oscar", root)
+            events = json.loads(timeline_path.read_text(encoding="utf-8"))
+            self.assertEqual(updated_count, 1)
+            self.assertEqual(events[0]["name_of_pet"], ["Oscar"])
+
+            # Renaming a pet that doesn't appear anywhere touches nothing.
+            mtime_after_first_rename = timeline_path.stat().st_mtime_ns
+            no_op_count = rename_pet_in_timelines("Luna", "Nova", root)
+            self.assertEqual(no_op_count, 0)
+            self.assertEqual(timeline_path.stat().st_mtime_ns, mtime_after_first_rename)
+
+    def test_rename_pet_in_timelines_handles_missing_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory) / "does-not-exist"
+            self.assertEqual(rename_pet_in_timelines("Milo", "Oscar", missing), 0)
 
     def test_event_builder_keeps_raw_and_never_overwrites_final(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -31,9 +31,11 @@ if str(BACKEND_ROOT) not in sys.path:
 from app.pet_profiles import list_pet_profiles
 
 if __package__:
+    from . import identity_matcher
     from .models import local_ollama
     from .prompt import build_system_prompt
 else:
+    import identity_matcher
     from models import local_ollama
     from prompt import build_system_prompt
 
@@ -58,10 +60,10 @@ def _resolve(value, env_var, default):
     return resolved
 
 
-def _call(model_name, image_path, allowed_dir, prompt, reference_images, ollama_model=None):
+def _call(model_name, image_path, allowed_dir, prompt, ollama_model=None):
     if model_name == QWEN:
         return local_ollama.analyze(
-            image_path, allowed_dir, prompt, reference_images, ollama_model=ollama_model
+            image_path, allowed_dir, prompt, ollama_model=ollama_model
         )
 
     if model_name == CLAUDE:
@@ -69,60 +71,28 @@ def _call(model_name, image_path, allowed_dir, prompt, reference_images, ollama_
             from .models import anthropic_claude
         else:
             from models import anthropic_claude
-        return anthropic_claude.analyze(
-            image_path, allowed_dir, prompt, reference_images
-        )
+        return anthropic_claude.analyze(image_path, allowed_dir, prompt)
 
     if model_name == OPENAI:
         if __package__:
             from .models import openai_gpt
         else:
             from models import openai_gpt
-        return openai_gpt.analyze(image_path, allowed_dir, prompt, reference_images)
+        return openai_gpt.analyze(image_path, allowed_dir, prompt)
 
     if __package__:
         from .models import google_gemini
     else:
         from models import google_gemini
-    return google_gemini.analyze(image_path, allowed_dir, prompt, reference_images)
+    return google_gemini.analyze(image_path, allowed_dir, prompt)
 
 
-def _profile_image_paths(profile):
-    if isinstance(profile, dict):
-        paths = profile.get("image_paths") or profile.get("reference_images")
-        if paths:
-            return list(paths)
-        single = profile.get("image_path") or profile.get("reference_image")
-        return [single] if single else []
-    return list(profile.image_paths)
-
-
-def _references_for(profile):
-    """One reference dict per registered photo -- a pet with several
-    photos on file contributes several entries, all sharing its name."""
-    name = profile["name"] if isinstance(profile, dict) else profile.name
-    references = []
-    for image_path in _profile_image_paths(profile):
-        path = Path(image_path).expanduser().resolve(strict=True)
-        if not path.is_file() or path.suffix.lower() not in {".jpg", ".jpeg", ".png"}:
-            raise ValueError(
-                f"Pet reference must be an existing JPEG or PNG file: {path}"
-            )
-        mime_type = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
-        references.append({"name": str(name), "path": path, "mime_type": mime_type})
-    return references
-
-
-def _outcome(output, model_used, fell_back, reference_images):
-    names = []
-    for item in reference_images:
-        if item["name"] not in names:
-            names.append(item["name"])
+def _outcome(output, model_used, fell_back, matched_names):
     return {
         "output": output,
         "model_used": model_used,
         "fell_back": fell_back,
-        "registered_pet_names": names,
+        "registered_pet_names": matched_names,
     }
 
 
@@ -146,28 +116,27 @@ def analyze(
     actually calls (default: OLLAMA_MODEL) -- named "qwen" for the
     provider family, but Ollama can serve any vision-capable model the
     user has pulled, not just Qwen.
+
+    Identity ("which registered pet is this") is decided separately from
+    the vision-LLM call, by CLIP visual similarity against each pet's
+    reference photos (see identity_matcher.py) -- the LLM only describes
+    the scene and always reports an empty name_of_pet itself.
     """
     primary_model = _resolve(primary, "VISION_MODEL_PRIMARY", DEFAULT_PRIMARY)
     fallback_model = _resolve(fallback, "VISION_MODEL_FALLBACK", DEFAULT_FALLBACK)
     profiles = list_pet_profiles() if pet_profiles is None else list(pet_profiles)
     prompt = build_system_prompt(profiles)
-    reference_images = tuple(
-        reference for profile in profiles for reference in _references_for(profile)
-    )
+    matched_names = identity_matcher.match_identity(image_path, profiles)
 
     if primary_model is None:
         raise ValueError("No primary model configured (VISION_MODEL_PRIMARY or primary=).")
 
     try:
-        output = _call(
-            primary_model, image_path, allowed_dir, prompt, reference_images, ollama_model
-        )
-        return _outcome(output, primary_model, False, reference_images)
+        output = _call(primary_model, image_path, allowed_dir, prompt, ollama_model)
+        return _outcome(output, primary_model, False, matched_names)
     except Exception as exc:
         if fallback_model and fallback_model != primary_model:
             print(f"{primary_model} call failed ({exc}); falling back to {fallback_model}.")
-            output = _call(
-                fallback_model, image_path, allowed_dir, prompt, reference_images, ollama_model
-            )
-            return _outcome(output, fallback_model, True, reference_images)
+            output = _call(fallback_model, image_path, allowed_dir, prompt, ollama_model)
+            return _outcome(output, fallback_model, True, matched_names)
         raise

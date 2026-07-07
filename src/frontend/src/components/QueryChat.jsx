@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { postQuery } from '../api/queryApi.js'
+import { postQuery, proofVideoUrl } from '../api/queryApi.js'
 import './QueryChat.css'
 
 // If the question already names a date some way the backend understands
@@ -15,10 +15,24 @@ function withDateHint(question, dateHint) {
   return `${question} on ${dateHint}`
 }
 
+function proofHeading(proof) {
+  const segments = proof?.segments || []
+  if (!segments.length) return null
+  const dayCount = new Set(segments.map((segment) => segment.date)).size
+  const clipWord = segments.length === 1 ? 'clip' : 'clips'
+  const dayWord = dayCount === 1 ? 'day' : 'days'
+  return `${segments.length} ${clipWord} across ${dayCount} ${dayWord}`
+}
+
+function segmentCaption(segment) {
+  return `${segment.date} · ${segment.clip_start_timestamp}–${segment.clip_end_timestamp}`
+}
+
 export default function QueryChat({ dateHint, placeholder }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [includeProof, setIncludeProof] = useState(false)
   const listRef = useRef(null)
 
   useEffect(() => {
@@ -34,8 +48,11 @@ export default function QueryChat({ dateHint, placeholder }) {
     setInput('')
     setIsSending(true)
     try {
-      const response = await postQuery(withDateHint(question, dateHint))
-      setMessages((current) => [...current, { role: 'assistant', text: response.answer }])
+      const response = await postQuery(withDateHint(question, dateHint), { includeProof })
+      setMessages((current) => [
+        ...current,
+        { role: 'assistant', text: response.answer, proof: includeProof ? response.proof : null },
+      ])
     } catch (err) {
       setMessages((current) => [
         ...current,
@@ -55,13 +72,41 @@ export default function QueryChat({ dateHint, placeholder }) {
           </p>
         )}
         {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`query-chat__message query-chat__message--${message.role}${
-              message.isError ? ' query-chat__message--error' : ''
-            }`}
-          >
-            {message.text}
+          <div key={index}>
+            <div
+              className={`query-chat__message query-chat__message--${message.role}${
+                message.isError ? ' query-chat__message--error' : ''
+              }`}
+            >
+              {message.text}
+            </div>
+            {message.proof?.segments?.length > 0 && (
+              <div className="query-chat__proof-group">
+                <p className="query-chat__proof-heading">{proofHeading(message.proof)}</p>
+                {message.proof.segments.map((segment) => (
+                  <div className="query-chat__proof" key={segment.segment}>
+                    <video
+                      className="query-chat__proof-video"
+                      src={proofVideoUrl(segment.video_path)}
+                      controls
+                    />
+                    <p className="query-chat__proof-caption">{segmentCaption(segment)}</p>
+                  </div>
+                ))}
+                {message.proof.status === 'partial' && (
+                  <p className="query-chat__proof-note">
+                    Some matches had no available clip{message.proof.error ? `: ${message.proof.error}` : '.'}
+                  </p>
+                )}
+              </div>
+            )}
+            {message.proof &&
+              !message.proof.segments?.length &&
+              message.proof.status !== 'not_requested' && (
+                <p className="query-chat__proof-note">
+                  Evidence clip unavailable{message.proof.error ? `: ${message.proof.error}` : '.'}
+                </p>
+              )}
           </div>
         ))}
         {isSending && (
@@ -70,6 +115,14 @@ export default function QueryChat({ dateHint, placeholder }) {
           </div>
         )}
       </div>
+      <label className="query-chat__proof-toggle">
+        <input
+          type="checkbox"
+          checked={includeProof}
+          onChange={(e) => setIncludeProof(e.target.checked)}
+        />
+        Include evidence clip with the answer
+      </label>
       <form className="query-chat__form" onSubmit={handleSubmit}>
         <input
           type="text"

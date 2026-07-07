@@ -31,8 +31,11 @@ from app.pet_profiles import (
     list_pet_profiles,
     register_pet_profile,
     remove_pet_profile,
+    rename_pet_profile,
 )
+from app.event_builder.timeline_storage import rename_pet_in_timelines
 from app.query_layer import answer_query
+from app.query_layer.proof_storage import DEFAULT_PROOF_ROOT
 from app.vision_model.model_router import _VALID_MODELS as SUPPORTED_MODELS
 
 from . import pipeline_runner
@@ -67,6 +70,13 @@ app.mount("/media/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploa
 PET_IMAGES_DIR = DEFAULT_PROFILE_DIR / "images"
 PET_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/media/pet-profiles", StaticFiles(directory=str(PET_IMAGES_DIR)), name="pet-profiles")
+
+# DEFAULT_PROOF_ROOT is .../query-proofs/temp -- mount its parent so the
+# mount prefix lines up with the "query-proofs/..." suffix of the
+# repo-relative video_path answer_query() returns (see _proof_video_url).
+QUERY_PROOF_DIR = DEFAULT_PROOF_ROOT.parent
+QUERY_PROOF_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/media/query-proofs", StaticFiles(directory=str(QUERY_PROOF_DIR)), name="query-proofs")
 
 _SENTINEL = object()
 
@@ -131,6 +141,38 @@ async def add_pet_photo(identifier: str, image: UploadFile = File(...)):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     finally:
         staging_path.unlink(missing_ok=True)
+
+    return _pet_profile_dict(profile)
+
+
+class RenamePetRequest(BaseModel):
+    name: str
+
+
+def _find_pet_name(identifier):
+    target = str(identifier or "").strip().casefold()
+    for profile in list_pet_profiles():
+        if profile.profile_id.casefold() == target or profile.name.casefold() == target:
+            return profile.name
+    return None
+
+
+@app.patch("/api/pets/{identifier}")
+async def rename_pet(identifier: str, payload: RenamePetRequest):
+    """Renames an already-registered pet and retroactively relabels every
+    already-persisted timeline event that used the old name, so history
+    (the dashboard, the query layer) reflects the new name too, not just
+    identity matches going forward."""
+    old_name = _find_pet_name(identifier)
+    try:
+        profile = rename_pet_profile(identifier, payload.name)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    if old_name and old_name.casefold() != profile.name.casefold():
+        rename_pet_in_timelines(old_name, profile.name)
 
     return _pet_profile_dict(profile)
 
@@ -240,27 +282,47 @@ class QueryRequest(BaseModel):
     question: str
     start_date: str | None = None
     end_date: str | None = None
+    include_proof: bool = False
+
+
+def _proof_video_url(video_path):
+    """answer_query() returns each proof segment's video_path as a
+    repo-relative filesystem path (e.g. "src/results/query-proofs/temp/
+    2026-07-06/xxx_query_proof_1.mp4") -- rewrite it into a URL the
+    frontend can point a <video> tag at directly, the same way every
+    other media field in this API is already a ready-to-use
+    "/media/..." path."""
+    if not video_path:
+        return None
+    suffix = video_path.split("query-proofs/", 1)[-1]
+    return f"/media/query-proofs/{suffix}"
 
 
 @app.post("/api/query")
 async def query_activities(payload: QueryRequest):
     """Answers a natural-language question over every day's final timeline
     (e.g. "did my cat play in the last 3 days?") using the deterministic,
-    evidence-backed query_layer -- no LLM call, no proof video (kept fast
-    for a chat-style UI); every match still comes with its supporting
-    timeline evidence in the response."""
+    evidence-backed query_layer. Proof clip generation is opt-in via
+    include_proof, since it's slower than a plain answer -- each match
+    (e.g. one per day for a multi-day query) comes back as its own
+    separate clip rather than one stitched video, so the caller can
+    list/play them individually."""
     question = payload.question.strip()
     if not question:
         raise HTTPException(status_code=400, detail="A question is required.")
     try:
-        return answer_query(
+        response = answer_query(
             question,
             start_date=payload.start_date,
             end_date=payload.end_date,
-            include_proof=False,
+            include_proof=payload.include_proof,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    for segment in response["proof"].get("segments", []):
+        segment["video_path"] = _proof_video_url(segment.get("video_path"))
+    return response
 
 
 @app.get("/api/health")

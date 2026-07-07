@@ -35,3 +35,8 @@ security_risks.md
 
 # claude code local tooling, not part of the shared project
 .claude/
+
+# auto-downloaded model weights (CLIP downloads to ~/.cache/huggingface;
+# ultralytics/YOLO downloads into the backend's cwd instead) -- fetched
+# on first use, never committed
+src/backend/*.pt

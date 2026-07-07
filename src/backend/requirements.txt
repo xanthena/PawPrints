@@ -8,3 +8,6 @@ fastapi
 uvicorn[standard]
 python-multipart
 imageio-ffmpeg>=0.5.1,<1.0
+open_clip_torch
+Pillow
+ultralytics

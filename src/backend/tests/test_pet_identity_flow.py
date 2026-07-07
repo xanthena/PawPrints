@@ -34,20 +34,18 @@ def timeline_event(event_id, name, start):
 
 
 class PetIdentityFlowTests(unittest.TestCase):
-    def test_dynamic_prompt_explains_reference_photos(self):
-        # Each reference photo is captioned with its pet's name inline,
-        # right next to that image, rather than described in a separate
-        # numbered list here -- see local_ollama.py/google_gemini.py/etc,
-        # which build the per-image captions themselves. A small local
-        # model doesn't reliably correlate a flat image list against a
-        # separately written enumeration.
+    def test_prompt_no_longer_asks_the_llm_to_judge_identity(self):
+        # Identity is now decided by CLIP visual similarity
+        # (identity_matcher.py), not by the vision-LLM comparing reference
+        # photos in its own prompt -- the LLM always reports an empty
+        # name_of_pet, and reference photos are never mentioned to it.
         prompt = build_system_prompt([{"name": "Milo"}, {"name": "Luna"}])
 
-        self.assertIn("reference photos of registered pets", prompt)
-        self.assertIn("directly preceded by a caption naming that pet", prompt)
         self.assertIn('"name_of_pet": []', prompt)
         self.assertIn('"activities": [""]', prompt)
-        self.assertIn("Never guess identity", prompt)
+        self.assertNotIn("reference photo", prompt.lower())
+        self.assertNotIn("Milo", prompt)
+        self.assertNotIn("Luna", prompt)
 
     def test_named_query_filters_other_cat_and_uses_name_in_answer(self):
         with tempfile.TemporaryDirectory() as directory:

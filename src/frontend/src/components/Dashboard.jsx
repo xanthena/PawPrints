@@ -8,6 +8,7 @@ import ProcessingModal from './ProcessingModal.jsx'
 import FootageTimelineModal from './FootageTimelineModal.jsx'
 import SettingsModal, { loadModelPrefs } from './SettingsModal.jsx'
 import QueryWidget from './QueryWidget.jsx'
+import PawWatermark from './PawWatermark.jsx'
 import { MOCK_FOOTAGES } from '../mock/footages.js'
 import { streamFootageAnalysis, mediaUrl } from '../api/footageStream.js'
 import { formatDayHeading, todayDateString } from '../utils/date.js'
@@ -45,6 +46,7 @@ function groupByDay(footages) {
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [uploadError, setUploadError] = useState(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [modelPrefs, setModelPrefs] = useState(loadModelPrefs)
   const [processingJobId, setProcessingJobId] = useState(null)
@@ -63,6 +65,20 @@ export default function Dashboard() {
   }
 
   async function handleUpload(file) {
+    // Catch this before a job/processing-modal ever appears -- letting
+    // the video "start" and only failing once the pipeline reaches its
+    // first vision-model call (deep inside the stream) means the user
+    // sees a progressing job that suddenly errors, instead of being told
+    // upfront what to fix. Settings intentionally never pre-fills a
+    // choice (see SettingsModal.jsx), so this is a normal state to hit,
+    // not just an edge case.
+    if (!modelPrefs.primary) {
+      setUploadError(
+        'No vision model is configured yet. Open Settings, choose a primary model, and click Save before analyzing footage.'
+      )
+      return
+    }
+    setUploadError(null)
     setIsModalOpen(false)
 
     const jobId = `job-${Date.now()}`
@@ -145,13 +161,20 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
+      <PawWatermark />
       <header className="dashboard__header">
         <div className="dashboard__brand">
           <PawIcon size={30} color="var(--paw-orange)" />
           <h1 className="brand-title">paw prints</h1>
         </div>
         <div className="dashboard__header-actions">
-          <button className="btn btn--primary" onClick={() => setIsModalOpen(true)}>
+          <button
+            className="btn btn--primary"
+            onClick={() => {
+              setUploadError(null)
+              setIsModalOpen(true)
+            }}
+          >
             + Add Footage
           </button>
           <button
@@ -186,7 +209,11 @@ export default function Dashboard() {
       </div>
 
       {isModalOpen && (
-        <AddFootageModal onClose={() => setIsModalOpen(false)} onUpload={handleUpload} />
+        <AddFootageModal
+          onClose={() => setIsModalOpen(false)}
+          onUpload={handleUpload}
+          error={uploadError}
+        />
       )}
 
       {processingJob && <ProcessingModal filename={processingJob.filename} />}

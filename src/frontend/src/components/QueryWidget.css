@@ -2,7 +2,11 @@
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 200;
+  /* Below .modal-backdrop's z-index (100, see AddFootageModal.css) so an
+     open modal naturally sits in front of this instead of the two
+     coinciding on screen -- the widget stays mounted and keeps its own
+     open/closed state, it's just stacked behind whatever modal is up. */
+  z-index: 90;
   display: flex;
   flex-direction: column;
   align-items: flex-end;

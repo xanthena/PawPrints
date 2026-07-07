@@ -9,6 +9,7 @@ from .store import (
     list_pet_profiles,
     register_pet_profile,
     remove_pet_profile,
+    rename_pet_profile,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "list_pet_profiles",
     "register_pet_profile",
     "remove_pet_profile",
+    "rename_pet_profile",
 ]

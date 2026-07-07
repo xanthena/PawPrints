@@ -64,6 +64,41 @@ class PetProfileStoreTests(unittest.TestCase):
             self.assertEqual(len(removed.image_paths), 3)
             self.assertFalse(any(path.exists() for path in removed.image_paths))
 
+    def test_renames_pet_keeping_id_and_photos(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            store = PetProfileStore(root / "profiles")
+            upload = root / "upload.png"
+            upload.write_bytes(PNG_BYTES)
+
+            registered = store.register("Milo", upload)
+            renamed = store.rename("milo", "  Oscar  ")
+
+            self.assertEqual(renamed.name, "Oscar")
+            self.assertEqual(renamed.profile_id, registered.profile_id)
+            self.assertEqual(renamed.image_paths, registered.image_paths)
+            self.assertEqual([item.name for item in store.list()], ["Oscar"])
+
+    def test_rename_rejects_collision_with_other_pet(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            store = PetProfileStore(root / "profiles")
+            first = root / "first.png"
+            first.write_bytes(PNG_BYTES)
+            second = root / "second.png"
+            second.write_bytes(PNG_BYTES)
+            store.register("Milo", first)
+            store.register("Luna", second)
+
+            with self.assertRaisesRegex(ValueError, "already registered"):
+                store.rename("Luna", "milo")
+
+    def test_rename_missing_pet_raises_key_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = PetProfileStore(Path(directory) / "profiles")
+            with self.assertRaises(KeyError):
+                store.rename("nobody", "New Name")
+
     def test_enforces_two_pet_limit_and_unique_names(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

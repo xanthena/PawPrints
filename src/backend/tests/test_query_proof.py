@@ -54,15 +54,15 @@ class QueryProofTests(unittest.TestCase):
 
         self.assertEqual(len(segments), 3)
 
-    def test_artifact_path_is_unique_and_dated(self):
+    def test_artifact_output_dir_is_dated_and_ids_are_unique(self):
         with tempfile.TemporaryDirectory() as directory:
             now = datetime(2026, 7, 6, 12, tzinfo=timezone.utc)
             first = create_proof_artifact(directory, now=now)
             second = create_proof_artifact(directory, now=now)
 
-        self.assertNotEqual(first.video_path, second.video_path)
-        self.assertEqual(first.video_path.parent.name, "2026-07-06")
-        self.assertTrue(first.video_path.name.endswith("_query_proof.mp4"))
+        self.assertNotEqual(first.query_id, second.query_id)
+        self.assertEqual(first.output_dir, second.output_dir)
+        self.assertEqual(first.output_dir.name, "2026-07-06")
 
     def test_cleanup_removes_only_expired_managed_proofs(self):
         with tempfile.TemporaryDirectory() as directory:

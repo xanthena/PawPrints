@@ -253,6 +253,29 @@ class PetProfileStore:
             image_path.unlink(missing_ok=True)
         return removed
 
+    def rename(self, identifier, new_name):
+        """Rename an already-registered pet. Only the manifest's "name"
+        field changes -- id, photos, and created_at are untouched, so
+        anything keyed by id (e.g. stored image filenames) keeps working."""
+        records = self._records()
+        match_index = self._find_record_index(records, identifier)
+        if match_index is None:
+            raise KeyError(f"No pet profile matches '{identifier}'.")
+
+        clean_name = _clean_name(new_name)
+        record = records[match_index]
+        if any(
+            index != match_index
+            and str(other.get("name", "")).strip().casefold() == clean_name.casefold()
+            for index, other in enumerate(records)
+        ):
+            raise ValueError(f"A pet named '{clean_name}' is already registered.")
+
+        updated_record = {**record, "name": clean_name}
+        records[match_index] = updated_record
+        self._write_records(records)
+        return self._profile(updated_record)
+
 
 def register_pet_profile(name, image_paths, profile_dir=DEFAULT_PROFILE_DIR):
     return PetProfileStore(profile_dir).register(name, image_paths)
@@ -268,3 +291,7 @@ def list_pet_profiles(profile_dir=DEFAULT_PROFILE_DIR):
 
 def remove_pet_profile(identifier, profile_dir=DEFAULT_PROFILE_DIR):
     return PetProfileStore(profile_dir).remove(identifier)
+
+
+def rename_pet_profile(identifier, new_name, profile_dir=DEFAULT_PROFILE_DIR):
+    return PetProfileStore(profile_dir).rename(identifier, new_name)

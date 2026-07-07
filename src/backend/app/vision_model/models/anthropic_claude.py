@@ -45,7 +45,7 @@ def _image_block(path, mime_type):
     }
 
 
-def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) -> str:
+def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT) -> str:
     client = _get_client()
     image = validate_image_path(image_path, allowed_dir)
 
@@ -65,13 +65,6 @@ def analyze(image_path, allowed_dir, prompt=SYSTEM_PROMPT, reference_images=()) 
         {"type": "text", "text": "CCTV candidate image:"},
         _image_block(image.path, image.mime_type),
     ]
-    for reference in reference_images:
-        content.extend(
-            [
-                {"type": "text", "text": f"Reference for {reference['name']}:"},
-                _image_block(reference["path"], reference["mime_type"]),
-            ]
-        )
 
     message = client.messages.create(
         model=ANTHROPIC_MODEL,

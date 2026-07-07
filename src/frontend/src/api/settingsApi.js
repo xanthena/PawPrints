@@ -53,6 +53,17 @@ export async function addPetImage(identifier, imageFile) {
   return data
 }
 
+export async function renamePet(identifier, newName) {
+  const response = await fetch(`${API_BASE}/api/pets/${encodeURIComponent(identifier)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: newName }),
+  })
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) throw new Error(data.detail || `Could not rename pet: ${response.status}`)
+  return data
+}
+
 export async function deletePet(identifier) {
   const response = await fetch(`${API_BASE}/api/pets/${encodeURIComponent(identifier)}`, {
     method: 'DELETE',

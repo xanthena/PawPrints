@@ -38,23 +38,6 @@ def compute_end_time(all_events, index):
         return all_events[index + 1]["timestamp"]
     return candidate["timestamp"]
 
-def _validated_pet_names(value, registered_names):
-    if isinstance(value, str):
-        values = [value]
-    elif isinstance(value, list):
-        values = value
-    else:
-        values = []
-    registered = {str(name).casefold(): str(name) for name in registered_names}
-    names = []
-    for value in values:
-        canonical = registered.get(str(value or "").strip().casefold())
-        if canonical and canonical not in names:
-            names.append(canonical)
-    return names
-
-
-
 def run(video_stem, primary_model=None, fallback_model=None):
     """primary_model/fallback_model override VISION_MODEL_PRIMARY/
     VISION_MODEL_FALLBACK for this run -- this is the hook a future
@@ -87,10 +70,10 @@ def run(video_stem, primary_model=None, fallback_model=None):
             result = raw_output
 
         if isinstance(result, dict):
-            result["name_of_pet"] = _validated_pet_names(
-                result.get("name_of_pet", []),
-                outcome.get("registered_pet_names", []),
-            )
+            # Identity is CLIP-derived (see model_router.analyze()), not
+            # guessed by the vision-LLM -- it always reports name_of_pet
+            # as empty itself, so the real answer is registered_pet_names.
+            result["name_of_pet"] = outcome.get("registered_pet_names", [])
 
         results.append({
             "frame": Path(frame_path).name,

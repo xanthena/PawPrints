@@ -1,9 +1,9 @@
-"""Cut and stitch evidence ranges from one or more source videos."""
+"""Cut evidence ranges from one or more source videos into standalone clips."""
 
 import tempfile
 from pathlib import Path
 
-from app.media_tools import concat_file_entry, resolve_ffmpeg, run_ffmpeg
+from app.media_tools import resolve_ffmpeg, run_ffmpeg
 
 from .models import ProofSegment
 
@@ -86,18 +86,29 @@ def merge_evidence_ranges(evidence):
     ]
 
 
-def render_proof_video(segments, output_path, ffmpeg_path=None):
-    """Normalize evidence clips and combine them into one video-only MP4."""
+def render_proof_clips(segments, output_dir, query_id, ffmpeg_path=None):
+    """Normalize each evidence segment into its own standalone MP4.
+
+    Each matching moment (e.g. one per day for a multi-day query) becomes
+    a separate playable clip instead of one stitched-together video, so a
+    caller can list/play them individually and see which day or moment
+    each one came from. Returns a list of Paths in the same order as
+    `segments`.
+
+    All clips are rendered into a temp directory first and only moved
+    into `output_dir` once every one has succeeded, so a failure partway
+    through never leaves a partial set of proof files behind.
+    """
     if not segments:
         raise ValueError("At least one proof segment is required.")
 
-    destination = Path(output_path).resolve()
-    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination_dir = Path(output_dir).resolve()
+    destination_dir.mkdir(parents=True, exist_ok=True)
     ffmpeg = resolve_ffmpeg(ffmpeg_path)
 
     with tempfile.TemporaryDirectory(
         prefix="query-proof-",
-        dir=destination.parent,
+        dir=destination_dir,
     ) as temporary_directory:
         temporary = Path(temporary_directory)
         rendered_segments = []
@@ -142,36 +153,10 @@ def render_proof_video(segments, output_path, ffmpeg_path=None):
             )
             rendered_segments.append(clip_path)
 
-        rendered = temporary / "query_proof.mp4"
-        if len(rendered_segments) == 1:
-            rendered_segments[0].replace(rendered)
-        else:
-            concat_file = temporary / "segments.txt"
-            concat_file.write_text(
-                "".join(concat_file_entry(path) for path in rendered_segments),
-                encoding="utf-8",
-            )
-            run_ffmpeg(
-                [
-                    ffmpeg,
-                    "-hide_banner",
-                    "-loglevel",
-                    "error",
-                    "-y",
-                    "-f",
-                    "concat",
-                    "-safe",
-                    "0",
-                    "-i",
-                    str(concat_file),
-                    "-c",
-                    "copy",
-                    "-movflags",
-                    "+faststart",
-                    str(rendered),
-                ],
-                "stitching proof segments",
-            )
-        rendered.replace(destination)
+        destinations = []
+        for index, clip_path in enumerate(rendered_segments, start=1):
+            destination = destination_dir / f"{query_id}_query_proof_{index}.mp4"
+            clip_path.replace(destination)
+            destinations.append(destination)
 
-    return destination
+    return destinations
