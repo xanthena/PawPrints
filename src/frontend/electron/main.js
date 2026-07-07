@@ -7,20 +7,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = !app.isPackaged
 
 const BACKEND_DIR = path.join(__dirname, '../../backend')
-// The concrete interpreter, not the "py -3.12" launcher -- the launcher
-// execs into a real python.exe as an intermediary process, which makes
-// killing "the backend" on quit unreliable (killing the launcher doesn't
-// necessarily kill what it launched). Spawning the interpreter directly
-// means the child process this file holds a handle to *is* uvicorn.
-const PYTHON_EXE = 'C:\\Users\\yashn\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+// Same invocation the rest of this project's tooling already uses (see
+// .claude/launch.json) -- the "py" launcher resolves whichever machine's
+// Python 3.12 install without hardcoding a user-specific path. Whether
+// "py" execs directly into python.exe or spawns it as a child, taskkill
+// /t below kills the whole process tree either way, so backend cleanup
+// on quit doesn't depend on which one happens.
+const PYTHON_LAUNCHER = 'py'
+const PYTHON_VERSION_FLAG = '-3.12'
 const BACKEND_HEALTH_URL = 'http://localhost:8000/api/health'
 
 let backendProcess = null
 
 function startBackend() {
   backendProcess = spawn(
-    PYTHON_EXE,
-    ['-m', 'uvicorn', 'app.api.server:app', '--port', '8000'],
+    PYTHON_LAUNCHER,
+    [PYTHON_VERSION_FLAG, '-m', 'uvicorn', 'app.api.server:app', '--port', '8000'],
     { cwd: BACKEND_DIR }
   )
   backendProcess.stdout.on('data', (data) => process.stdout.write(`[backend] ${data}`))
